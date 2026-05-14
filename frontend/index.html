@@ -1,10 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>BioDockLab</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    header {
+      padding: 32px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-bottom: 1px solid #334155;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 40px;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      margin-top: 8px;
+    }
+
+    main {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .protein-name {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .pdb-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #1d4ed8;
+      color: white;
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #334155;
+      text-align: left;
+    }
+
+    th {
+      color: #93c5fd;
+    }
+
+    .score {
+      font-weight: bold;
+      color: #22c55e;
+    }
+
+    .viewer-placeholder {
+      height: 320px;
+      border-radius: 16px;
+      border: 1px dashed #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      background: radial-gradient(circle, #1e293b, #020617);
+    }
+
+    footer {
+      padding: 24px 32px;
+      color: #64748b;
+      border-top: 1px solid #334155;
+    }
+  </style>
 </head>
 <body>
-  <h1>BioDockLab</h1>
-  <p>Protein-Ligand Docking Visualization Platform</p>
+  <header>
+    <h1>BioDockLab</h1>
+    <div class="subtitle">Web-based Protein-Ligand Docking Visualization Platform</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Protein Target</h2>
+      <div id="protein-info">Loading protein data...</div>
+    </section>
+
+    <section class="card">
+      <h2>3D Viewer</h2>
+      <div class="viewer-placeholder">
+        Molecular 3D Viewer will be added here
+      </div>
+    </section>
+
+    <section class="card" style="grid-column: span 2;">
+      <h2>Docking Results</h2>
+      <div id="docking-results">Loading docking results...</div>
+    </section>
+  </main>
+
+  <footer>
+    BioDockLab is an educational and exploratory platform. Docking scores are not clinical evidence.
+  </footer>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:8000";
+
+    async function loadProtein() {
+      const res = await fetch(`${API_BASE}/proteins`);
+      const proteins = await res.json();
+      const protein = proteins[0];
+
+      document.getElementById("protein-info").innerHTML = `
+        <div class="protein-name">${protein.name}</div>
+        <div class="pdb-badge">PDB ID: ${protein.pdb_id}</div>
+        <p>${protein.description}</p>
+      `;
+    }
+
+    async function loadDockingResults() {
+      const res = await fetch(`${API_BASE}/docking/1`);
+      const data = await res.json();
+
+      const rows = data.ligands.map(ligand => `
+        <tr>
+          <td>#${ligand.rank}</td>
+          <td>${ligand.name}</td>
+          <td class="score">${ligand.binding_score}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("docking-results").innerHTML = `
+        <p><strong>Protein:</strong> ${data.protein}</p>
+        <p><strong>Note:</strong> ${data.note}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Ligand</th>
+              <th>Binding Score</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    loadProtein();
+    loadDockingResults();
+  </script>
 </body>
 </html>
