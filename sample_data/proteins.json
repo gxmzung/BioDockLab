@@ -1,0 +1,20 @@
+[
+  {
+    "id": "6LU7",
+    "name": "SARS-CoV-2 Main Protease",
+    "category": "Viral protein",
+    "description": "A coronavirus main protease structure commonly used for educational molecular docking examples."
+  },
+  {
+    "id": "1CRN",
+    "name": "Crambin",
+    "category": "Plant protein",
+    "description": "A small plant protein frequently used as a simple molecular visualization example."
+  },
+  {
+    "id": "1MBN",
+    "name": "Myoglobin",
+    "category": "Oxygen-binding protein",
+    "description": "A muscle oxygen-binding protein often used in structural biology education."
+  }
+]

@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
+import json
 
 app = FastAPI(title="BioDockLab API")
 
@@ -11,43 +13,43 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-PROTEINS = [
-    {
-        "id": "1",
-        "name": "SARS-CoV-2 Main Protease",
-        "pdb_id": "6LU7",
-        "description": "A sample protein target used for educational docking visualization."
-    }
-]
+BASE_DIR = Path(__file__).resolve().parent.parent
+SAMPLE_DATA_DIR = BASE_DIR / "sample_data"
 
-DOCKING_RESULTS = {
-    "1": {
-        "protein": "SARS-CoV-2 Main Protease",
-        "pdb_id": "6LU7",
-        "ligands": [
-            {"name": "Ligand-A", "binding_score": -8.7, "rank": 1},
-            {"name": "Ligand-B", "binding_score": -7.9, "rank": 2},
-            {"name": "Ligand-C", "binding_score": -6.4, "rank": 3}
-        ],
-        "note": "Scores are sample values for educational visualization only."
-    }
-}
+
+def load_json(filename: str):
+    file_path = SAMPLE_DATA_DIR / filename
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 
 @app.get("/")
 def root():
-    return {"message": "BioDockLab Backend Running"}
+    return {
+        "message": "BioDockLab Backend Running",
+        "description": "Educational protein-ligand docking visualization API"
+    }
+
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
+
 @app.get("/proteins")
 def get_proteins():
-    return PROTEINS
+    return load_json("proteins.json")
+
 
 @app.get("/docking/{protein_id}")
 def get_docking_result(protein_id: str):
-    return DOCKING_RESULTS.get(
-        protein_id,
-        {"error": "Protein not found"}
-    )
+    docking_results = load_json("docking_results.json")
+
+    if protein_id not in docking_results:
+        return {
+            "error": "Protein not found",
+            "protein_id": protein_id
+        }
+
+    return docking_results[protein_id]

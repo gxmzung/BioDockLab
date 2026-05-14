@@ -1,0 +1,32 @@
+{
+  "6LU7": {
+    "protein": "SARS-CoV-2 Main Protease",
+    "pdb_id": "6LU7",
+    "ligands": [
+      {"name": "Ligand-A", "binding_score": -8.7, "rank": 1},
+      {"name": "Ligand-B", "binding_score": -7.9, "rank": 2},
+      {"name": "Ligand-C", "binding_score": -6.3, "rank": 3}
+    ],
+    "note": "Sample docking scores for educational visualization only."
+  },
+  "1CRN": {
+    "protein": "Crambin",
+    "pdb_id": "1CRN",
+    "ligands": [
+      {"name": "Ligand-X", "binding_score": -5.2, "rank": 1},
+      {"name": "Ligand-Y", "binding_score": -4.8, "rank": 2},
+      {"name": "Ligand-Z", "binding_score": -4.1, "rank": 3}
+    ],
+    "note": "Sample docking scores for educational visualization only."
+  },
+  "1MBN": {
+    "protein": "Myoglobin",
+    "pdb_id": "1MBN",
+    "ligands": [
+      {"name": "Ligand-M", "binding_score": -7.1, "rank": 1},
+      {"name": "Ligand-N", "binding_score": -6.8, "rank": 2},
+      {"name": "Ligand-O", "binding_score": -6.0, "rank": 3}
+    ],
+    "note": "Sample docking scores for educational visualization only."
+  }
+}

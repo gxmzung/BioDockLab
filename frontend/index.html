@@ -9,7 +9,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-
     body {
       margin: 0;
       background: #020617;
@@ -87,6 +86,15 @@
       font-weight: bold;
     }
 
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      background: #1d4ed8;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
     canvas {
       margin-top: 20px;
       background: #111827;
@@ -98,7 +106,6 @@
       padding: 24px;
       color: #64748b;
     }
-
   </style>
 </head>
 
@@ -117,11 +124,7 @@
 
     <h2>Protein Selection</h2>
 
-    <select id="protein-select">
-      <option value="6LU7">SARS-CoV-2 Main Protease</option>
-      <option value="1CRN">Crambin</option>
-      <option value="1MBN">Myoglobin</option>
-    </select>
+    <select id="protein-select"></select>
 
     <div id="protein-info" style="margin-top:20px;"></div>
 
@@ -145,52 +148,53 @@
 </footer>
 
 <script>
+const API_BASE = "http://127.0.0.1:8000";
 
 let stage = new NGL.Stage("viewport");
+let chart;
+let proteins = [];
 
 window.addEventListener("resize", () => {
   stage.handleResize();
 });
 
-const dockingData = {
-  "6LU7": {
-    protein: "SARS-CoV-2 Main Protease",
-    ligands: [
-      {name:"Ligand-A", score:-8.7},
-      {name:"Ligand-B", score:-7.9},
-      {name:"Ligand-C", score:-6.3}
-    ]
-  },
+async function init() {
+  const res = await fetch(`${API_BASE}/proteins`);
+  proteins = await res.json();
 
-  "1CRN": {
-    protein: "Crambin",
-    ligands: [
-      {name:"Ligand-X", score:-5.2},
-      {name:"Ligand-Y", score:-4.8},
-      {name:"Ligand-Z", score:-4.1}
-    ]
-  },
+  const select = document.getElementById("protein-select");
 
-  "1MBN": {
-    protein: "Myoglobin",
-    ligands: [
-      {name:"Ligand-M", score:-7.1},
-      {name:"Ligand-N", score:-6.8},
-      {name:"Ligand-O", score:-6.0}
-    ]
-  }
-};
+  select.innerHTML = proteins.map(protein => `
+    <option value="${protein.id}">${protein.name}</option>
+  `).join("");
 
-let chart;
+  select.addEventListener("change", (e) => {
+    loadProtein(e.target.value);
+  });
 
-function loadProtein(pdbId) {
+  loadProtein(proteins[0].id);
+}
 
+async function loadProtein(pdbId) {
+  const protein = proteins.find(item => item.id === pdbId);
+
+  document.getElementById("protein-info").innerHTML = `
+    <h3>${protein.name}</h3>
+    <div class="badge">PDB ID: ${protein.id}</div>
+    <p><strong>Category:</strong> ${protein.category}</p>
+    <p>${protein.description}</p>
+  `;
+
+  load3DViewer(pdbId);
+  loadDockingResults(pdbId);
+}
+
+function load3DViewer(pdbId) {
   stage.removeAllComponents();
 
   stage.loadFile(
     `https://files.rcsb.org/download/${pdbId}.pdb`
   ).then(component => {
-
     component.addRepresentation("cartoon", {
       color: "skyblue"
     });
@@ -201,31 +205,23 @@ function loadProtein(pdbId) {
     });
 
     component.autoView();
-
   });
-
-  updateInfo(pdbId);
 }
 
-function updateInfo(pdbId) {
+async function loadDockingResults(pdbId) {
+  const res = await fetch(`${API_BASE}/docking/${pdbId}`);
+  const data = await res.json();
 
-  const data = dockingData[pdbId];
-
-  document.getElementById("protein-info").innerHTML = `
-    <h3>${data.protein}</h3>
-    <p><strong>PDB ID:</strong> ${pdbId}</p>
-    <p>Interactive molecular visualization loaded from Protein Data Bank.</p>
-  `;
-
-  const rows = data.ligands.map((ligand, index) => `
+  const rows = data.ligands.map(ligand => `
     <tr>
-      <td>#${index + 1}</td>
+      <td>#${ligand.rank}</td>
       <td>${ligand.name}</td>
-      <td class="score">${ligand.score}</td>
+      <td class="score">${ligand.binding_score}</td>
     </tr>
   `).join("");
 
   document.getElementById("docking-results").innerHTML = `
+    <p><strong>Note:</strong> ${data.note}</p>
     <table>
       <thead>
         <tr>
@@ -234,7 +230,6 @@ function updateInfo(pdbId) {
           <th>Binding Score</th>
         </tr>
       </thead>
-
       <tbody>
         ${rows}
       </tbody>
@@ -245,7 +240,6 @@ function updateInfo(pdbId) {
 }
 
 function updateChart(ligands) {
-
   const ctx = document.getElementById("scoreChart");
 
   if(chart) {
@@ -253,57 +247,34 @@ function updateChart(ligands) {
   }
 
   chart = new Chart(ctx, {
-
-    type: 'bar',
-
+    type: "bar",
     data: {
-
       labels: ligands.map(l => l.name),
-
       datasets: [{
-        label: 'Binding Score',
-        data: ligands.map(l => l.score)
+        label: "Binding Score",
+        data: ligands.map(l => l.binding_score)
       }]
     },
-
     options: {
       responsive: true,
-
       plugins: {
         legend: {
-          labels: {
-            color: 'white'
-          }
+          labels: { color: "white" }
         }
       },
-
       scales: {
-
         x: {
-          ticks: {
-            color: 'white'
-          }
+          ticks: { color: "white" }
         },
-
         y: {
-          ticks: {
-            color: 'white'
-          }
+          ticks: { color: "white" }
         }
       }
     }
   });
 }
 
-document.getElementById("protein-select")
-.addEventListener("change", (e) => {
-
-  loadProtein(e.target.value);
-
-});
-
-loadProtein("6LU7");
-
+init();
 </script>
 
 </body>
