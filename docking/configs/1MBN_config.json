@@ -1,0 +1,18 @@
+{
+  "pdb_id": "1MBN",
+  "receptor_file": "docking/receptors/1MBN_receptor.pdbqt",
+  "ligand_dir": "docking/ligands/",
+  "center": {
+    "x": 15.0,
+    "y": 20.0,
+    "z": 10.0
+  },
+  "box_size": {
+    "x": 24,
+    "y": 24,
+    "z": 24
+  },
+  "exhaustiveness": 8,
+  "num_modes": 9,
+  "note": "Sample docking box configuration for myoglobin visualization."
+}

@@ -1,0 +1,18 @@
+{
+  "pdb_id": "6LU7",
+  "receptor_file": "docking/receptors/6LU7_receptor.pdbqt",
+  "ligand_dir": "docking/ligands/",
+  "center": {
+    "x": -10.0,
+    "y": 12.5,
+    "z": 68.0
+  },
+  "box_size": {
+    "x": 22,
+    "y": 22,
+    "z": 22
+  },
+  "exhaustiveness": 8,
+  "num_modes": 9,
+  "note": "Sample docking box configuration for research workflow demonstration."
+}

@@ -35,7 +35,7 @@
     main {
       padding: 24px;
       display: grid;
-      grid-template-columns: 420px 1fr;
+      grid-template-columns: 460px 1fr;
       gap: 24px;
     }
 
@@ -44,11 +44,12 @@
       border: 1px solid #1e293b;
       border-radius: 18px;
       padding: 20px;
+      margin-bottom: 20px;
     }
 
     #viewport {
       width: 100%;
-      height: 700px;
+      height: 760px;
       border-radius: 16px;
       overflow: hidden;
       background: black;
@@ -72,9 +73,10 @@
     }
 
     th, td {
-      padding: 12px;
+      padding: 10px;
       border-bottom: 1px solid #334155;
       text-align: left;
+      font-size: 14px;
     }
 
     th {
@@ -93,6 +95,22 @@
       border-radius: 999px;
       font-size: 13px;
       margin-top: 8px;
+    }
+
+    .warning {
+      color: #fbbf24;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    pre {
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 13px;
+      color: #cbd5e1;
     }
 
     canvas {
@@ -114,37 +132,51 @@
 <header>
   <h1>BioDockLab</h1>
   <div class="subtitle">
-    Interactive Protein-Ligand Docking Visualization Platform
+    Research-Oriented Protein-Ligand Docking Visualization Platform
   </div>
 </header>
 
 <main>
 
-  <section class="card">
+  <section>
 
-    <h2>Protein Selection</h2>
+    <div class="card">
+      <h2>Protein Selection</h2>
+      <select id="protein-select"></select>
+      <div id="protein-info" style="margin-top:20px;"></div>
+    </div>
 
-    <select id="protein-select"></select>
+    <div class="card">
+      <h2>Docking Results</h2>
+      <div id="docking-results"></div>
+      <canvas id="scoreChart"></canvas>
+    </div>
 
-    <div id="protein-info" style="margin-top:20px;"></div>
+    <div class="card">
+      <h2>Docking Configuration</h2>
+      <div id="docking-config"></div>
+    </div>
 
-    <h2 style="margin-top:32px;">Docking Results</h2>
-
-    <div id="docking-results"></div>
-
-    <canvas id="scoreChart"></canvas>
+    <div class="card">
+      <h2>Experiment Records</h2>
+      <div id="experiment-records"></div>
+    </div>
 
   </section>
 
   <section class="card">
     <h2>3D Molecular Viewer</h2>
     <div id="viewport"></div>
+    <p class="warning">
+      Current version visualizes protein structures and sample docking metadata.
+      Real AutoDock Vina execution will be added in a later research pipeline phase.
+    </p>
   </section>
 
 </main>
 
 <footer>
-  Educational visualization platform only. Not for pharmaceutical validation.
+  BioDockLab is a research-oriented educational prototype. Docking scores are not clinical evidence.
 </footer>
 
 <script>
@@ -172,21 +204,29 @@ async function init() {
     loadProtein(e.target.value);
   });
 
+  loadExperiments();
   loadProtein(proteins[0].id);
 }
 
 async function loadProtein(pdbId) {
-  const protein = proteins.find(item => item.id === pdbId);
+  await loadMetadata(pdbId);
+  load3DViewer(pdbId);
+  loadDockingResults(pdbId);
+  loadDockingConfig(pdbId);
+}
+
+async function loadMetadata(pdbId) {
+  const res = await fetch(`${API_BASE}/metadata/${pdbId}`);
+  const protein = await res.json();
 
   document.getElementById("protein-info").innerHTML = `
     <h3>${protein.name}</h3>
-    <div class="badge">PDB ID: ${protein.id}</div>
+    <div class="badge">PDB ID: ${protein.pdb_id}</div>
     <p><strong>Category:</strong> ${protein.category}</p>
     <p>${protein.description}</p>
+    <p><strong>Metadata Source:</strong> ${protein.source}</p>
+    <p class="warning">${protein.note}</p>
   `;
-
-  load3DViewer(pdbId);
-  loadDockingResults(pdbId);
 }
 
 function load3DViewer(pdbId) {
@@ -230,13 +270,56 @@ async function loadDockingResults(pdbId) {
           <th>Binding Score</th>
         </tr>
       </thead>
-      <tbody>
-        ${rows}
-      </tbody>
+      <tbody>${rows}</tbody>
     </table>
   `;
 
   updateChart(data.ligands);
+}
+
+async function loadDockingConfig(pdbId) {
+  const res = await fetch(`${API_BASE}/docking/config/${pdbId}`);
+  const config = await res.json();
+
+  document.getElementById("docking-config").innerHTML = `
+    <p><strong>Receptor:</strong> ${config.receptor_file}</p>
+    <p><strong>Center:</strong> 
+      x=${config.center.x}, y=${config.center.y}, z=${config.center.z}
+    </p>
+    <p><strong>Box Size:</strong>
+      x=${config.box_size.x}, y=${config.box_size.y}, z=${config.box_size.z}
+    </p>
+    <p><strong>Exhaustiveness:</strong> ${config.exhaustiveness}</p>
+    <pre>${JSON.stringify(config, null, 2)}</pre>
+  `;
+}
+
+async function loadExperiments() {
+  const res = await fetch(`${API_BASE}/experiments`);
+  const experiments = await res.json();
+
+  const rows = experiments.map(exp => `
+    <tr>
+      <td>${exp.id}</td>
+      <td>${exp.pdb_id}</td>
+      <td>${exp.best_score}</td>
+      <td>${exp.status}</td>
+    </tr>
+  `).join("");
+
+  document.getElementById("experiment-records").innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Experiment ID</th>
+          <th>PDB</th>
+          <th>Best Score</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
 }
 
 function updateChart(ligands) {
@@ -263,12 +346,8 @@ function updateChart(ligands) {
         }
       },
       scales: {
-        x: {
-          ticks: { color: "white" }
-        },
-        y: {
-          ticks: { color: "white" }
-        }
+        x: { ticks: { color: "white" } },
+        y: { ticks: { color: "white" } }
       }
     }
   });

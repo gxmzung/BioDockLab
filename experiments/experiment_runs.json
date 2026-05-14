@@ -1,0 +1,26 @@
+[
+  {
+    "id": "EXP-2026-05-15-001",
+    "pdb_id": "6LU7",
+    "target": "SARS-CoV-2 Main Protease",
+    "status": "sample_result",
+    "engine": "AutoDock Vina",
+    "vina_version": "planned",
+    "input_format": "PDBQT",
+    "created_at": "2026-05-15",
+    "best_score": -8.7,
+    "reproducibility_note": "This is a sample experiment record. Real Vina execution will be added in a later phase."
+  },
+  {
+    "id": "EXP-2026-05-15-002",
+    "pdb_id": "1MBN",
+    "target": "Myoglobin",
+    "status": "sample_result",
+    "engine": "AutoDock Vina",
+    "vina_version": "planned",
+    "input_format": "PDBQT",
+    "created_at": "2026-05-15",
+    "best_score": -7.1,
+    "reproducibility_note": "This record demonstrates how experiment metadata will be stored."
+  }
+]

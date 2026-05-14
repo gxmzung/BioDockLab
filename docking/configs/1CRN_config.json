@@ -1,0 +1,18 @@
+{
+  "pdb_id": "1CRN",
+  "receptor_file": "docking/receptors/1CRN_receptor.pdbqt",
+  "ligand_dir": "docking/ligands/",
+  "center": {
+    "x": 5.0,
+    "y": 5.0,
+    "z": 5.0
+  },
+  "box_size": {
+    "x": 18,
+    "y": 18,
+    "z": 18
+  },
+  "exhaustiveness": 8,
+  "num_modes": 9,
+  "note": "Sample docking box configuration for small protein visualization."
+}
