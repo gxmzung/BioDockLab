@@ -1,0 +1,36 @@
+{
+  "project": "BioDockLab",
+  "version": "0.1-sample",
+  "protein": {
+    "id": "sample_protein",
+    "name": "Sample Protein Target",
+    "source": "Replace with actual PDB source note"
+  },
+  "ligands": [
+    {
+      "ligand_id": "ligand_001",
+      "name": "Sample Ligand 1",
+      "docking_score": -7.4,
+      "unit": "kcal/mol",
+      "rank": 1,
+      "note": "Sample value for UI development only."
+    },
+    {
+      "ligand_id": "ligand_002",
+      "name": "Sample Ligand 2",
+      "docking_score": -6.2,
+      "unit": "kcal/mol",
+      "rank": 2,
+      "note": "Sample value for UI development only."
+    },
+    {
+      "ligand_id": "ligand_003",
+      "name": "Sample Ligand 3",
+      "docking_score": -5.8,
+      "unit": "kcal/mol",
+      "rank": 3,
+      "note": "Sample value for UI development only."
+    }
+  ],
+  "disclaimer": "This file contains placeholder values for frontend and API development. Do not interpret as scientific evidence."
+}
