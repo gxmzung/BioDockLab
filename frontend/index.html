@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>BioDockLab</title>
 
   <script src="https://cdn.jsdelivr.net/npm/ngl@latest/dist/ngl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
+
     body {
       margin: 0;
-      background: #0f172a;
+      background: #020617;
       color: white;
       font-family: Arial, sans-serif;
     }
 
     header {
       padding: 24px 32px;
-      border-bottom: 1px solid #334155;
+      border-bottom: 1px solid #1e293b;
+      background: linear-gradient(135deg,#0f172a,#020617);
     }
 
     h1 {
       margin: 0;
-      font-size: 40px;
+      font-size: 42px;
     }
 
     .subtitle {
@@ -32,29 +36,40 @@
     main {
       padding: 24px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 420px 1fr;
       gap: 24px;
     }
 
     .card {
-      background: #111827;
-      border: 1px solid #334155;
-      border-radius: 16px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 18px;
       padding: 20px;
     }
 
     #viewport {
       width: 100%;
-      height: 500px;
-      border-radius: 12px;
+      height: 700px;
+      border-radius: 16px;
       overflow: hidden;
       background: black;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #1e293b;
+      color: white;
+      font-size: 15px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
     th, td {
@@ -72,10 +87,18 @@
       font-weight: bold;
     }
 
+    canvas {
+      margin-top: 20px;
+      background: #111827;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
     footer {
       padding: 24px;
       color: #64748b;
     }
+
   </style>
 </head>
 
@@ -84,18 +107,30 @@
 <header>
   <h1>BioDockLab</h1>
   <div class="subtitle">
-    Web-based Protein-Ligand Docking Visualization Platform
+    Interactive Protein-Ligand Docking Visualization Platform
   </div>
 </header>
 
 <main>
 
   <section class="card">
-    <h2>Protein Information</h2>
-    <div id="protein-info"></div>
+
+    <h2>Protein Selection</h2>
+
+    <select id="protein-select">
+      <option value="6LU7">SARS-CoV-2 Main Protease</option>
+      <option value="1CRN">Crambin</option>
+      <option value="1MBN">Myoglobin</option>
+    </select>
+
+    <div id="protein-info" style="margin-top:20px;"></div>
 
     <h2 style="margin-top:32px;">Docking Results</h2>
+
     <div id="docking-results"></div>
+
+    <canvas id="scoreChart"></canvas>
+
   </section>
 
   <section class="card">
@@ -106,37 +141,87 @@
 </main>
 
 <footer>
-  BioDockLab is an educational platform. Docking scores are not clinical evidence.
+  Educational visualization platform only. Not for pharmaceutical validation.
 </footer>
 
 <script>
 
-const API_BASE = "http://127.0.0.1:8000";
+let stage = new NGL.Stage("viewport");
 
-async function loadProtein() {
-  const res = await fetch(`${API_BASE}/proteins`);
-  const proteins = await res.json();
+window.addEventListener("resize", () => {
+  stage.handleResize();
+});
 
-  const protein = proteins[0];
+const dockingData = {
+  "6LU7": {
+    protein: "SARS-CoV-2 Main Protease",
+    ligands: [
+      {name:"Ligand-A", score:-8.7},
+      {name:"Ligand-B", score:-7.9},
+      {name:"Ligand-C", score:-6.3}
+    ]
+  },
 
-  document.getElementById("protein-info").innerHTML = `
-    <h3>${protein.name}</h3>
-    <p><strong>PDB ID:</strong> ${protein.pdb_id}</p>
-    <p>${protein.description}</p>
-  `;
+  "1CRN": {
+    protein: "Crambin",
+    ligands: [
+      {name:"Ligand-X", score:-5.2},
+      {name:"Ligand-Y", score:-4.8},
+      {name:"Ligand-Z", score:-4.1}
+    ]
+  },
 
-  load3DProtein(protein.pdb_id);
+  "1MBN": {
+    protein: "Myoglobin",
+    ligands: [
+      {name:"Ligand-M", score:-7.1},
+      {name:"Ligand-N", score:-6.8},
+      {name:"Ligand-O", score:-6.0}
+    ]
+  }
+};
+
+let chart;
+
+function loadProtein(pdbId) {
+
+  stage.removeAllComponents();
+
+  stage.loadFile(
+    `https://files.rcsb.org/download/${pdbId}.pdb`
+  ).then(component => {
+
+    component.addRepresentation("cartoon", {
+      color: "skyblue"
+    });
+
+    component.addRepresentation("ball+stick", {
+      sele: "hetero",
+      color: "orange"
+    });
+
+    component.autoView();
+
+  });
+
+  updateInfo(pdbId);
 }
 
-async function loadDockingResults() {
-  const res = await fetch(`${API_BASE}/docking/1`);
-  const data = await res.json();
+function updateInfo(pdbId) {
 
-  const rows = data.ligands.map(ligand => `
+  const data = dockingData[pdbId];
+
+  document.getElementById("protein-info").innerHTML = `
+    <h3>${data.protein}</h3>
+    <p><strong>PDB ID:</strong> ${pdbId}</p>
+    <p>Interactive molecular visualization loaded from Protein Data Bank.</p>
+  `;
+
+  const rows = data.ligands.map((ligand, index) => `
     <tr>
-      <td>#${ligand.rank}</td>
+      <td>#${index + 1}</td>
       <td>${ligand.name}</td>
-      <td class="score">${ligand.binding_score}</td>
+      <td class="score">${ligand.score}</td>
     </tr>
   `).join("");
 
@@ -149,39 +234,75 @@ async function loadDockingResults() {
           <th>Binding Score</th>
         </tr>
       </thead>
+
       <tbody>
         ${rows}
       </tbody>
     </table>
   `;
+
+  updateChart(data.ligands);
 }
 
-function load3DProtein(pdbId) {
+function updateChart(ligands) {
 
-  const stage = new NGL.Stage("viewport");
+  const ctx = document.getElementById("scoreChart");
 
-  window.addEventListener("resize", () => {
-    stage.handleResize();
-  });
+  if(chart) {
+    chart.destroy();
+  }
 
-  stage.loadFile(
-    `https://files.rcsb.org/download/${pdbId}.pdb`
-  ).then(component => {
+  chart = new Chart(ctx, {
 
-    component.addRepresentation("cartoon", {
-      color: "skyblue"
-    });
+    type: 'bar',
 
-    component.addRepresentation("ball+stick", {
-      sele: "hetero"
-    });
+    data: {
 
-    component.autoView();
+      labels: ligands.map(l => l.name),
+
+      datasets: [{
+        label: 'Binding Score',
+        data: ligands.map(l => l.score)
+      }]
+    },
+
+    options: {
+      responsive: true,
+
+      plugins: {
+        legend: {
+          labels: {
+            color: 'white'
+          }
+        }
+      },
+
+      scales: {
+
+        x: {
+          ticks: {
+            color: 'white'
+          }
+        },
+
+        y: {
+          ticks: {
+            color: 'white'
+          }
+        }
+      }
+    }
   });
 }
 
-loadProtein();
-loadDockingResults();
+document.getElementById("protein-select")
+.addEventListener("change", (e) => {
+
+  loadProtein(e.target.value);
+
+});
+
+loadProtein("6LU7");
 
 </script>
 
