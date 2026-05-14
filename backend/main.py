@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import json
+import requests
 
 app = FastAPI(title="BioDockLab API")
 
@@ -57,31 +58,68 @@ def get_docking_result(protein_id: str):
 
 @app.get("/metadata/{pdb_id}")
 def get_metadata(pdb_id: str):
-    proteins = load_json(SAMPLE_DATA_DIR / "proteins.json")
+    pdb_id = pdb_id.upper()
+    url = f"https://data.rcsb.org/rest/v1/core/entry/{pdb_id}"
 
-    protein = next(
-        (item for item in proteins if item["id"].lower() == pdb_id.lower()),
-        None
-    )
+    try:
+        response = requests.get(url, timeout=10)
 
-    if not protein:
+        if response.status_code != 200:
+            return {
+                "error": "RCSB metadata not found",
+                "pdb_id": pdb_id,
+                "status_code": response.status_code
+            }
+
+        data = response.json()
+
+        title = data.get("struct", {}).get("title", "Unknown title")
+
+        experimental_methods = [
+            item.get("method", "Unknown")
+            for item in data.get("exptl", [])
+        ]
+
+        accession = data.get("rcsb_accession_info", {})
+        deposit_date = accession.get("deposit_date", "Unknown")
+        release_date = accession.get("initial_release_date", "Unknown")
+
+        resolution_list = data.get("rcsb_entry_info", {}).get(
+            "resolution_combined",
+            []
+        )
+
+        resolution = resolution_list[0] if resolution_list else None
+
+        citation = data.get("rcsb_primary_citation", {})
+        citation_title = citation.get("title", "No primary citation title")
+        journal = citation.get("journal_abbrev", "Unknown journal")
+        year = citation.get("year", "Unknown year")
+
         return {
-            "error": "Metadata not found",
-            "pdb_id": pdb_id
+            "pdb_id": pdb_id,
+            "title": title,
+            "experimental_methods": experimental_methods,
+            "resolution_angstrom": resolution,
+            "deposit_date": deposit_date,
+            "release_date": release_date,
+            "citation_title": citation_title,
+            "journal": journal,
+            "year": year,
+            "source": "RCSB PDB Data API"
         }
 
-    return {
-        "pdb_id": protein["id"],
-        "name": protein["name"],
-        "category": protein["category"],
-        "description": protein["description"],
-        "source": "local_sample_metadata",
-        "note": "RCSB metadata integration planned in next phase."
-    }
+    except requests.RequestException as e:
+        return {
+            "error": "Failed to fetch RCSB metadata",
+            "pdb_id": pdb_id,
+            "detail": str(e)
+        }
 
 
 @app.get("/docking/config/{pdb_id}")
 def get_docking_config(pdb_id: str):
+    pdb_id = pdb_id.upper()
     config_path = DOCKING_CONFIG_DIR / f"{pdb_id}_config.json"
 
     if not config_path.exists():

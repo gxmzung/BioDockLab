@@ -159,6 +159,10 @@
 
     <div class="card">
       <h2>Experiment Records</h2>
+      <button onclick="createSampleExperiment()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#2563eb;color:white;font-weight:bold;cursor:pointer;">
+        Create Sample Experiment
+      </button>
+      <div id="experiment-create-result" style="margin-top:12px;"></div>
       <div id="experiment-records"></div>
     </div>
 
@@ -185,6 +189,7 @@ const API_BASE = "http://127.0.0.1:8000";
 let stage = new NGL.Stage("viewport");
 let chart;
 let proteins = [];
+let currentPdbId = null;
 
 window.addEventListener("resize", () => {
   stage.handleResize();
@@ -209,6 +214,7 @@ async function init() {
 }
 
 async function loadProtein(pdbId) {
+  currentPdbId = pdbId;
   await loadMetadata(pdbId);
   load3DViewer(pdbId);
   loadDockingResults(pdbId);
@@ -320,6 +326,27 @@ async function loadExperiments() {
       <tbody>${rows}</tbody>
     </table>
   `;
+}
+
+
+async function createSampleExperiment() {
+  if(!currentPdbId) {
+    alert("Select a protein first.");
+    return;
+  }
+
+  const res = await fetch(`${API_BASE}/experiments/sample/${currentPdbId}`, {
+    method: "POST"
+  });
+
+  const result = await res.json();
+
+  document.getElementById("experiment-create-result").innerHTML = `
+    <p class="warning"><strong>Created:</strong> ${result.experiment_id}</p>
+    <p><strong>Best Score:</strong> ${result.best_score}</p>
+  `;
+
+  loadExperiments();
 }
 
 function updateChart(ligands) {
