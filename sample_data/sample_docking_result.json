@@ -1,0 +1,13 @@
+{
+  "protein": "SARS-CoV-2 Main Protease",
+  "ligands": [
+    {
+      "name": "Ligand-A",
+      "binding_score": -8.7
+    },
+    {
+      "name": "Ligand-B",
+      "binding_score": -7.9
+    }
+  ]
+}

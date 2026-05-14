@@ -1,41 +1,13 @@
 # Experiment Log
 
-## Experiment Info
+## Objective
 
-- Experiment ID:
-- Date:
-- Owner:
-- Protein Target:
-- Ligand Set:
-- Tool / Version:
+## Dataset
 
-## Purpose
+## Method
 
+## Result
 
-## Input Files
-
-| File | Description | Source |
-|---|---|---|
-|  |  |  |
-
-## Parameters
-
-```txt
-
-```
-
-## Results
-
-| Ligand | Docking Score | Rank | Notes |
-|---|---:|---:|---|
-|  |  |  |  |
-
-## Interpretation
-
-
-## Limitations
-
+## Issues
 
 ## Next Step
-
-
