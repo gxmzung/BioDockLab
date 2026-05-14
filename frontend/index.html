@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <title>BioDockLab</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/ngl@latest/dist/ngl.js"></script>
+
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
       background: #0f172a;
-      color: #e5e7eb;
+      color: white;
+      font-family: Arial, sans-serif;
     }
 
     header {
-      padding: 32px;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
+      padding: 24px 32px;
       border-bottom: 1px solid #334155;
     }
 
@@ -28,7 +30,7 @@
     }
 
     main {
-      padding: 32px;
+      padding: 24px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
@@ -38,23 +40,15 @@
       background: #111827;
       border: 1px solid #334155;
       border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      padding: 20px;
     }
 
-    .protein-name {
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .pdb-badge {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #1d4ed8;
-      color: white;
-      font-size: 13px;
+    #viewport {
+      width: 100%;
+      height: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: black;
     }
 
     table {
@@ -74,102 +68,122 @@
     }
 
     .score {
-      font-weight: bold;
       color: #22c55e;
-    }
-
-    .viewer-placeholder {
-      height: 320px;
-      border-radius: 16px;
-      border: 1px dashed #475569;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      background: radial-gradient(circle, #1e293b, #020617);
+      font-weight: bold;
     }
 
     footer {
-      padding: 24px 32px;
+      padding: 24px;
       color: #64748b;
-      border-top: 1px solid #334155;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>BioDockLab</h1>
-    <div class="subtitle">Web-based Protein-Ligand Docking Visualization Platform</div>
-  </header>
 
-  <main>
-    <section class="card">
-      <h2>Protein Target</h2>
-      <div id="protein-info">Loading protein data...</div>
-    </section>
+<header>
+  <h1>BioDockLab</h1>
+  <div class="subtitle">
+    Web-based Protein-Ligand Docking Visualization Platform
+  </div>
+</header>
 
-    <section class="card">
-      <h2>3D Viewer</h2>
-      <div class="viewer-placeholder">
-        Molecular 3D Viewer will be added here
-      </div>
-    </section>
+<main>
 
-    <section class="card" style="grid-column: span 2;">
-      <h2>Docking Results</h2>
-      <div id="docking-results">Loading docking results...</div>
-    </section>
-  </main>
+  <section class="card">
+    <h2>Protein Information</h2>
+    <div id="protein-info"></div>
 
-  <footer>
-    BioDockLab is an educational and exploratory platform. Docking scores are not clinical evidence.
-  </footer>
+    <h2 style="margin-top:32px;">Docking Results</h2>
+    <div id="docking-results"></div>
+  </section>
 
-  <script>
-    const API_BASE = "http://127.0.0.1:8000";
+  <section class="card">
+    <h2>3D Molecular Viewer</h2>
+    <div id="viewport"></div>
+  </section>
 
-    async function loadProtein() {
-      const res = await fetch(`${API_BASE}/proteins`);
-      const proteins = await res.json();
-      const protein = proteins[0];
+</main>
 
-      document.getElementById("protein-info").innerHTML = `
-        <div class="protein-name">${protein.name}</div>
-        <div class="pdb-badge">PDB ID: ${protein.pdb_id}</div>
-        <p>${protein.description}</p>
-      `;
-    }
+<footer>
+  BioDockLab is an educational platform. Docking scores are not clinical evidence.
+</footer>
 
-    async function loadDockingResults() {
-      const res = await fetch(`${API_BASE}/docking/1`);
-      const data = await res.json();
+<script>
 
-      const rows = data.ligands.map(ligand => `
+const API_BASE = "http://127.0.0.1:8000";
+
+async function loadProtein() {
+  const res = await fetch(`${API_BASE}/proteins`);
+  const proteins = await res.json();
+
+  const protein = proteins[0];
+
+  document.getElementById("protein-info").innerHTML = `
+    <h3>${protein.name}</h3>
+    <p><strong>PDB ID:</strong> ${protein.pdb_id}</p>
+    <p>${protein.description}</p>
+  `;
+
+  load3DProtein(protein.pdb_id);
+}
+
+async function loadDockingResults() {
+  const res = await fetch(`${API_BASE}/docking/1`);
+  const data = await res.json();
+
+  const rows = data.ligands.map(ligand => `
+    <tr>
+      <td>#${ligand.rank}</td>
+      <td>${ligand.name}</td>
+      <td class="score">${ligand.binding_score}</td>
+    </tr>
+  `).join("");
+
+  document.getElementById("docking-results").innerHTML = `
+    <table>
+      <thead>
         <tr>
-          <td>#${ligand.rank}</td>
-          <td>${ligand.name}</td>
-          <td class="score">${ligand.binding_score}</td>
+          <th>Rank</th>
+          <th>Ligand</th>
+          <th>Binding Score</th>
         </tr>
-      `).join("");
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  `;
+}
 
-      document.getElementById("docking-results").innerHTML = `
-        <p><strong>Protein:</strong> ${data.protein}</p>
-        <p><strong>Note:</strong> ${data.note}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Ligand</th>
-              <th>Binding Score</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-    }
+function load3DProtein(pdbId) {
 
-    loadProtein();
-    loadDockingResults();
-  </script>
+  const stage = new NGL.Stage("viewport");
+
+  window.addEventListener("resize", () => {
+    stage.handleResize();
+  });
+
+  stage.loadFile(
+    `https://files.rcsb.org/download/${pdbId}.pdb`
+  ).then(component => {
+
+    component.addRepresentation("cartoon", {
+      color: "skyblue"
+    });
+
+    component.addRepresentation("ball+stick", {
+      sele: "hetero"
+    });
+
+    component.autoView();
+  });
+}
+
+loadProtein();
+loadDockingResults();
+
+</script>
+
 </body>
 </html>
