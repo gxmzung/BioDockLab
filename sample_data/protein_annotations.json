@@ -1,0 +1,46 @@
+{
+  "6LU7": {
+    "display_name": "SARS-CoV-2 Main Protease",
+    "research_focus": "viral protease inhibitor exploration",
+    "active_site_selection": "41 or 145",
+    "active_site_note": "Educational highlight around commonly discussed catalytic residues for main protease examples. Validate exact binding-site assumptions before research use.",
+    "ligand_examples": [
+      {
+        "name": "N3-like reference ligand",
+        "type": "reference inhibitor example",
+        "interpretation": "Used as a visual reference for binding-site exploration, not as a validated therapeutic claim."
+      },
+      {
+        "name": "Fragment-A",
+        "type": "virtual screening example",
+        "interpretation": "Sample ligand record for workflow demonstration."
+      }
+    ]
+  },
+  "1CRN": {
+    "display_name": "Crambin",
+    "research_focus": "small protein visualization benchmark",
+    "active_site_selection": "protein",
+    "active_site_note": "Crambin is mainly used here as a compact visualization test target, not a drug-discovery target.",
+    "ligand_examples": [
+      {
+        "name": "Visualization sample",
+        "type": "demo-only ligand",
+        "interpretation": "Used only to demonstrate UI and experiment logging."
+      }
+    ]
+  },
+  "1MBN": {
+    "display_name": "Myoglobin",
+    "research_focus": "oxygen-binding protein structure education",
+    "active_site_selection": "hetero",
+    "active_site_note": "Hetero atoms are highlighted for structural education. Biological interpretation requires domain review.",
+    "ligand_examples": [
+      {
+        "name": "Heme-related visual reference",
+        "type": "structural cofactor reference",
+        "interpretation": "Used for structural context, not docking validation."
+      }
+    ]
+  }
+}
