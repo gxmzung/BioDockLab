@@ -48,3 +48,35 @@ into a collaborative interdisciplinary platform.
 BioDockLab is an educational and exploratory platform.
 
 Docking scores are predictive values only and must not be interpreted as clinically validated medical conclusions.
+
+---
+
+## Current Prototype Status
+
+BioDockLab currently supports:
+
+- Web-based protein selection
+- RCSB PDB metadata loading
+- WebGL-based 3D molecular visualization
+- Active-site candidate highlighting
+- Ligand/docking score table
+- Binding score chart
+- Docking configuration display
+- Sample-mode experiment creation
+- Output JSON and experiment log tracking
+- Claim boundary for research/education use only
+
+## Demo Workflow
+
+1. Select a protein target.
+2. Review PDB metadata.
+3. Inspect the 3D molecular structure.
+4. Check ligand/docking score examples.
+5. Create a sample experiment.
+6. Review generated experiment records.
+
+## Claim Boundary
+
+BioDockLab does not claim to discover drugs, validate drug efficacy, replace wet-lab experiments, replace animal studies, or replace clinical trials.
+
+It is a research and education support platform for early-stage structure-based exploration and reproducible workflow management.
