@@ -3,187 +3,726 @@
 <head>
   <meta charset="UTF-8" />
   <title>BioDockLab</title>
+
   <script src="https://cdn.jsdelivr.net/npm/ngl@latest/dist/ngl.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    body { margin:0; background:#020617; color:white; font-family:Arial,sans-serif; }
-    header { padding:24px 32px; border-bottom:1px solid #1e293b; background:linear-gradient(135deg,#0f172a,#020617); }
-    h1 { margin:0; font-size:42px; }
-    .subtitle { color:#94a3b8; margin-top:8px; }
-    main { padding:24px; display:grid; grid-template-columns:470px 1fr; gap:24px; }
-    .card { background:#0f172a; border:1px solid #1e293b; border-radius:18px; padding:20px; margin-bottom:20px; }
-    #viewport { width:100%; height:760px; border-radius:16px; overflow:hidden; background:black; }
-    select, button { width:100%; padding:12px; margin-top:12px; border-radius:10px; border:none; font-size:15px; }
-    select { background:#1e293b; color:white; }
-    button { background:#2563eb; color:white; font-weight:bold; cursor:pointer; }
-    button:hover { background:#1d4ed8; }
-    table { width:100%; border-collapse:collapse; margin-top:18px; }
-    th,td { padding:10px; border-bottom:1px solid #334155; text-align:left; font-size:14px; }
-    th { color:#93c5fd; }
-    .score { color:#22c55e; font-weight:bold; }
-    .badge { display:inline-block; padding:6px 10px; background:#1d4ed8; border-radius:999px; font-size:13px; margin-top:8px; }
-    .warning { color:#fbbf24; font-size:14px; line-height:1.5; }
-    .safe { color:#86efac; font-size:14px; line-height:1.5; }
-    .muted { color:#94a3b8; font-size:13px; }
-    pre { background:#020617; border:1px solid #334155; border-radius:12px; padding:12px; overflow-x:auto; font-size:13px; color:#cbd5e1; }
-    canvas { margin-top:20px; background:#111827; border-radius:12px; padding:10px; }
-    footer { padding:24px; color:#64748b; }
+    body{
+      margin:0;
+      background:#020617;
+      color:white;
+      font-family:Arial,sans-serif;
+    }
+
+    header{
+      padding:28px 40px;
+      border-bottom:1px solid #1e293b;
+      background:linear-gradient(135deg,#0f172a,#020617);
+    }
+
+    h1{
+      margin:0;
+      font-size:46px;
+    }
+
+    .subtitle{
+      margin-top:10px;
+      color:#94a3b8;
+      font-size:18px;
+    }
+
+    .demo-banner{
+      margin-top:24px;
+      background:#111827;
+      border:1px solid #334155;
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .steps{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .step{
+      background:#1e293b;
+      padding:10px 14px;
+      border-radius:999px;
+      color:#93c5fd;
+      font-size:14px;
+    }
+
+    main{
+      padding:24px;
+      display:grid;
+      grid-template-columns:470px 1fr;
+      gap:24px;
+    }
+
+    .card{
+      background:#0f172a;
+      border:1px solid #1e293b;
+      border-radius:18px;
+      padding:20px;
+      margin-bottom:20px;
+    }
+
+    h2{
+      margin-top:0;
+    }
+
+    #viewport{
+      width:100%;
+      height:760px;
+      border-radius:16px;
+      overflow:hidden;
+      background:black;
+    }
+
+    select,button{
+      width:100%;
+      padding:12px;
+      margin-top:12px;
+      border-radius:10px;
+      border:none;
+      font-size:15px;
+    }
+
+    select{
+      background:#1e293b;
+      color:white;
+    }
+
+    button{
+      background:#2563eb;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#1d4ed8;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:18px;
+    }
+
+    th,td{
+      padding:10px;
+      border-bottom:1px solid #334155;
+      text-align:left;
+      font-size:14px;
+    }
+
+    th{
+      color:#93c5fd;
+    }
+
+    .score{
+      color:#22c55e;
+      font-weight:bold;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:6px 10px;
+      background:#1d4ed8;
+      border-radius:999px;
+      font-size:13px;
+      margin-top:8px;
+    }
+
+    .warning{
+      color:#fbbf24;
+      line-height:1.6;
+    }
+
+    .safe{
+      color:#86efac;
+      line-height:1.6;
+    }
+
+    .muted{
+      color:#94a3b8;
+      font-size:13px;
+    }
+
+    .legend{
+      display:flex;
+      gap:18px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:14px;
+    }
+
+    .dot{
+      width:14px;
+      height:14px;
+      border-radius:999px;
+    }
+
+    .blue{ background:#7dd3fc; }
+    .orange{ background:orange; }
+    .red{ background:red; }
+
+    pre{
+      background:#020617;
+      border:1px solid #334155;
+      border-radius:12px;
+      padding:12px;
+      overflow-x:auto;
+      font-size:13px;
+      color:#cbd5e1;
+    }
+
+    footer{
+      padding:24px;
+      color:#64748b;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .info-box{
+      background:#111827;
+      border-radius:14px;
+      padding:14px;
+      border:1px solid #334155;
+    }
+
   </style>
 </head>
+
 <body>
+
 <header>
+
   <h1>BioDockLab</h1>
-  <div class="subtitle">Research-Oriented Protein-Ligand Docking Visualization Platform</div>
+
+  <div class="subtitle">
+    Research-Oriented Protein-Ligand Docking Visualization Platform
+  </div>
+
+  <div class="demo-banner">
+
+    <strong>BioDockLab Demo Mode</strong>
+
+    <p class="muted">
+      This platform visualizes protein-ligand interaction workflows for research and education support.
+    </p>
+
+    <div class="steps">
+      <div class="step">STEP 1 · Select Protein</div>
+      <div class="step">STEP 2 · View Active Site</div>
+      <div class="step">STEP 3 · Compare Binding Scores</div>
+      <div class="step">STEP 4 · Save Experiment Logs</div>
+    </div>
+
+  </div>
+
 </header>
+
 <main>
-  <section>
-    <div class="card">
-      <h2>Protein Selection</h2>
-      <select id="protein-select"></select>
-      <div id="protein-info" style="margin-top:20px;"></div>
-    </div>
-    <div class="card">
-      <h2>Annotation / Active Site</h2>
-      <div id="annotation-info"></div>
-    </div>
-    <div class="card">
-      <h2>Docking Results</h2>
-      <div id="docking-results"></div>
-      <canvas id="scoreChart"></canvas>
-    </div>
-    <div class="card">
-      <h2>Docking Configuration</h2>
-      <div id="docking-config"></div>
-    </div>
-    <div class="card">
-      <h2>Experiment Records</h2>
-      <button onclick="createSampleExperiment()">Create Sample Experiment</button>
-      <div id="experiment-create-result" style="margin-top:12px;"></div>
-      <div id="experiment-records"></div>
-    </div>
-  </section>
-  <section class="card">
-    <h2>3D Molecular Viewer</h2>
-    <div id="viewport"></div>
-    <p class="warning">This system supports research and education workflows only. It does not validate drug efficacy or replace nonclinical/clinical testing.</p>
-    <p class="safe">Current scope: PDB visualization, RCSB metadata, active-site annotation, docking-config management, sample-mode experiment logging.</p>
-  </section>
+
+<section>
+
+<div class="card">
+
+<h2>Why BioDockLab?</h2>
+
+<div class="info-grid">
+
+<div class="info-box">
+<strong>Existing Problems</strong>
+<ul>
+<li>Complex bioinformatics tools</li>
+<li>Difficult installation</li>
+<li>CLI-heavy workflow</li>
+<li>Hard experiment tracking</li>
+</ul>
+</div>
+
+<div class="info-box">
+<strong>BioDockLab Solution</strong>
+<ul>
+<li>Web-based access</li>
+<li>3D molecular visualization</li>
+<li>Docking workflow support</li>
+<li>Experiment log management</li>
+</ul>
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Protein Selection</h2>
+
+<select id="protein-select"></select>
+
+<div id="protein-info" style="margin-top:20px;"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Annotation / Active Site</h2>
+
+<div id="annotation-info"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Docking Results</h2>
+
+<div id="docking-results"></div>
+
+<canvas id="scoreChart"></canvas>
+
+</div>
+
+<div class="card">
+
+<h2>Docking Configuration</h2>
+
+<div id="docking-config"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Experiment Records</h2>
+
+<button onclick="createSampleExperiment()">
+Create Sample Experiment
+</button>
+
+<div id="experiment-create-result" style="margin-top:12px;"></div>
+
+<div id="experiment-records"></div>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>3D Molecular Viewer</h2>
+
+<div id="viewport"></div>
+
+<div class="legend">
+
+<div class="legend-item">
+<div class="dot blue"></div>
+<div>Protein Structure</div>
+</div>
+
+<div class="legend-item">
+<div class="dot orange"></div>
+<div>Ligand / Molecule Candidate</div>
+</div>
+
+<div class="legend-item">
+<div class="dot red"></div>
+<div>Active Site Candidate</div>
+</div>
+
+</div>
+
+<p class="warning">
+This system supports research and education workflows only.
+It does not validate drug efficacy or replace nonclinical/clinical testing.
+</p>
+
+<p class="safe">
+Current scope:
+PDB visualization,
+RCSB metadata,
+active-site annotation,
+docking-config management,
+sample-mode experiment logging.
+</p>
+
+</section>
+
 </main>
-<footer>BioDockLab — Bioinformatics workflow prototype for education and research support.</footer>
+
+<footer>
+BioDockLab — Bioinformatics workflow prototype for education and research support.
+</footer>
+
 <script>
+
 const API_BASE = "http://127.0.0.1:8000";
+
 let stage = new NGL.Stage("viewport");
 let chart;
 let proteins = [];
 let currentPdbId = null;
 let currentAnnotation = null;
+
 window.addEventListener("resize", () => stage.handleResize());
 
-async function init() {
+async function init(){
+
   const res = await fetch(`${API_BASE}/proteins`);
   proteins = await res.json();
+
   const select = document.getElementById("protein-select");
-  select.innerHTML = proteins.map(p => `<option value="${p.id}">${p.name}</option>`).join("");
-  select.addEventListener("change", e => loadProtein(e.target.value));
+
+  select.innerHTML = proteins.map(
+    p => `<option value="${p.id}">${p.name}</option>`
+  ).join("");
+
+  select.addEventListener(
+    "change",
+    e => loadProtein(e.target.value)
+  );
+
   loadExperiments();
+
   loadProtein(proteins[0].id);
 }
 
-async function loadProtein(pdbId) {
+async function loadProtein(pdbId){
+
   currentPdbId = pdbId;
+
   await loadMetadata(pdbId);
   await loadAnnotation(pdbId);
+
   load3DViewer(pdbId);
+
   loadDockingResults(pdbId);
+
   loadDockingConfig(pdbId);
 }
 
-async function loadMetadata(pdbId) {
+async function loadMetadata(pdbId){
+
   const res = await fetch(`${API_BASE}/metadata/${pdbId}`);
+
   const p = await res.json();
+
   document.getElementById("protein-info").innerHTML = `
     <h3>${p.title}</h3>
+
     <div class="badge">PDB ID: ${p.pdb_id}</div>
+
     <p><strong>Method:</strong> ${(p.experimental_methods || []).join(", ")}</p>
-    <p><strong>Resolution:</strong> ${p.resolution_angstrom ? p.resolution_angstrom + " Å" : "Not available"}</p>
-    <p><strong>Deposit:</strong> ${p.deposit_date} / <strong>Release:</strong> ${p.release_date}</p>
+
+    <p><strong>Resolution:</strong>
+    ${p.resolution_angstrom ? p.resolution_angstrom + " Å" : "Not available"}
+    </p>
+
+    <p>
+    <strong>Deposit:</strong> ${p.deposit_date}
+    <br>
+    <strong>Release:</strong> ${p.release_date}
+    </p>
+
     <p><strong>Citation:</strong> ${p.citation_title}</p>
-    <p class="muted">Source: ${p.source}</p>`;
+
+    <p class="muted">Source: ${p.source}</p>
+  `;
 }
 
-async function loadAnnotation(pdbId) {
+async function loadAnnotation(pdbId){
+
   const res = await fetch(`${API_BASE}/annotations/${pdbId}`);
+
   currentAnnotation = await res.json();
-  const ligands = (currentAnnotation.ligand_examples || []).map(l => `
-    <tr><td>${l.name}</td><td>${l.type}</td></tr>`).join("");
+
+  const ligands = (currentAnnotation.ligand_examples || []).map(
+    l => `
+    <tr>
+      <td>${l.name}</td>
+      <td>${l.type}</td>
+    </tr>
+    `
+  ).join("");
+
   document.getElementById("annotation-info").innerHTML = `
-    <p><strong>Research Focus:</strong> ${currentAnnotation.research_focus}</p>
-    <p><strong>Active Site Selection:</strong> <code>${currentAnnotation.active_site_selection}</code></p>
+    <p><strong>Research Focus:</strong>
+    ${currentAnnotation.research_focus}</p>
+
+    <p><strong>Active Site Selection:</strong>
+    <code>${currentAnnotation.active_site_selection}</code></p>
+
     <p class="warning">${currentAnnotation.active_site_note}</p>
-    <table><thead><tr><th>Ligand Example</th><th>Type</th></tr></thead><tbody>${ligands}</tbody></table>`;
+
+    <table>
+      <thead>
+        <tr>
+          <th>Ligand Example</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+
+      <tbody>${ligands}</tbody>
+    </table>
+  `;
 }
 
-function load3DViewer(pdbId) {
+function load3DViewer(pdbId){
+
   stage.removeAllComponents();
-  stage.loadFile(`https://files.rcsb.org/download/${pdbId}.pdb`).then(component => {
-    component.addRepresentation("cartoon", { color:"skyblue" });
-    component.addRepresentation("ball+stick", { sele:"hetero and not water", color:"orange" });
-    if (currentAnnotation && currentAnnotation.active_site_selection && currentAnnotation.active_site_selection !== "protein") {
-      component.addRepresentation("spacefill", { sele:currentAnnotation.active_site_selection, color:"red", radiusScale:0.65 });
+
+  stage.loadFile(
+    `https://files.rcsb.org/download/${pdbId}.pdb`
+  ).then(component => {
+
+    component.addRepresentation(
+      "cartoon",
+      {
+        color:"skyblue"
+      }
+    );
+
+    component.addRepresentation(
+      "ball+stick",
+      {
+        sele:"hetero and not water",
+        color:"orange"
+      }
+    );
+
+    if(
+      currentAnnotation &&
+      currentAnnotation.active_site_selection &&
+      currentAnnotation.active_site_selection !== "protein"
+    ){
+      component.addRepresentation(
+        "spacefill",
+        {
+          sele:currentAnnotation.active_site_selection,
+          color:"red",
+          radiusScale:0.65
+        }
+      );
     }
+
     component.autoView();
   });
 }
 
-async function loadDockingResults(pdbId) {
+async function loadDockingResults(pdbId){
+
   const res = await fetch(`${API_BASE}/docking/${pdbId}`);
+
   const data = await res.json();
-  const rows = data.ligands.map(l => `<tr><td>#${l.rank}</td><td>${l.name}</td><td class="score">${l.binding_score}</td></tr>`).join("");
+
+  const rows = data.ligands.map(
+    l => `
+      <tr>
+        <td>#${l.rank}</td>
+        <td>${l.name}</td>
+        <td class="score">${l.binding_score}</td>
+      </tr>
+    `
+  ).join("");
+
   document.getElementById("docking-results").innerHTML = `
-    <p><strong>Note:</strong> ${data.note}</p>
-    <table><thead><tr><th>Rank</th><th>Ligand</th><th>Binding Score</th></tr></thead><tbody>${rows}</tbody></table>`;
+    <p>
+      <strong>Note:</strong>
+      ${data.note}
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Ligand</th>
+          <th>Binding Score</th>
+        </tr>
+      </thead>
+
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+
   updateChart(data.ligands);
 }
 
-async function loadDockingConfig(pdbId) {
+async function loadDockingConfig(pdbId){
+
   const res = await fetch(`${API_BASE}/docking/config/${pdbId}`);
+
   const c = await res.json();
+
   document.getElementById("docking-config").innerHTML = `
     <p><strong>Receptor:</strong> ${c.receptor_file}</p>
-    <p><strong>Center:</strong> x=${c.center.x}, y=${c.center.y}, z=${c.center.z}</p>
-    <p><strong>Box:</strong> x=${c.box_size.x}, y=${c.box_size.y}, z=${c.box_size.z}</p>
+
+    <p>
+      <strong>Center:</strong>
+      x=${c.center.x},
+      y=${c.center.y},
+      z=${c.center.z}
+    </p>
+
+    <p>
+      <strong>Box:</strong>
+      x=${c.box_size.x},
+      y=${c.box_size.y},
+      z=${c.box_size.z}
+    </p>
+
     <p><strong>Exhaustiveness:</strong> ${c.exhaustiveness}</p>
-    <pre>${JSON.stringify(c, null, 2)}</pre>`;
+
+    <pre>${JSON.stringify(c, null, 2)}</pre>
+  `;
 }
 
-async function loadExperiments() {
+async function loadExperiments(){
+
   const res = await fetch(`${API_BASE}/experiments`);
+
   const exps = await res.json();
+
   const recent = exps.slice(-8).reverse();
-  const rows = recent.map(e => `<tr><td>${e.id}</td><td>${e.pdb_id}</td><td>${e.best_score}</td><td>${e.status}</td></tr>`).join("");
-  document.getElementById("experiment-records").innerHTML = `<table><thead><tr><th>ID</th><th>PDB</th><th>Best</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+  const rows = recent.map(
+    e => `
+    <tr>
+      <td>${e.id}</td>
+      <td>${e.pdb_id}</td>
+      <td>${e.best_score}</td>
+      <td>${e.status}</td>
+    </tr>
+    `
+  ).join("");
+
+  document.getElementById("experiment-records").innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>PDB</th>
+          <th>Best</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>${rows}</tbody>
+    </table>
+  `;
 }
 
-async function createSampleExperiment() {
-  if (!currentPdbId) return alert("Select a protein first.");
-  document.getElementById("experiment-create-result").innerHTML = `<p class="warning">Creating experiment... saving output JSON and log file.</p>`;
-  const res = await fetch(`${API_BASE}/experiments/sample/${currentPdbId}`, { method:"POST" });
+async function createSampleExperiment(){
+
+  if(!currentPdbId){
+    return alert("Select a protein first.");
+  }
+
+  document.getElementById(
+    "experiment-create-result"
+  ).innerHTML = `
+    <p class="warning">
+    Creating experiment...
+    Saving docking config...
+    Writing experiment logs...
+    </p>
+  `;
+
+  const res = await fetch(
+    `${API_BASE}/experiments/sample/${currentPdbId}`,
+    {
+      method:"POST"
+    }
+  );
+
   const r = await res.json();
-  document.getElementById("experiment-create-result").innerHTML = `<p class="safe"><strong>Created:</strong> ${r.experiment_id}</p><p><strong>Best Score:</strong> ${r.best_score}</p>`;
+
+  document.getElementById(
+    "experiment-create-result"
+  ).innerHTML = `
+    <p class="safe">
+      <strong>Experiment Created:</strong>
+      ${r.experiment_id}
+    </p>
+
+    <p>
+      <strong>Best Score:</strong>
+      ${r.best_score}
+    </p>
+  `;
+
   loadExperiments();
 }
 
-function updateChart(ligands) {
+function updateChart(ligands){
+
   const ctx = document.getElementById("scoreChart");
-  if (chart) chart.destroy();
+
+  if(chart){
+    chart.destroy();
+  }
+
   chart = new Chart(ctx, {
+
     type:"bar",
-    data:{ labels:ligands.map(l => l.name), datasets:[{ label:"Binding Score", data:ligands.map(l => l.binding_score) }] },
-    options:{ responsive:true, plugins:{ legend:{ labels:{ color:"white" } } }, scales:{ x:{ ticks:{ color:"white" } }, y:{ ticks:{ color:"white" } } } }
+
+    data:{
+      labels:ligands.map(l => l.name),
+
+      datasets:[
+        {
+          label:"Binding Score",
+          data:ligands.map(l => l.binding_score)
+        }
+      ]
+    },
+
+    options:{
+      responsive:true,
+
+      plugins:{
+        legend:{
+          labels:{
+            color:"white"
+          }
+        }
+      },
+
+      scales:{
+        x:{
+          ticks:{
+            color:"white"
+          }
+        },
+
+        y:{
+          ticks:{
+            color:"white"
+          }
+        }
+      }
+    }
   });
 }
 
 init();
+
 </script>
+
 </body>
 </html>
