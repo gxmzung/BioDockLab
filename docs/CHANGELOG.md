@@ -17,3 +17,11 @@
 - `owner@biodocklab.local / 4748` now logs in as `super_admin`.
 - Added frontend hard binding and backend policy fallback for super admin.
 
+\n## v0.4.2-info-density
+
+- Increased dashboard information density.
+- Expanded patient/doctor result explanation report.
+- Expanded research docking experiment screen.
+- Added detailed experiment parameters, candidate table, molecular evidence, and claim-boundary notes.
+- Preserved role-based access and proprietary/private project direction.
+

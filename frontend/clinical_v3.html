@@ -652,6 +652,158 @@
       display:block;
     }
 
+  
+    .detail-card-title {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .mini-label {
+      font-size:12px;
+      font-weight:950;
+      color:#64748b;
+    }
+
+    .soft-panel {
+      border:1px solid #e5ebf5;
+      border-radius:18px;
+      background:#f8fbff;
+      padding:18px;
+    }
+
+    .evidence-box {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .evidence-item {
+      border:1px solid #e5ebf5;
+      background:white;
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .evidence-item b {
+      display:block;
+      margin-bottom:6px;
+      font-size:15px;
+    }
+
+    .evidence-item span {
+      font-size:13px;
+      color:#64748b;
+      font-weight:750;
+      line-height:1.6;
+    }
+
+    .molecule-legend {
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:12px;
+      color:#64748b;
+      font-size:13px;
+      font-weight:850;
+    }
+
+    .legend-dot {
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      margin-right:5px;
+    }
+
+    .dot-blue { background:#3b82f6; }
+    .dot-teal { background:#14b8a6; }
+    .dot-orange { background:#f59e0b; }
+    .dot-purple { background:#7c3aed; }
+
+    .quick-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .quick-grid button {
+      border:1px solid #dbe8ff;
+      background:white;
+      color:#1f6bff;
+      border-radius:16px;
+      padding:18px;
+      font-weight:950;
+      cursor:pointer;
+    }
+
+    .patient-summary-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr 1fr;
+      gap:0;
+      border:1px solid #e5ebf5;
+      border-radius:16px;
+      overflow:hidden;
+    }
+
+    .patient-summary-grid > div {
+      padding:18px;
+      border-right:1px solid #e5ebf5;
+      background:white;
+    }
+
+    .patient-summary-grid > div:last-child {
+      border-right:0;
+    }
+
+    .big-green-summary {
+      background:#ecfdf5;
+      border:1px solid #99f6e4;
+      color:#047857;
+      border-radius:20px;
+      padding:24px;
+      line-height:1.8;
+      font-weight:900;
+    }
+
+    .score-list {
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .score-line {
+      display:grid;
+      grid-template-columns:130px 1fr 70px;
+      align-items:center;
+      gap:12px;
+      font-size:14px;
+      font-weight:850;
+      color:#334155;
+    }
+
+    .bar-bg {
+      height:8px;
+      background:#e5e7eb;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .bar-fill {
+      height:8px;
+      background:var(--blue);
+      border-radius:999px;
+    }
+
+    .screen-note {
+      margin-top:18px;
+      font-size:13px;
+      color:#64748b;
+      line-height:1.6;
+      font-weight:750;
+    }
+
   </style>
 </head>
 
@@ -799,7 +951,7 @@
       <p style="color:var(--blue);font-weight:950">상세 보기 〉</p>
     </div>
 
-    <div class="version">© 2025 BioDockLab<br/>v0.4.1 admin-login</div>
+    <div class="version">© 2025 BioDockLab<br/>v0.4.2 info-density</div>
   </aside>
 
   <main>
@@ -2053,6 +2205,381 @@ init();
 
   ensureSuperAdminRole();
   saveSuperAdminToAccounts();
+})();
+</script>
+
+
+<script id="biodocklab-info-density-v042">
+(() => {
+  function info2(label, value) {
+    return `
+      <div style="display:flex;justify-content:space-between;border-bottom:1px solid #eef2f7;padding:11px 0;font-size:14px">
+        <b style="color:#64748b">${label}</b>
+        <b>${value}</b>
+      </div>
+    `;
+  }
+
+  function scoreLine(label, value, width) {
+    return `
+      <div class="score-line">
+        <span>${label}</span>
+        <div class="bar-bg"><div class="bar-fill" style="width:${width}%"></div></div>
+        <b>${value}</b>
+      </div>
+    `;
+  }
+
+  function makeProteinDense() {
+    if (typeof makeProtein === "function") {
+      makeProtein();
+      return;
+    }
+  }
+
+  window.reportPage = function(mode) {
+    const patientMode = mode === "patient";
+
+    const topNotice = patientMode
+      ? `<div class="alert warn" style="margin-bottom:18px">환자 화면은 상담 준비와 쉬운 설명을 위한 화면입니다. 진단·처방·치료 결정은 담당 의료진이 수행합니다.</div>`
+      : `<div class="alert info" style="margin-bottom:18px">의사 화면은 환자 설명 리포트와 전문가용 상세 해석을 함께 확인하는 화면입니다.</div>`;
+
+    return `
+      <div class="hero">
+        <div>
+          <h1>Result Explanation Report</h1>
+          <p class="subtitle">환자/의사용 이해 쉬운 결과 설명</p>
+        </div>
+        <div style="display:flex;gap:12px">
+          <button class="action">PDF 저장</button>
+          <button class="action">의사 메모</button>
+          <button class="blue-btn">상담 준비</button>
+        </div>
+      </div>
+
+      ${topNotice}
+
+      <div class="grid grid-main">
+        <div class="grid">
+          <div class="card">
+            <h2>환자 요약 정보</h2>
+            <div class="patient-summary-grid">
+              <div>
+                <div class="mini-label">Patient ID</div>
+                <b>PT-2025-0520-0017</b>
+              </div>
+              <div>
+                <div class="mini-label">진단 영역</div>
+                <b>비소세포폐암<br/>(NSCLC)</b>
+              </div>
+              <div>
+                <div class="mini-label">현재 상태</div>
+                <b>진행성, EGFR<br/>L858R 변이 양성</b>
+              </div>
+              <div>
+                <div class="mini-label">다음 상담 예정일</div>
+                <b>2025-06-02<br/>10:00</b>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>치료제 후보 요약</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>후보 치료제</th>
+                  <th>예상 효능</th>
+                  <th>위험도</th>
+                  <th>권장도</th>
+                  <th>주요 근거</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b style="color:var(--blue)">BD-201</b><br/><span class="muted">BioDock 신약 후보</span></td>
+                  <td><span class="pill green">72%</span></td>
+                  <td><span class="pill orange">보통</span></td>
+                  <td><span class="pill green">높음</span></td>
+                  <td>EGFR L858R 특이적 결합 강도 우수, 세포 실험에서 높은 억제 효과 확인</td>
+                </tr>
+                <tr>
+                  <td><b style="color:var(--blue)">BD-105</b><br/><span class="muted">2세대 TKI</span></td>
+                  <td><span class="pill">55%</span></td>
+                  <td><span class="pill green">낮음</span></td>
+                  <td><span class="pill">보통</span></td>
+                  <td>기존 2세대 TKI 대비 반응률 개선, 내성 발생 가능성 중간</td>
+                </tr>
+                <tr>
+                  <td><b style="color:var(--blue)">Gefitinib</b><br/><span class="muted">1세대 TKI</span></td>
+                  <td><span class="pill purple">32%</span></td>
+                  <td><span class="pill green">낮음</span></td>
+                  <td><span class="pill purple">낮음</span></td>
+                  <td>기존 표준 치료제, 반응률 및 지속기간 제한적</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="screen-note">ORR: Overall Response Rate. 현재 값은 데모용 샘플 데이터이며 실제 임상 검증값이 아닙니다.</p>
+          </div>
+
+          <div class="card">
+            <h2>쉽게 이해하는 설명</h2>
+            <p style="line-height:1.9;font-weight:750;color:#334155">
+              검사 결과, 환자분의 암은 EGFR이라는 단백질의 특정 변이 때문에 생긴 것으로 확인되었습니다.
+              이 변이에 잘 맞는 후보 치료제는 BD-201로 예측되며, 암을 줄일 가능성은 높고 부작용 위험은 보통 수준으로 예상됩니다.
+            </p>
+            <div class="alert safe">
+              현재 환자 상태와 검사 결과를 종합했을 때, 긍정적인 치료 반응이 기대됩니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="big-green-summary">
+            <h2 style="margin-bottom:12px">의사 종합 해석</h2>
+            환자에서 EGFR L858R 변이에 대한 치료 반응 가능성이 높은 치료제가 확인되었으며,
+            부작용 위험은 보통 수준으로 예측됩니다.
+            <ul>
+              <li>1차 권장 후보: BD-201</li>
+              <li>기존 치료제 대비 예측 반응률 향상 기대</li>
+              <li>뇌 전이 위험성이 낮아 예후가 양호할 가능성</li>
+            </ul>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h2>분자적 근거</h2>
+              <div class="protein" style="height:220px"></div>
+              <p class="screen-note">
+                BD-201은 EGFR L858R 변이 부위에 결합하여 신호 전달을 효과적으로 차단하는 것으로 예측됩니다.
+              </p>
+              <div class="molecule-legend">
+                <span><i class="legend-dot dot-blue"></i>EGFR 단백질</span>
+                <span><i class="legend-dot dot-teal"></i>BD-201</span>
+                <span><i class="legend-dot dot-orange"></i>L858R 위치</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>예측 반응 및 위험도</h2>
+              <div style="display:flex;align-items:center;gap:20px">
+                <div class="score-ring"><div><b>78</b><br/>/100</div></div>
+                <div>
+                  <b>종합 예측 점수</b>
+                  <p class="muted">반응 가능성: <b style="color:var(--teal)">높음</b></p>
+                </div>
+              </div>
+
+              <div class="score-list">
+                ${scoreLine("유전자 적합성","92 / 100",92)}
+                ${scoreLine("약물 결합 안정성","81 / 100",81)}
+                ${scoreLine("세포 실험 예측","73 / 100",73)}
+                ${scoreLine("부작용 예측","68 / 100",68)}
+              </div>
+
+              <p class="screen-note">점수가 높을수록 예측상 반응 가능성이 높습니다.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>의사용 상세 해석</h2>
+            <p style="line-height:1.9;font-weight:750;color:#334155">
+              EGFR L858R 변이 양성 NSCLC 환자에서 BD-201은 도킹 점수 -11.2 kcal/mol로 우수한 결합 친화도를 보였습니다.
+              분자 동역학 시뮬레이션에서 RMSD 1.8 Å로 안정성이 확인되었고, 세포주 기반 예측 IC50은 12.3 nM으로 우수한 활성을 보였습니다.
+            </p>
+            <p class="screen-note">
+              본 리포트는 AI 예측 모델 기반으로 생성되었으며, 임상 판단은 담당 의사의 최종 결정이 필요합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  window.renderPatient = function() {
+    document.getElementById("screen-patient").innerHTML = window.reportPage("patient");
+    makeProteinDense();
+  };
+
+  window.renderDoctor = function() {
+    document.getElementById("screen-doctor").innerHTML = window.reportPage("doctor");
+    makeProteinDense();
+  };
+
+  window.renderResearch = function() {
+    document.getElementById("screen-research_lab").innerHTML = `
+      <div class="hero">
+        <div>
+          <p style="color:var(--blue);font-weight:950">Research Lab 〉 Docking Experiments 〉 EXP-2025-05-20-001</p>
+          <h1>Virtual Docking Experiment</h1>
+          <p class="subtitle">단백질-화합물 결합 예측 및 스크리닝</p>
+        </div>
+        <div style="display:flex;gap:12px">
+          <button class="action">결과 저장</button>
+          <button class="action">보고서 생성</button>
+          <button class="blue-btn">실험 실행</button>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:310px 1fr 380px">
+        <div class="grid">
+          <div class="card">
+            <div class="detail-card-title">
+              <h2>타겟 단백질</h2>
+              <span class="pill green">준비됨</span>
+            </div>
+            <b style="font-size:22px">KRAS G12D</b>
+            <p class="muted">PDB ID: 6R68</p>
+            <div class="protein" style="height:170px"></div>
+            ${info2("유전자","KRAS")}
+            ${info2("돌연변이","G12D")}
+            ${info2("길이","189 aa")}
+            ${info2("해상도","2.20 Å")}
+            ${info2("바인딩 부위","SII Pocket")}
+          </div>
+
+          <div class="card">
+            <div class="detail-card-title">
+              <h2>선택 화합물</h2>
+              <span class="pill">편집</span>
+            </div>
+            <b style="font-size:22px;color:var(--blue)">BDL-10234</b>
+            <p class="muted">내부 라이브러리</p>
+            <div style="height:150px;background:#f8fafc;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:54px">⌬</div>
+            ${info2("MW","452.91")}
+            ${info2("식별자","BDL-10234")}
+            ${info2("공급원","BioDockLib")}
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="detail-card-title">
+              <h2>3D View</h2>
+              <div>
+                <button class="action" style="margin:0;padding:8px 10px">2D Interaction</button>
+              </div>
+            </div>
+            <div class="protein" style="height:430px"></div>
+            <div class="molecule-legend">
+              <span><i class="legend-dot dot-teal"></i>Hydrogen Bond</span>
+              <span><i class="legend-dot dot-purple"></i>Hydrophobic</span>
+              <span><i class="legend-dot dot-orange"></i>π-π Stacking</span>
+              <span><i class="legend-dot dot-blue"></i>Salt Bridge</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>결과</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>순위</th>
+                  <th>화합물 ID</th>
+                  <th>화합물 이름</th>
+                  <th>Binding Score</th>
+                  <th>ΔG</th>
+                  <th>RMSD</th>
+                  <th>ADMET Risk</th>
+                  <th>선택</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>BDL-10234</td><td>BDL-10234</td><td>-10.28</td><td>-54.32</td><td>1.21</td><td><span class="pill green">Low</span></td><td>●</td></tr>
+                <tr><td>2</td><td>BDL-08765</td><td>BDL-08765</td><td>-9.46</td><td>-48.11</td><td>1.35</td><td><span class="pill green">Low</span></td><td>○</td></tr>
+                <tr><td>3</td><td>BDL-09123</td><td>BDL-09123</td><td>-8.74</td><td>-42.76</td><td>1.72</td><td><span class="pill orange">Medium</span></td><td>○</td></tr>
+                <tr><td>4</td><td>BDL-07654</td><td>BDL-07654</td><td>-8.31</td><td>-39.28</td><td>1.98</td><td><span class="pill orange">Medium</span></td><td>○</td></tr>
+                <tr><td>5</td><td>BDL-06321</td><td>BDL-06321</td><td>-7.89</td><td>-36.54</td><td>2.11</td><td><span class="pill red">High</span></td><td>○</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="detail-card-title">
+              <h2>실험 파라미터</h2>
+              <span class="pill">편집</span>
+            </div>
+            ${info2("도킹 프로그램","AutoDock Vina 1.2.3")}
+            ${info2("그리드 박스","24.0 × 24.0 × 24.0 Å")}
+            ${info2("그리드 중심","X: 25.62, Y: 13.47, Z: 8.91")}
+            ${info2("탐색 알고리즘","GA")}
+            ${info2("포즈 개수","20")}
+            ${info2("에너지 정렬","MM/GBSA")}
+            ${info2("유연성 처리","Side-chain Flexible")}
+            ${info2("랜덤 시드","20250520")}
+          </div>
+
+          <div class="card">
+            <div class="detail-card-title">
+              <h2>실험 상태</h2>
+              <span class="pill">실행 중</span>
+            </div>
+            ${info2("실험 ID","EXP-2025-05-20-001")}
+            ${info2("생성자","김서연 박사")}
+            ${info2("생성 일시","2025-05-20 09:15")}
+            ${info2("라이브러리","내부 라이브러리 v3.2")}
+            ${info2("진행 상황","Scoring 단계 (3/4)")}
+
+            <div style="margin-top:18px;height:12px;background:#e5e7eb;border-radius:999px">
+              <div style="width:72%;height:12px;background:var(--blue);border-radius:999px"></div>
+            </div>
+            <p style="text-align:right;color:var(--blue);font-weight:950">72%</p>
+            ${info2("경과 시간","00:18:42")}
+            ${info2("예상 남은 시간","00:07:15")}
+          </div>
+
+          <div class="card">
+            <h2>빠른 액션</h2>
+            <div class="quick-grid">
+              <button>결과 저장</button>
+              <button>보고서 생성</button>
+              <button>포즈 내보내기</button>
+              <button>새 실험 시작</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    makeProteinDense();
+  };
+
+  const oldDashboard = window.renderDashboard;
+
+  window.renderDashboard = function() {
+    if (typeof oldDashboard === "function") {
+      oldDashboard();
+    }
+
+    const box = document.getElementById("roleBanner");
+    if (box) {
+      box.innerHTML = "🔐 <b>역할 기반 접근 제어 적용 중</b> · 현재 계정 역할에 따라 환자정보, 연구데이터, 처방정보, 보안로그 접근 범위가 다르게 표시됩니다.";
+    }
+
+    const insight = document.getElementById("insightBox");
+    if (insight && !insight.dataset.dense) {
+      insight.dataset.dense = "1";
+      insight.innerHTML += `
+        <div class="alert info" style="margin-bottom:12px">
+          <b>보안 정책</b><br/>
+          모든 화면 접근은 감사 로그로 기록되며, 권한 밖 접근은 차단됩니다.
+        </div>
+        <div class="alert warn">
+          <b>상용화 기준</b><br/>
+          실제 병원 연동 시 2단계 인증, 기관 승인, 비식별화 정책, 접근 사유 기록이 필요합니다.
+        </div>
+      `;
+    }
+  };
+
+  const current = document.querySelector(".screen.active")?.id || "screen-dashboard";
+
+  if (current === "screen-dashboard" && typeof window.renderDashboard === "function") {
+    window.renderDashboard();
+  }
+
 })();
 </script>
 
