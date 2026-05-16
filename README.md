@@ -85,3 +85,15 @@ BioDockLab currently supports:
 BioDockLab does not claim to discover drugs, validate drug efficacy, replace wet-lab experiments, replace animal studies, or replace clinical trials.
 
 It is a research and education support platform for early-stage structure-based exploration and reproducible workflow management.
+
+---
+
+## Security / Commercialization Documents
+
+- [Threat Model v0.1](docs/security/threat_model_v0.1.md)
+- [Access Policy](docs/security/access_policy.md)
+- [Commercial Security Checklist](docs/security/commercial_security_checklist.md)
+- [Role Workspaces v0.5](docs/roles/role_workspaces_v05.md)
+- [Biogrammer Role Matrix](docs/roles/biogrammer_role_matrix.md)
+
+BioDockLab is a proprietary/private prototype intended for research, education, explanation support, workflow management, and security-audit exploration. It is not an EMR replacement, diagnosis system, prescription system, or validated clinical decision-making system.

@@ -34,3 +34,12 @@
 - Added account table, access request examples, permission matrix, and commercialization security checklist.
 - Preserved private/proprietary product direction.
 
+
+## v0.6-security-docs
+
+- Added Threat Model v0.1.
+- Added Access Policy document.
+- Added Commercial Security Checklist.
+- Added security documentation README.
+- Updated README with security and commercialization documentation links.
+
