@@ -1057,7 +1057,7 @@
       <p style="color:var(--blue);font-weight:950">상세 보기 〉</p>
     </div>
 
-    <div class="version">© 2025 BioDockLab<br/>v0.5 role-workspaces</div>
+    <div class="version">© 2025 BioDockLab<br/>v0.10 nurse-review</div>
   </aside>
 
   <main>
@@ -3327,6 +3327,306 @@ init();
   } else {
     boot();
   }
+})();
+</script>
+
+
+<script id="biodocklab-nurse-review-v010">
+(() => {
+  function ensureNurseRole() {
+    try {
+      if (typeof USERS !== "undefined" && !USERS.some(u => u.role === "nurse")) {
+        USERS.splice(3, 0, {
+          role: "nurse",
+          label: "간호사",
+          name: "간호학과 검토자 A",
+          title: "Nurse"
+        });
+      }
+
+      if (typeof POLICY !== "undefined") {
+        POLICY.nurse = [
+          "dashboard",
+          "nurse",
+          "patient_limited",
+          "reports_limited",
+          "consent_status"
+        ];
+
+        if (POLICY.super_admin && !POLICY.super_admin.includes("nurse")) {
+          POLICY.super_admin.push("nurse");
+        }
+      }
+
+      if (typeof ROLE_DASHBOARD !== "undefined" && !ROLE_DASHBOARD.nurse) {
+        ROLE_DASHBOARD.nurse = {
+          banner: "🩹 간호사 권한 화면 · 바이탈, 인수인계, 투약/처치 확인, 환자 상태 변화 요약 중심으로 표시됩니다.",
+          metrics: [
+            ["🩺", "바이탈 확인", "18", "대기"],
+            ["🔁", "인수인계", "7", "진행"],
+            ["💊", "투약 확인", "12", "주의"],
+            ["⚠", "상태 변화", "3", "관찰"]
+          ],
+          recent: [
+            ["바이탈 재측정 필요", "PT-2025-0520-0017", "간호 관찰", "진행 중", "간호학과 검토자 A"],
+            ["투약 전 확인", "Gefitinib", "투약 확인", "주의", "간호학과 검토자 A"],
+            ["인수인계 요약", "NSCLC 환자", "교대 기록", "완료", "간호학과 검토자 A"]
+          ],
+          insights: [
+            ["warn", "투약 전 약물상호작용 및 처방 변경 여부 확인이 필요합니다."],
+            ["safe", "환자 상태 요약은 간호기록을 대체하지 않고 인수인계 보조로만 사용됩니다."]
+          ]
+        };
+      }
+
+      const roleSelect = document.getElementById("roleSelect");
+      if (roleSelect && !Array.from(roleSelect.options).some(o => o.value === "nurse")) {
+        const opt = document.createElement("option");
+        opt.value = "nurse";
+        opt.textContent = "간호사";
+        roleSelect.insertBefore(opt, roleSelect.options[3] || null);
+      }
+
+      const signupRole = document.getElementById("signupRole");
+      if (signupRole && !Array.from(signupRole.options).some(o => o.value === "nurse")) {
+        const opt = document.createElement("option");
+        opt.value = "nurse";
+        opt.textContent = "간호사";
+        signupRole.insertBefore(opt, signupRole.options[3] || null);
+      }
+
+      const demoGrid = document.querySelector(".demo-login-grid");
+      if (demoGrid && !demoGrid.querySelector('[data-demo-role="nurse"]')) {
+        const btn = document.createElement("button");
+        btn.dataset.demoRole = "nurse";
+        btn.textContent = "간호사";
+        btn.onclick = () => demoLogin("nurse");
+        const adminBtn = Array.from(demoGrid.querySelectorAll("button")).find(b => b.textContent.trim() === "원무");
+        demoGrid.insertBefore(btn, adminBtn || null);
+      }
+
+      const nav = document.getElementById("nav");
+      if (nav && !nav.querySelector('[data-view="nurse"]')) {
+        const btn = document.createElement("button");
+        btn.dataset.view = "nurse";
+        btn.innerHTML = '<span class="icon">🩹</span>Nurse';
+        btn.addEventListener("click", () => navigate("nurse"));
+        const adminBtn = nav.querySelector('[data-view="admin"]');
+        nav.insertBefore(btn, adminBtn || null);
+      }
+
+      const content = document.querySelector(".content");
+      if (content && !document.getElementById("screen-nurse")) {
+        const section = document.createElement("section");
+        section.id = "screen-nurse";
+        section.className = "screen";
+        content.appendChild(section);
+      }
+    } catch (e) {
+      console.warn("ensureNurseRole failed", e);
+    }
+  }
+
+  const NURSE_ACCOUNT = {
+    email: "nurse@biodocklab.local",
+    password: "1234",
+    name: "간호학과 검토자 A",
+    role: "nurse",
+    approval_status: "demo_approved"
+  };
+
+  function ensureNurseAccount() {
+    const key = "biodocklab_v04_accounts";
+    let accounts = [];
+
+    try {
+      accounts = JSON.parse(localStorage.getItem(key) || "[]");
+    } catch (e) {
+      accounts = [];
+    }
+
+    if (!accounts.some(a => a.email === NURSE_ACCOUNT.email)) {
+      accounts.push(NURSE_ACCOUNT);
+      localStorage.setItem(key, JSON.stringify(accounts));
+    }
+  }
+
+  const oldDemoLogin = window.demoLogin;
+  window.demoLogin = function(role) {
+    ensureNurseRole();
+    ensureNurseAccount();
+
+    if (role === "nurse") {
+      localStorage.setItem("biodocklab_v04_session", JSON.stringify(NURSE_ACCOUNT));
+      localStorage.setItem("biodocklab_v03_role", "nurse");
+
+      if (typeof setRole === "function") {
+        setRole("nurse");
+      }
+
+      const gate = document.getElementById("authGate");
+      if (gate) gate.style.display = "none";
+
+      const roleSelect = document.getElementById("roleSelect");
+      if (roleSelect) {
+        roleSelect.value = "nurse";
+        roleSelect.disabled = true;
+      }
+
+      const actorName = document.getElementById("actorName");
+      const actorRole = document.getElementById("actorRole");
+
+      if (actorName) actorName.textContent = "간호학과 검토자 A";
+      if (actorRole) actorRole.textContent = "간호사";
+
+      return;
+    }
+
+    if (typeof oldDemoLogin === "function") {
+      oldDemoLogin(role);
+    }
+  };
+
+  const oldLogin = window.loginBioDockLab;
+  window.loginBioDockLab = function() {
+    ensureNurseRole();
+    ensureNurseAccount();
+
+    const email = document.getElementById("loginEmail")?.value.trim();
+    const password = document.getElementById("loginPassword")?.value.trim();
+
+    if (email === NURSE_ACCOUNT.email && password === NURSE_ACCOUNT.password) {
+      window.demoLogin("nurse");
+      return;
+    }
+
+    if (typeof oldLogin === "function") {
+      oldLogin();
+    }
+  };
+
+  function info(label, value) {
+    return `
+      <div style="display:flex;justify-content:space-between;border-bottom:1px solid #eef2f7;padding:11px 0;font-size:14px">
+        <b style="color:#64748b">${label}</b>
+        <b>${value}</b>
+      </div>
+    `;
+  }
+
+  window.renderNurse = function() {
+    const target = document.getElementById("screen-nurse");
+    if (!target) return;
+
+    target.innerHTML = `
+      <div class="hero">
+        <div>
+          <p style="color:var(--blue);font-weight:950">Nurse Workspace 〉 Handoff & Monitoring</p>
+          <h1>Nurse Workspace</h1>
+          <p class="subtitle">바이탈, 인수인계, 투약/처치 확인, 환자 상태 변화 요약을 지원하는 간호사 보조 화면</p>
+        </div>
+        <button class="blue-btn">인수인계 요약 생성</button>
+      </div>
+
+      <div class="alert warn" style="margin-bottom:18px">
+        이 화면은 간호기록/EMR을 대체하지 않습니다. 간호사 업무 중 필요한 최소 정보와 인수인계 보조 정보를 역할 기반으로 보여주는 프로토타입입니다.
+      </div>
+
+      <div class="grid grid-4" style="margin-bottom:18px">
+        <div class="card metric"><div class="metric-icon">🩺</div><div><span>바이탈 확인</span><b>18</b><small>대기</small></div></div>
+        <div class="card metric"><div class="metric-icon">🔁</div><div><span>인수인계</span><b>7</b><small>진행</small></div></div>
+        <div class="card metric"><div class="metric-icon">💊</div><div><span>투약 확인</span><b>12</b><small>주의</small></div></div>
+        <div class="card metric"><div class="metric-icon">⚠</div><div><span>상태 변화</span><b>3</b><small>관찰</small></div></div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>환자 상태 요약</h2>
+          ${info("환자ID", "PT-2025-0520-0017")}
+          ${info("이름", "김○○")}
+          ${info("진료 영역", "종양내과 / NSCLC")}
+          ${info("상태", "EGFR L858R 양성, 치료 상담 예정")}
+          ${info("주의", "투약 전 상호작용 및 처방 변경 여부 확인")}
+          ${info("다음 상담", "2025-06-02 10:00")}
+        </div>
+
+        <div class="card">
+          <h2>바이탈 / 관찰 포인트</h2>
+          <table class="table">
+            <thead><tr><th>항목</th><th>최근값</th><th>상태</th><th>메모</th></tr></thead>
+            <tbody>
+              <tr><td>혈압</td><td>128/82</td><td><span class="pill green">안정</span></td><td>재측정 필요 없음</td></tr>
+              <tr><td>맥박</td><td>92</td><td><span class="pill orange">관찰</span></td><td>통증/불안 여부 확인</td></tr>
+              <tr><td>체온</td><td>37.4℃</td><td><span class="pill orange">관찰</span></td><td>감염 징후 확인</td></tr>
+              <tr><td>SpO₂</td><td>96%</td><td><span class="pill green">안정</span></td><td>호흡곤란 여부 확인</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>인수인계 요약</h2>
+          <div class="workspace-list">
+            <div class="workspace-item"><b>투약 전 확인</b><span>Gefitinib 관련 상호작용 및 병용약 확인 필요</span></div>
+            <div class="workspace-item"><b>환자 설명 상태</b><span>환자용 설명 리포트 생성됨. 상담 전 질문 목록 확인 가능</span></div>
+            <div class="workspace-item"><b>동의 상태</b><span>리포트 생성 동의 완료, 제3자 제공 미동의</span></div>
+            <div class="workspace-item"><b>주의</b><span>이 요약은 간호기록을 대체하지 않으며 EMR 기록 확인 필요</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>간호사 접근 범위</h2>
+          <div class="role-chip-row">
+            <span class="role-chip">환자 상태 요약</span>
+            <span class="role-chip">바이탈 요약</span>
+            <span class="role-chip">인수인계 보조</span>
+            <span class="role-chip">투약 전 확인</span>
+            <span class="role-chip">동의 상태</span>
+          </div>
+
+          <br/>
+
+          <h2>제한되는 데이터</h2>
+          <div class="role-chip-row">
+            <span class="role-chip">연구 원천 데이터</span>
+            <span class="role-chip">보안 로그 수정</span>
+            <span class="role-chip">권한 정책 변경</span>
+            <span class="role-chip">처방 결정</span>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  const oldNavigate = window.navigate;
+  window.navigate = async function(view, skipPolicy=false) {
+    ensureNurseRole();
+    ensureNurseAccount();
+
+    if (view === "nurse" && typeof window.renderNurse === "function") {
+      window.renderNurse();
+    }
+
+    if (typeof oldNavigate === "function") {
+      return oldNavigate(view, skipPolicy);
+    }
+  };
+
+  function boot() {
+    ensureNurseRole();
+    ensureNurseAccount();
+
+    if (typeof ROLE_DASHBOARD !== "undefined" && typeof renderDashboard === "function") {
+      try { renderDashboard(); } catch (e) {}
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+
+  setTimeout(boot, 500);
 })();
 </script>
 

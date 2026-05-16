@@ -52,3 +52,20 @@
 - Fixed smoke test URL encoding and Korean actor query issue.
 - Recreated demo, QA, screenshot, and evidence docs.
 
+
+## v0.10-nurse-review-package
+
+- Added Nurse role and Nurse Workspace.
+- Added nurse demo account.
+- Updated access policy for nurse role.
+- Updated clinical users.
+- Added nursing review document.
+- Added clinical review request package.
+- Added news/club pitch positioning document.
+- Added email draft for nursing professor review.
+
+## v0.10.2-real-name-safety
+
+- Removed real-person-like nurse demo name from UI/docs.
+- Replaced nurse demo identity with 간호학과 검토자 A.
+- Added real-name and external-publication privacy policy document.
