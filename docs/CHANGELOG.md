@@ -85,3 +85,9 @@
 - Fixed demo name scope.
 - `최하늘 원무` is reserved for Administration/원무 only.
 - Nurse role remains anonymized as `간호학과 검토자 A`.
+
+## v0.15-protein-atlas-extension
+
+- Added Protein Atlas extension planning document.
+- Positioned Protein Atlas as education/research extension material.
+- Separated research/education concept material from core implementation screenshots.
