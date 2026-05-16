@@ -805,6 +805,112 @@
     }
 
   </style>
+
+<style id="biodocklab-role-workspaces-v05-css">
+  .workspace-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-bottom:24px;
+  }
+
+  .workspace-kicker {
+    color:var(--blue);
+    font-weight:950;
+    margin-bottom:8px;
+  }
+
+  .workspace-section-title {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+
+  .workspace-list {
+    display:grid;
+    gap:12px;
+  }
+
+  .workspace-item {
+    border:1px solid var(--line);
+    background:#f8fbff;
+    border-radius:16px;
+    padding:16px;
+    line-height:1.7;
+  }
+
+  .workspace-item b {
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .workspace-item span {
+    color:var(--muted);
+    font-size:13px;
+    font-weight:750;
+  }
+
+  .role-chip-row {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .role-chip {
+    border:1px solid #dbe8ff;
+    background:#eef5ff;
+    color:#1f6bff;
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:12px;
+    font-weight:950;
+  }
+
+  .console-stat {
+    display:flex;
+    gap:16px;
+    align-items:center;
+  }
+
+  .console-stat-icon {
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eef5ff;
+    font-size:26px;
+  }
+
+  .console-stat b {
+    display:block;
+    font-size:26px;
+  }
+
+  .console-stat span {
+    color:var(--muted);
+    font-weight:850;
+    font-size:13px;
+  }
+
+  .matrix-table td {
+    font-size:13px;
+  }
+
+  .matrix-table .yes {
+    color:#047857;
+    font-weight:950;
+  }
+
+  .matrix-table .no {
+    color:#be123c;
+    font-weight:950;
+  }
+</style>
+
 </head>
 
 <body>
@@ -951,7 +1057,7 @@
       <p style="color:var(--blue);font-weight:950">상세 보기 〉</p>
     </div>
 
-    <div class="version">© 2025 BioDockLab<br/>v0.4.2 info-density</div>
+    <div class="version">© 2025 BioDockLab<br/>v0.5 role-workspaces</div>
   </aside>
 
   <main>
@@ -1075,6 +1181,10 @@
       <section id="screen-admin" class="screen"></section>
       <section id="screen-security" class="screen"></section>
       <section id="screen-data_hub" class="screen"></section>
+
+      
+      <section id="screen-role_workspace" class="screen"></section>
+      <section id="screen-admin_console" class="screen"></section>
 
       <section id="screen-denied" class="screen">
         <div class="deny-box card">
@@ -2580,6 +2690,643 @@ init();
     window.renderDashboard();
   }
 
+})();
+</script>
+
+
+<script id="biodocklab-role-workspaces-v05">
+(() => {
+  const WORKSPACES = {
+    patient: {
+      icon: "♙",
+      title: "Patient Workspace",
+      subtitle: "본인 검사 결과를 쉬운 설명으로 확인하고, 다음 진료 상담을 준비하는 화면입니다.",
+      metrics: [
+        ["📄", "설명 리포트", "3", "확인 가능"],
+        ["🗓", "다음 상담", "1", "예약"],
+        ["❓", "상담 질문", "5", "작성"],
+        ["📝", "동의 상태", "2", "관리"]
+      ],
+      tasks: [
+        ["검사 결과 쉬운 설명 확인", "전문용어를 줄인 설명 리포트를 확인합니다."],
+        ["의사에게 물어볼 질문 준비", "복약, 부작용, 재검사, 치료 방향 질문을 정리합니다."],
+        ["데이터 제공 동의 확인", "연구 활용, 제3자 제공, 리포트 생성 동의 상태를 확인합니다."]
+      ],
+      data: ["본인 설명 리포트", "상담 예정일", "동의 상태", "환자용 요약"],
+      blocked: ["의사용 상세 판단", "약사 내부 검토 메모", "연구용 비식별 데이터셋", "보안 감사 로그"],
+      outputs: ["상담 준비 메모", "환자용 PDF 리포트", "동의 상태 확인 기록"]
+    },
+
+    doctor: {
+      icon: "🩺",
+      title: "Doctor Workspace",
+      subtitle: "환자 결과 요약과 후보 치료 설명 리포트를 확인하고, 최종 의사결정을 보조하는 화면입니다.",
+      metrics: [
+        ["♙", "담당 환자", "24", "관리"],
+        ["📄", "리포트", "18", "생성"],
+        ["💊", "약사 검토", "7", "요청"],
+        ["🗓", "상담 예정", "11", "오늘"]
+      ],
+      tasks: [
+        ["환자 결과 요약 검토", "검사 결과, 유전자 변이, 후보 치료 설명을 한눈에 확인합니다."],
+        ["환자 설명 문구 확인", "환자가 이해할 수 있는 표현인지 확인합니다."],
+        ["약사 검토 요청", "처방량, 병용약, 상호작용 검토를 약사에게 요청합니다."]
+      ],
+      data: ["담당 환자 요약", "의사용 상세 해석", "치료 후보 비교", "설명 리포트"],
+      blocked: ["플랫폼 보안 로그 직접 수정", "연구자용 원천 데이터셋 관리", "시스템 권한 정책 변경"],
+      outputs: ["의사 메모", "상담 준비 리포트", "약사 검토 요청"]
+    },
+
+    pharmacist: {
+      icon: "💊",
+      title: "Pharmacist Workspace",
+      subtitle: "처방량, 병용약, 약물상호작용, 유전자 적합성을 검토하는 화면입니다.",
+      metrics: [
+        ["💊", "검토 대기", "16", "처방"],
+        ["⚠", "상호작용", "5", "주의"],
+        ["🧬", "유전자 적합성", "9", "검토"],
+        ["✓", "검토 완료", "42", "오늘"]
+      ],
+      tasks: [
+        ["처방량 검토", "용량, 투여 경로, 빈도, 환자 상태를 기준으로 확인합니다."],
+        ["약물상호작용 확인", "CYP3A4, 병용약, 금기 조합 가능성을 검토합니다."],
+        ["유전자 적합성 확인", "EGFR 등 유전자 변이 정보와 약물 반응 가능성을 참고합니다."]
+      ],
+      data: ["처방량", "약물상호작용", "복약지도 메모", "유전자 적합성 요약"],
+      blocked: ["불필요한 실명 연구 데이터", "보안 관리자 로그", "원무 전용 서류 처리"],
+      outputs: ["약사 검토 메모", "상호작용 경고", "복약지도 참고사항"]
+    },
+
+    admin_staff: {
+      icon: "🗂",
+      title: "Administration Workspace",
+      subtitle: "예약, 동의서, 서류 처리 중심으로 업무를 수행하고 민감 의료정보는 마스킹됩니다.",
+      metrics: [
+        ["🗓", "오늘 예약", "38", "건"],
+        ["📝", "동의서", "21", "확인"],
+        ["📄", "서류 발급", "12", "대기"],
+        ["🔒", "마스킹", "100%", "적용"]
+      ],
+      tasks: [
+        ["예약 상태 확인", "환자 상담 예정일과 방문 일정을 관리합니다."],
+        ["동의서 상태 확인", "연구 활용, 리포트 생성, 외부 제공 동의 여부를 확인합니다."],
+        ["서류 발급 관리", "진료확인서, 상담 준비 문서, 제출용 서류 상태를 관리합니다."]
+      ],
+      data: ["환자ID", "마스킹된 이름", "예약일", "동의서 상태", "서류 상태"],
+      blocked: ["진단 상세", "처방량", "유전자 상세", "연구 원천 데이터"],
+      outputs: ["예약 확인", "동의서 체크", "서류 발급 상태"]
+    },
+
+    researcher: {
+      icon: "⚗",
+      title: "Researcher Workspace",
+      subtitle: "비식별 연구 데이터와 단백질-화합물 가상 도킹 실험을 관리하는 화면입니다.",
+      metrics: [
+        ["⚗", "활성 실험", "128", "진행"],
+        ["⌬", "후보 화합물", "3,456", "스크리닝"],
+        ["📜", "실험 로그", "342", "저장"],
+        ["🧬", "단백질 타겟", "18", "관리"]
+      ],
+      tasks: [
+        ["단백질 타겟 선택", "PDB 기반 단백질 구조와 활성 부위를 확인합니다."],
+        ["도킹 실험 실행", "후보 화합물의 결합 점수와 ADMET 위험도를 비교합니다."],
+        ["실험 로그 저장", "재현성을 위해 Config, 결과, 로그를 기록합니다."]
+      ],
+      data: ["비식별 연구 데이터", "PDB 메타데이터", "도킹 결과", "실험 로그"],
+      blocked: ["실명 환자 원본 데이터", "원무 서류 업무", "보안 감사 로그 수정"],
+      outputs: ["실험 결과 JSON", "도킹 리포트", "후보 화합물 랭킹"]
+    },
+
+    security: {
+      icon: "🛡",
+      title: "Security Workspace",
+      subtitle: "접근 로그, 차단 이벤트, 내부자 과다열람 의심 이벤트를 확인하는 화면입니다.",
+      metrics: [
+        ["📜", "접근 로그", "128", "최근"],
+        ["🚫", "차단 이벤트", "9", "검토"],
+        ["⚠", "위험 이벤트", "6", "주의"],
+        ["🔐", "정책 적용", "100%", "RBAC"]
+      ],
+      tasks: [
+        ["접근 로그 검토", "누가, 언제, 어떤 환자/화면에 접근했는지 확인합니다."],
+        ["권한 밖 접근 차단 확인", "차단 이벤트와 접근 사유를 검토합니다."],
+        ["내부자 과다열람 탐지", "동일 환자 반복 조회, 업무 외 열람 가능성을 확인합니다."]
+      ],
+      data: ["감사 로그", "위험 이벤트", "권한 정책", "접근 차단 기록"],
+      blocked: ["의료 판단 내용 수정", "처방 내용 변경", "연구 결과 조작"],
+      outputs: ["보안 감사 리포트", "위험 이벤트 검토", "권한 정책 개선안"]
+    },
+
+    super_admin: {
+      icon: "👑",
+      title: "Platform Admin Workspace",
+      subtitle: "전체 계정, 역할, 권한 정책, 보안 이벤트, 제품 설정을 관리하는 플랫폼 관리자 화면입니다.",
+      metrics: [
+        ["👥", "전체 역할", "14", "관리"],
+        ["🔐", "권한 정책", "100%", "RBAC"],
+        ["📜", "감사 로그", "전체", "조회"],
+        ["⚙", "제품 설정", "v0.5", "관리"]
+      ],
+      tasks: [
+        ["계정 승인 관리", "의사, 약사, 원무, 연구자, 보안관리자 계정 승인 상태를 관리합니다."],
+        ["권한 정책 관리", "역할별 접근 가능 화면과 마스킹 정책을 관리합니다."],
+        ["상용화 설정 관리", "2단계 인증, 기관 승인, 감사 로그 보존 정책을 설정합니다."]
+      ],
+      data: ["전체 계정", "전체 권한 정책", "보안 로그", "제품 설정"],
+      blocked: ["없음. 단 실제 서비스에서는 관리자 행위도 감사 로그에 기록"],
+      outputs: ["권한 정책표", "계정 승인 기록", "보안 운영 리포트"]
+    },
+
+    bio_data_curator: {
+      icon: "🧬",
+      title: "Bio Data Curator Workspace",
+      subtitle: "바이오 데이터를 수집·정리하고 메타데이터 품질과 비식별화 상태를 관리하는 화면입니다.",
+      metrics: [
+        ["🧬", "데이터셋", "42", "관리"],
+        ["🧾", "메타데이터", "1,284", "정리"],
+        ["🔒", "비식별 처리", "98%", "완료"],
+        ["⚠", "품질 이슈", "7", "검토"]
+      ],
+      tasks: [
+        ["PDB/유전자/화합물 데이터 정리", "공개 데이터와 내부 샘플 데이터를 표준 형식으로 정리합니다."],
+        ["메타데이터 품질 확인", "누락, 중복, 단위 오류, 출처 미기재를 점검합니다."],
+        ["비식별 연구 데이터셋 구성", "환자 식별정보를 제거하고 연구용 데이터셋으로 분리합니다."]
+      ],
+      data: ["PDB 메타데이터", "화합물 라이브러리", "비식별 데이터셋", "데이터 품질 이슈"],
+      blocked: ["실명 환자 상세", "처방량 직접 수정", "보안 로그 삭제"],
+      outputs: ["정제 데이터셋", "메타데이터 품질 리포트", "비식별화 체크리스트"]
+    },
+
+    ai_model_operator: {
+      icon: "🤖",
+      title: "AI Model Operator Workspace",
+      subtitle: "AI 예측 모델을 실행하고 도킹 점수, 후보 랭킹, 모델 한계를 검토하는 화면입니다.",
+      metrics: [
+        ["🤖", "실행 모델", "12", "활성"],
+        ["📊", "예측 결과", "3,420", "생성"],
+        ["⚠", "편향 점검", "4", "필요"],
+        ["✓", "완료 분석", "89", "오늘"]
+      ],
+      tasks: [
+        ["도킹 점수 분석", "후보 화합물의 결합 점수와 안정성을 비교합니다."],
+        ["모델 결과 비교", "AI 예측값, 실험 샘플값, 규칙 기반 결과를 비교합니다."],
+        ["모델 한계 표시", "AI 예측이 임상 검증을 대체하지 않는다는 경계를 표시합니다."]
+      ],
+      data: ["모델 입력값", "예측 점수", "후보 랭킹", "모델 한계 메모"],
+      blocked: ["최종 진단/처방 결정", "환자 식별정보 원본", "권한 정책 변경"],
+      outputs: ["AI 예측 리포트", "후보 랭킹표", "모델 한계 설명"]
+    },
+
+    patient_explanation_designer: {
+      icon: "📝",
+      title: "Patient Explanation Designer Workspace",
+      subtitle: "검사 결과와 AI 예측 결과를 환자가 이해할 수 있는 설명으로 바꾸는 화면입니다.",
+      metrics: [
+        ["📝", "설명 리포트", "28", "작성"],
+        ["❓", "상담 질문", "64", "생성"],
+        ["📄", "PDF 템플릿", "6", "관리"],
+        ["⚠", "표현 검수", "9", "필요"]
+      ],
+      tasks: [
+        ["쉬운 설명 문장 작성", "전문용어를 줄이고 환자가 이해 가능한 표현으로 변환합니다."],
+        ["금지 표현 검수", "진단 확정, 치료 보장, 약효 단정 표현을 제거합니다."],
+        ["상담 질문 생성", "환자가 의사에게 물어볼 질문을 정리합니다."]
+      ],
+      data: ["환자용 요약", "설명 리포트 초안", "금지 표현 체크", "상담 질문"],
+      blocked: ["의료진 최종 판단 대체", "처방 추천 확정", "보안 로그 접근"],
+      outputs: ["환자용 설명 리포트", "상담 질문 리스트", "표현 검수 결과"]
+    },
+
+    research_workflow_engineer: {
+      icon: "🧪",
+      title: "Research Workflow Engineer Workspace",
+      subtitle: "연구 실험 파이프라인, 도킹 Config, 실험 로그, 재현성 체크를 관리하는 화면입니다.",
+      metrics: [
+        ["⚗", "파이프라인", "18", "운영"],
+        ["📜", "실험 로그", "342", "기록"],
+        ["⌬", "Docking Config", "76", "관리"],
+        ["✓", "재현성 체크", "91%", "정상"]
+      ],
+      tasks: [
+        ["실험 파이프라인 구성", "단백질 선택, 도킹 설정, 결과 저장 흐름을 구성합니다."],
+        ["도킹 Config 관리", "그리드 중심, 박스 크기, 알고리즘 설정을 기록합니다."],
+        ["재현성 체크", "입력 파일, Config, 결과 JSON, 로그 파일을 연결합니다."]
+      ],
+      data: ["실험 Config", "실험 로그", "결과 JSON", "재현성 체크리스트"],
+      blocked: ["실명 환자 데이터", "처방 결정", "계정 승인"],
+      outputs: ["실험 파이프라인", "재현성 리포트", "실험 로그 패키지"]
+    },
+
+    clinical_workflow_coordinator: {
+      icon: "🏥",
+      title: "Clinical Workflow Coordinator Workspace",
+      subtitle: "의사·약사·원무 사이의 업무 흐름과 인수인계 상태를 연결하는 화면입니다.",
+      metrics: [
+        ["🩺", "의사 요청", "14", "대기"],
+        ["💊", "약사 검토", "8", "진행"],
+        ["🗂", "원무 처리", "21", "진행"],
+        ["📄", "리포트 전달", "12", "완료"]
+      ],
+      tasks: [
+        ["의사-약사 협업 연결", "처방 검토 요청과 검토 결과를 연결합니다."],
+        ["원무 동의서 상태 확인", "리포트 제공과 연구 활용 동의 상태를 확인합니다."],
+        ["인수인계 요약 관리", "직군별로 필요한 최소 정보만 전달합니다."]
+      ],
+      data: ["업무 상태", "협업 요청", "동의서 상태", "마스킹된 환자 요약"],
+      blocked: ["불필요한 진단 상세", "보안 로그 삭제", "연구 원천 데이터"],
+      outputs: ["협업 진행표", "인수인계 요약", "업무 병목 리포트"]
+    },
+
+    bio_security_architect: {
+      icon: "🛡",
+      title: "Bio Security Architect Workspace",
+      subtitle: "의료·바이오 데이터 접근권한, 동의, 감사 로그, 내부자 위험 탐지를 설계하는 화면입니다.",
+      metrics: [
+        ["📜", "접근 로그", "128", "최근"],
+        ["🚫", "차단 이벤트", "9", "검토"],
+        ["⚠", "위험 이벤트", "6", "주의"],
+        ["🔐", "정책 적용률", "100%", "RBAC"]
+      ],
+      tasks: [
+        ["역할 기반 접근 정책 설계", "환자, 의사, 약사, 원무, 연구자, 보안 권한을 분리합니다."],
+        ["내부자 과다열람 탐지", "반복 열람, 업무 외 접근, 권한 밖 시도를 감지합니다."],
+        ["동의 기반 데이터 접근 설계", "환자 동의 범위에 따라 연구/리포트 접근을 제한합니다."]
+      ],
+      data: ["접근 로그", "위험 이벤트", "권한 매트릭스", "동의 정책"],
+      blocked: ["의료 판단 수정", "연구 결과 조작", "처방 변경"],
+      outputs: ["권한 정책표", "위협 모델", "보안 감사 리포트"]
+    },
+
+    virtual_lab_developer: {
+      icon: "🧫",
+      title: "Virtual Lab Developer Workspace",
+      subtitle: "3D 분자 뷰어, 가상 도킹, WebGL/VR/AR 실험실 화면을 개발하는 화면입니다.",
+      metrics: [
+        ["🧫", "가상 실험", "22", "진행"],
+        ["🧬", "3D 뷰어", "5", "모듈"],
+        ["⌬", "Ligand Pose", "128", "시각화"],
+        ["🖥", "WebGL 화면", "7", "개발"]
+      ],
+      tasks: [
+        ["3D 분자 뷰어 개발", "단백질 표면, 활성 부위, 리간드 위치를 시각화합니다."],
+        ["가상 도킹 화면 구현", "도킹 결과와 결합 포즈를 사용자가 이해하기 쉽게 보여줍니다."],
+        ["VR/AR 확장 설계", "미래 버전에서 분자 결합을 공간적으로 탐색하는 기능을 설계합니다."]
+      ],
+      data: ["3D 구조", "Ligand Pose", "WebGL 컴포넌트", "시뮬레이션 상태"],
+      blocked: ["임상 판단", "처방 추천 확정", "환자 원본 데이터"],
+      outputs: ["3D Viewer", "Virtual Docking Lab", "VR/AR 로드맵"]
+    }
+  };
+
+  function u() {
+    if (typeof user === "function") {
+      return user();
+    }
+    return { role:"researcher", label:"연구자", name:"김서연 박사" };
+  }
+
+  function metricHtml(items) {
+    return items.map(m => `
+      <div class="card console-stat">
+        <div class="console-stat-icon">${m[0]}</div>
+        <div>
+          <span>${m[1]}</span>
+          <b>${m[2]}</b>
+          <span>${m[3]}</span>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function listHtml(items) {
+    return items.map(item => `
+      <div class="workspace-item">
+        <b>${item[0]}</b>
+        <span>${item[1]}</span>
+      </div>
+    `).join("");
+  }
+
+  function chipHtml(items) {
+    return `<div class="role-chip-row">${items.map(i => `<span class="role-chip">${i}</span>`).join("")}</div>`;
+  }
+
+  function showCustomScreen(id, activeKey) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    const el = document.getElementById(id);
+    if (el) el.classList.add("active");
+
+    document.querySelectorAll("#nav button").forEach(b => {
+      b.classList.toggle("active", b.dataset.view === activeKey);
+    });
+  }
+
+  async function auditAsDashboard() {
+    const current = u();
+
+    try {
+      await fetch("http://127.0.0.1:8000/security/access-check", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+          role:current.role,
+          actor:current.name,
+          view:"dashboard",
+          patient_id:"PT-2025-0520-0017",
+          reason:"role workspace open"
+        })
+      });
+    } catch(e) {
+      console.warn("workspace audit failed", e);
+    }
+  }
+
+  window.openRoleWorkspace = async function() {
+    await auditAsDashboard();
+
+    const current = u();
+    const cfg = WORKSPACES[current.role] || WORKSPACES.researcher;
+    const target = document.getElementById("screen-role_workspace");
+
+    target.innerHTML = `
+      <div class="workspace-header">
+        <div>
+          <div class="workspace-kicker">${cfg.icon} ${current.label || current.role}</div>
+          <h1>${cfg.title}</h1>
+          <p class="subtitle">${cfg.subtitle}</p>
+        </div>
+        <button class="blue-btn" onclick="navigate('dashboard', true)">Dashboard</button>
+      </div>
+
+      <div class="grid grid-4" style="margin-bottom:18px">
+        ${metricHtml(cfg.metrics)}
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="workspace-section-title">
+            <h2>주요 업무</h2>
+            <span class="pill">Daily Work</span>
+          </div>
+          <div class="workspace-list">
+            ${listHtml(cfg.tasks)}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="workspace-section-title">
+            <h2>접근 가능한 데이터</h2>
+            <span class="pill green">Allowed</span>
+          </div>
+          ${chipHtml(cfg.data)}
+
+          <br/><br/>
+
+          <div class="workspace-section-title">
+            <h2>제한되는 데이터/행위</h2>
+            <span class="pill red">Restricted</span>
+          </div>
+          ${chipHtml(cfg.blocked)}
+        </div>
+
+        <div class="card">
+          <div class="workspace-section-title">
+            <h2>생성 산출물</h2>
+            <span class="pill purple">Outputs</span>
+          </div>
+          ${chipHtml(cfg.outputs)}
+        </div>
+
+        <div class="card">
+          <h2>역할 경계</h2>
+          <div class="alert warn">
+            이 화면은 역할별 업무를 보여주는 프로토타입입니다.
+            실제 상용화 버전에서는 기관 승인, 2단계 인증, 접근 사유 입력, 감사 로그 보존 정책이 필요합니다.
+          </div>
+        </div>
+      </div>
+    `;
+
+    showCustomScreen("screen-role_workspace", "role_workspace");
+  };
+
+  function buildPermissionMatrix() {
+    const roles = [
+      ["patient", "환자"],
+      ["doctor", "의사"],
+      ["pharmacist", "약사"],
+      ["admin_staff", "원무"],
+      ["researcher", "연구자"],
+      ["security", "보안"],
+      ["super_admin", "플랫폼 관리자"],
+      ["bio_data_curator", "Bio Data Curator"],
+      ["ai_model_operator", "AI Model Operator"],
+      ["patient_explanation_designer", "Patient Explanation Designer"],
+      ["research_workflow_engineer", "Research Workflow Engineer"],
+      ["clinical_workflow_coordinator", "Clinical Workflow Coordinator"],
+      ["bio_security_architect", "Bio Security Architect"],
+      ["virtual_lab_developer", "Virtual Lab Developer"]
+    ];
+
+    const cols = [
+      ["patient", "Patient"],
+      ["doctor", "Doctor"],
+      ["research_lab", "Research"],
+      ["prescription", "Pharmacy"],
+      ["admin", "Admin"],
+      ["security", "Security"],
+      ["data_hub", "Data Hub"]
+    ];
+
+    const policy = typeof POLICY !== "undefined" ? POLICY : {};
+
+    return `
+      <table class="table matrix-table">
+        <thead>
+          <tr>
+            <th>Role</th>
+            ${cols.map(c => `<th>${c[1]}</th>`).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          ${roles.map(r => `
+            <tr>
+              <td>${r[1]}</td>
+              ${cols.map(c => {
+                const yes = (policy[r[0]] || []).includes(c[0]);
+                return `<td class="${yes ? "yes" : "no"}">${yes ? "허용" : "차단"}</td>`;
+              }).join("")}
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function accountTable() {
+    let accounts = [];
+
+    try {
+      accounts = JSON.parse(localStorage.getItem("biodocklab_v04_accounts") || "[]");
+    } catch(e) {
+      accounts = [];
+    }
+
+    if (!accounts.length) {
+      accounts = [
+        { email:"owner@biodocklab.local", role:"super_admin", name:"이영준 관리자" },
+        { email:"doctor@biodocklab.local", role:"doctor", name:"이준호 의사" },
+        { email:"pharmacist@biodocklab.local", role:"pharmacist", name:"박민지 약사" },
+        { email:"admin@biodocklab.local", role:"admin_staff", name:"최하늘 원무" },
+        { email:"researcher@biodocklab.local", role:"researcher", name:"김서연 박사" },
+        { email:"security@biodocklab.local", role:"security", name:"보안관리자" }
+      ];
+    }
+
+    return `
+      <table class="table">
+        <thead>
+          <tr><th>이름</th><th>이메일</th><th>역할</th><th>승인 상태</th><th>MFA</th></tr>
+        </thead>
+        <tbody>
+          ${accounts.map(a => `
+            <tr>
+              <td>${a.name || "-"}</td>
+              <td>${a.email || "-"}</td>
+              <td>${a.role || "-"}</td>
+              <td><span class="pill green">approved</span></td>
+              <td><span class="pill orange">demo</span></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  window.openAdminConsole = async function() {
+    const current = u();
+
+    if (current.role !== "super_admin") {
+      const deny = document.getElementById("denyText");
+      if (deny) {
+        deny.textContent = `${current.label || current.role} 권한으로는 Platform Admin Console에 접근할 수 없습니다.`;
+      }
+      showCustomScreen("screen-denied", "admin_console");
+      return;
+    }
+
+    try {
+      await fetch("http://127.0.0.1:8000/security/access-check", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+          role:current.role,
+          actor:current.name,
+          view:"security",
+          patient_id:null,
+          reason:"platform admin console open"
+        })
+      });
+    } catch(e) {}
+
+    const target = document.getElementById("screen-admin_console");
+
+    target.innerHTML = `
+      <div class="workspace-header">
+        <div>
+          <div class="workspace-kicker">👑 Platform Admin</div>
+          <h1>Platform Admin Console</h1>
+          <p class="subtitle">계정, 역할, 권한 매트릭스, 접근 요청, 보안 정책을 관리합니다.</p>
+        </div>
+        <button class="blue-btn" onclick="openRoleWorkspace()">내 워크스페이스</button>
+      </div>
+
+      <div class="grid grid-4" style="margin-bottom:18px">
+        ${metricHtml([
+          ["👥", "계정", "14+", "관리"],
+          ["🔐", "권한정책", "RBAC", "적용"],
+          ["📜", "감사로그", "자동", "기록"],
+          ["⚠", "위험이벤트", "검토", "필요"]
+        ])}
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>계정 목록</h2>
+          ${accountTable()}
+        </div>
+
+        <div class="card">
+          <h2>접근 요청 / 차단 이벤트</h2>
+          <div class="workspace-list">
+            ${listHtml([
+              ["원무 → 처방 상세 접근 차단", "원무는 예약/동의/서류 업무만 가능하며 처방량은 마스킹됩니다."],
+              ["연구자 → 실명 환자정보 접근 차단", "연구자는 비식별 연구 데이터셋만 접근 가능합니다."],
+              ["환자 → 연구 실험실 접근 차단", "환자는 본인 설명 리포트와 상담 준비 정보만 확인합니다."]
+            ])}
+          </div>
+        </div>
+
+        <div class="card" style="grid-column:1 / -1">
+          <h2>역할별 권한 매트릭스</h2>
+          ${buildPermissionMatrix()}
+        </div>
+
+        <div class="card">
+          <h2>상용화 보안 체크리스트</h2>
+          <div class="workspace-list">
+            ${listHtml([
+              ["2단계 인증", "플랫폼 관리자, 보안관리자, 의료진 계정에 필수 적용"],
+              ["기관 승인", "의사/약사/원무/연구자 계정은 기관 확인 후 승인"],
+              ["접근 사유 입력", "민감정보 열람 시 목적과 사유 기록"],
+              ["감사 로그 보존", "접근 로그, 차단 로그, 다운로드 로그 장기 보관"]
+            ])}
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>제품 경계</h2>
+          <div class="alert warn">
+            BioDockLab은 EMR 대체, 진단, 처방, 임상 의사결정 시스템이 아닙니다.
+            연구/교육/설명 보조 및 보안 감사 레이어로 정의합니다.
+          </div>
+        </div>
+      </div>
+    `;
+
+    showCustomScreen("screen-admin_console", "admin_console");
+  };
+
+  function addWorkspaceNav() {
+    const nav = document.getElementById("nav");
+    if (!nav) return;
+
+    if (!document.querySelector('[data-view="role_workspace"]')) {
+      const btn = document.createElement("button");
+      btn.dataset.view = "role_workspace";
+      btn.innerHTML = '<span class="icon">🧭</span>My Workspace';
+      btn.addEventListener("click", window.openRoleWorkspace);
+      nav.appendChild(btn);
+    }
+
+    if (!document.querySelector('[data-view="admin_console"]')) {
+      const btn = document.createElement("button");
+      btn.dataset.view = "admin_console";
+      btn.innerHTML = '<span class="icon">👑</span>Admin Console';
+      btn.addEventListener("click", window.openAdminConsole);
+      nav.appendChild(btn);
+    }
+  }
+
+  function boot() {
+    addWorkspaceNav();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();
 </script>
 

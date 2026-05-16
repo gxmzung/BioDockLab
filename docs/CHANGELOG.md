@@ -25,3 +25,12 @@
 - Added detailed experiment parameters, candidate table, molecular evidence, and claim-boundary notes.
 - Preserved role-based access and proprietary/private project direction.
 
+
+## v0.5-role-workspaces
+
+- Added My Workspace screen.
+- Added concrete role-specific task/data/restriction/output sections.
+- Added Platform Admin Console.
+- Added account table, access request examples, permission matrix, and commercialization security checklist.
+- Preserved private/proprietary product direction.
+
