@@ -727,6 +727,7 @@
           <button onclick="demoLogin('admin_staff')">원무</button>
           <button onclick="demoLogin('researcher')">연구자</button>
           <button onclick="demoLogin('security')">보안</button>
+          <button onclick="demoLogin('super_admin')">관리자</button>
         </div>
       </div>
 
@@ -755,6 +756,7 @@
             <option value="admin_staff">원무</option>
             <option value="researcher">연구자</option>
             <option value="security">보안관리자</option>
+            <option value="super_admin">플랫폼 관리자</option>
           </select>
         </div>
 
@@ -943,7 +945,8 @@ const USERS = [
   { role:"pharmacist", label:"약사", name:"박민지 약사", title:"Pharmacist" },
   { role:"admin_staff", label:"원무", name:"최하늘 원무", title:"Administration" },
   { role:"patient", label:"환자", name:"환자 사용자", title:"Patient" },
-  { role:"security", label:"보안", name:"보안관리자", title:"Security" }
+  { role:"security", label:"보안", name:"보안관리자", title:"Security" },
+  { role:"super_admin", label:"플랫폼 관리자", name:"이영준 관리자", title:"Platform Admin" }
 ];
 
 const POLICY = {
@@ -952,7 +955,8 @@ const POLICY = {
   pharmacist: ["dashboard","prescription","patient_limited","reports_limited"],
   admin_staff: ["dashboard","admin","appointments","consent_status","patient_limited"],
   researcher: ["dashboard","research_lab","docking","data_hub"],
-  security: ["dashboard","security","audit_logs","risk_events"]
+  security: ["dashboard","security","audit_logs","risk_events"],
+  super_admin: ["dashboard","patient","doctor","research_lab","docking","prescription","admin","appointments","consent_status","data_hub","security","audit_logs","risk_events","reports","reports_limited","patient_limited"]
 };
 
 const ROLE_DASHBOARD = {
@@ -1641,7 +1645,8 @@ init();
     { email:"pharmacist@biodocklab.local", password:"1234", name:"박민지 약사", role:"pharmacist" },
     { email:"admin@biodocklab.local", password:"1234", name:"최하늘 원무", role:"admin_staff" },
     { email:"researcher@biodocklab.local", password:"1234", name:"김서연 박사", role:"researcher" },
-    { email:"security@biodocklab.local", password:"1234", name:"보안관리자", role:"security" }
+    { email:"security@biodocklab.local", password:"1234", name:"보안관리자", role:"security" },
+    { email:"owner@biodocklab.local", password:"4748", name:"이영준 관리자", role:"super_admin" }
   ];
 
   function loadAccounts() {
