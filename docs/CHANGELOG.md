@@ -9,3 +9,11 @@
 - Moved biogrammer job roles to internal role matrix documentation.
 - Preserved proprietary/private project direction.
 
+
+## v0.4.1-admin-login-fix
+
+- Fixed hidden platform admin login.
+- Platform admin remains hidden from demo buttons.
+- `owner@biodocklab.local / 4748` now logs in as `super_admin`.
+- Added frontend hard binding and backend policy fallback for super admin.
+

@@ -799,7 +799,7 @@
       <p style="color:var(--blue);font-weight:950">상세 보기 〉</p>
     </div>
 
-    <div class="version">© 2025 BioDockLab<br/>v0.4 role-auth</div>
+    <div class="version">© 2025 BioDockLab<br/>v0.4.1 admin-login</div>
   </aside>
 
   <main>
@@ -1891,6 +1891,168 @@ init();
   } else {
     bootAuth();
   }
+})();
+</script>
+
+
+<script id="biodocklab-super-admin-fix-v041">
+(() => {
+  const SUPER_ADMIN = {
+    email: "owner@biodocklab.local",
+    password: "4748",
+    name: "이영준 관리자",
+    role: "super_admin",
+    label: "플랫폼 관리자",
+    title: "Platform Admin"
+  };
+
+  function ensureSuperAdminRole() {
+    try {
+      if (typeof USERS !== "undefined" && !USERS.some(u => u.role === "super_admin")) {
+        USERS.push({
+          role: "super_admin",
+          label: "플랫폼 관리자",
+          name: "이영준 관리자",
+          title: "Platform Admin"
+        });
+      }
+
+      if (typeof POLICY !== "undefined") {
+        POLICY.super_admin = [
+          "dashboard",
+          "patient",
+          "doctor",
+          "research_lab",
+          "docking",
+          "prescription",
+          "admin",
+          "appointments",
+          "consent_status",
+          "data_hub",
+          "security",
+          "audit_logs",
+          "risk_events",
+          "reports",
+          "reports_limited",
+          "patient_limited"
+        ];
+      }
+
+      if (typeof ROLE_DASHBOARD !== "undefined" && !ROLE_DASHBOARD.super_admin) {
+        ROLE_DASHBOARD.super_admin = {
+          banner: "👑 플랫폼 관리자 권한 화면 · 전체 역할, 권한, 보안 로그, 연구/임상 워크플로우를 관리합니다.",
+          metrics: [
+            ["👥", "전체 역할", "14", "관리"],
+            ["🔐", "접근 정책", "100%", "RBAC"],
+            ["📜", "감사 로그", "전체", "조회"],
+            ["🚫", "차단 이벤트", "검토", "필요"]
+          ],
+          recent: [
+            ["역할 정책 관리", "전체 권한", "Platform Admin", "진행 중", "이영준 관리자"],
+            ["보안 로그 확인", "Audit Center", "Security", "허용", "이영준 관리자"],
+            ["상용화 권한 구조 검토", "BioDockLab", "Product", "검토 중", "이영준 관리자"]
+          ],
+          insights: [
+            ["safe", "플랫폼 관리자는 전체 화면 접근이 가능합니다."],
+            ["warn", "실제 서비스에서는 관리자 계정에 2단계 인증과 접근 사유 기록이 필요합니다."]
+          ]
+        };
+      }
+
+      const roleSelect = document.getElementById("roleSelect");
+      if (roleSelect && !Array.from(roleSelect.options).some(o => o.value === "super_admin")) {
+        const option = document.createElement("option");
+        option.value = "super_admin";
+        option.textContent = "플랫폼 관리자";
+        option.hidden = true;
+        roleSelect.appendChild(option);
+      }
+    } catch (e) {
+      console.warn("super admin role ensure failed", e);
+    }
+  }
+
+  function saveSuperAdminToAccounts() {
+    const key = "biodocklab_v04_accounts";
+    let accounts = [];
+
+    try {
+      accounts = JSON.parse(localStorage.getItem(key) || "[]");
+    } catch (e) {
+      accounts = [];
+    }
+
+    if (!accounts.some(acc => acc.email === SUPER_ADMIN.email)) {
+      accounts.push(SUPER_ADMIN);
+      localStorage.setItem(key, JSON.stringify(accounts));
+    }
+  }
+
+  function applySuperAdminSession() {
+    ensureSuperAdminRole();
+    saveSuperAdminToAccounts();
+
+    localStorage.setItem("biodocklab_v04_session", JSON.stringify(SUPER_ADMIN));
+    localStorage.setItem("biodocklab_v03_role", "super_admin");
+
+    try {
+      if (typeof currentRole !== "undefined") {
+        currentRole = "super_admin";
+      }
+    } catch (e) {}
+
+    const gate = document.getElementById("authGate");
+    if (gate) gate.style.display = "none";
+
+    const roleSelect = document.getElementById("roleSelect");
+    if (roleSelect) {
+      if (!Array.from(roleSelect.options).some(o => o.value === "super_admin")) {
+        const option = document.createElement("option");
+        option.value = "super_admin";
+        option.textContent = "플랫폼 관리자";
+        option.hidden = true;
+        roleSelect.appendChild(option);
+      }
+      roleSelect.value = "super_admin";
+      roleSelect.disabled = true;
+    }
+
+    const actorName = document.getElementById("actorName");
+    const actorRole = document.getElementById("actorRole");
+
+    if (actorName) actorName.textContent = SUPER_ADMIN.name;
+    if (actorRole) actorRole.textContent = "플랫폼 관리자";
+
+    if (typeof renderDashboard === "function") {
+      renderDashboard();
+    }
+
+    if (typeof navigate === "function") {
+      navigate("dashboard", true);
+    }
+  }
+
+  const previousLogin = window.loginBioDockLab;
+
+  window.loginBioDockLab = function() {
+    ensureSuperAdminRole();
+    saveSuperAdminToAccounts();
+
+    const email = document.getElementById("loginEmail")?.value.trim();
+    const password = document.getElementById("loginPassword")?.value.trim();
+
+    if (email === SUPER_ADMIN.email && password === SUPER_ADMIN.password) {
+      applySuperAdminSession();
+      return;
+    }
+
+    if (typeof previousLogin === "function") {
+      previousLogin();
+    }
+  };
+
+  ensureSuperAdminRole();
+  saveSuperAdminToAccounts();
 })();
 </script>
 
