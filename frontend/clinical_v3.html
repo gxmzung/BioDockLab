@@ -422,10 +422,353 @@
       font-weight:950;
       color:#17233c;
     }
+  
+    .logout-btn {
+      border:1px solid var(--line);
+      background:white;
+      color:#17233c;
+      border-radius:14px;
+      padding:11px 14px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .logout-btn:hover {
+      background:#f8fafc;
+    }
+
+    #roleSelect:disabled {
+      background:#f8fafc;
+      color:#64748b;
+      cursor:not-allowed;
+    }
+
+    .auth-gate {
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      background:linear-gradient(135deg,#eef5ff,#f7faff 45%,#ecfdf5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .auth-shell {
+      width:1120px;
+      min-height:680px;
+      background:white;
+      border:1px solid var(--line);
+      border-radius:34px;
+      box-shadow:0 24px 80px rgba(15,23,42,.12);
+      display:grid;
+      grid-template-columns:1fr 460px;
+      overflow:hidden;
+    }
+
+    .auth-left {
+      padding:52px;
+      background:
+        radial-gradient(circle at 70% 20%, rgba(20,184,166,.16), transparent 28%),
+        radial-gradient(circle at 10% 80%, rgba(31,107,255,.16), transparent 30%),
+        white;
+    }
+
+    .auth-brand {
+      display:flex;
+      align-items:center;
+      gap:14px;
+      font-size:34px;
+      font-weight:950;
+      color:var(--blue);
+      margin-bottom:40px;
+    }
+
+    .auth-title {
+      font-size:44px;
+      line-height:1.12;
+      font-weight:950;
+      letter-spacing:-1px;
+      margin:0;
+    }
+
+    .auth-subtitle {
+      margin-top:18px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.7;
+      font-weight:750;
+    }
+
+    .auth-feature-grid {
+      margin-top:38px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .auth-feature {
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:#f8fbff;
+      font-weight:850;
+      line-height:1.6;
+    }
+
+    .auth-feature b {
+      display:block;
+      margin-bottom:6px;
+      font-size:17px;
+      color:#17233c;
+    }
+
+    .auth-feature span {
+      color:#64748b;
+      font-size:14px;
+    }
+
+    .auth-right {
+      padding:42px;
+      background:#f8fafc;
+      border-left:1px solid var(--line);
+    }
+
+    .auth-tabs {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-bottom:22px;
+    }
+
+    .auth-tab {
+      border:1px solid var(--line);
+      background:white;
+      border-radius:14px;
+      padding:13px;
+      font-weight:950;
+      cursor:pointer;
+      color:#17233c;
+    }
+
+    .auth-tab.active {
+      background:var(--blue);
+      color:white;
+      border-color:var(--blue);
+    }
+
+    .auth-form {
+      display:none;
+    }
+
+    .auth-form.active {
+      display:block;
+    }
+
+    .auth-field {
+      margin-bottom:16px;
+    }
+
+    .auth-field label {
+      display:block;
+      font-size:13px;
+      color:#64748b;
+      font-weight:950;
+      margin-bottom:8px;
+    }
+
+    .auth-field input,
+    .auth-field select {
+      width:100%;
+      height:48px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:0 14px;
+      font-weight:850;
+      background:white;
+      outline:none;
+    }
+
+    .auth-submit {
+      width:100%;
+      height:52px;
+      border:0;
+      border-radius:16px;
+      background:var(--blue);
+      color:white;
+      font-weight:950;
+      font-size:16px;
+      cursor:pointer;
+      margin-top:8px;
+    }
+
+    .auth-notice {
+      margin-top:18px;
+      padding:14px;
+      border-radius:14px;
+      background:#fffbeb;
+      border:1px solid #fde68a;
+      color:#92400e;
+      font-weight:800;
+      line-height:1.6;
+      font-size:13px;
+    }
+
+    .demo-login-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .demo-login-grid button {
+      border:1px solid var(--line);
+      background:white;
+      border-radius:14px;
+      padding:12px;
+      font-weight:950;
+      cursor:pointer;
+      color:#17233c;
+    }
+
+    .demo-login-grid button:hover {
+      background:#eef5ff;
+      color:var(--blue);
+    }
+
+    .auth-error {
+      display:none;
+      margin-bottom:14px;
+      padding:12px;
+      border-radius:12px;
+      background:#fff1f2;
+      border:1px solid #fecdd3;
+      color:#be123c;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .auth-error.show {
+      display:block;
+    }
+
   </style>
 </head>
 
 <body>
+
+<div class="auth-gate" id="authGate">
+  <div class="auth-shell">
+    <div class="auth-left">
+      <div class="auth-brand"><span>🧬</span><span>BioDockLab</span></div>
+
+      <h1 class="auth-title">
+        역할 기반 의료·바이오 데이터 접근 플랫폼
+      </h1>
+
+      <p class="auth-subtitle">
+        환자, 의사, 약사, 원무, 연구자, 보안관리자가 각자 필요한 정보만 접근하도록 분리합니다.
+        모든 접근은 감사 로그로 기록되며, 권한 밖 접근은 차단됩니다.
+      </p>
+
+      <div class="auth-feature-grid">
+        <div class="auth-feature">
+          <b>역할 기반 접근제어</b>
+          <span>환자·의사·약사·원무·연구자·보안 역할별 화면 분리</span>
+        </div>
+
+        <div class="auth-feature">
+          <b>민감정보 마스킹</b>
+          <span>원무·연구자 화면에서 진단/처방/개인식별 정보 제한</span>
+        </div>
+
+        <div class="auth-feature">
+          <b>보안 감사 로그</b>
+          <span>누가, 언제, 어떤 화면에 접근했는지 자동 기록</span>
+        </div>
+
+        <div class="auth-feature">
+          <b>연구/설명 보조</b>
+          <span>실제 진단·처방이 아닌 연구와 설명 보조 목적</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">로그인</button>
+        <button class="auth-tab" id="signupTab" onclick="switchAuthTab('signup')">회원가입</button>
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+
+      <div class="auth-form active" id="loginForm">
+        <div class="auth-field">
+          <label>이메일</label>
+          <input id="loginEmail" placeholder="예: doctor@biodocklab.local" />
+        </div>
+
+        <div class="auth-field">
+          <label>비밀번호</label>
+          <input id="loginPassword" type="password" placeholder="데모 비밀번호: 1234" />
+        </div>
+
+        <button class="auth-submit" onclick="loginBioDockLab()">로그인</button>
+
+        <div class="auth-notice">
+          데모 계정은 아래 버튼으로 바로 로그인할 수 있습니다.
+          실제 상용화 버전에서는 병원/기관 인증, 2단계 인증, 관리자 승인이 필요합니다.
+        </div>
+
+        <div class="demo-login-grid">
+          <button onclick="demoLogin('patient')">환자</button>
+          <button onclick="demoLogin('doctor')">의사</button>
+          <button onclick="demoLogin('pharmacist')">약사</button>
+          <button onclick="demoLogin('admin_staff')">원무</button>
+          <button onclick="demoLogin('researcher')">연구자</button>
+          <button onclick="demoLogin('security')">보안</button>
+        </div>
+      </div>
+
+      <div class="auth-form" id="signupForm">
+        <div class="auth-field">
+          <label>이름</label>
+          <input id="signupName" placeholder="이름을 입력하세요" />
+        </div>
+
+        <div class="auth-field">
+          <label>이메일</label>
+          <input id="signupEmail" placeholder="이메일을 입력하세요" />
+        </div>
+
+        <div class="auth-field">
+          <label>비밀번호</label>
+          <input id="signupPassword" type="password" placeholder="비밀번호를 입력하세요" />
+        </div>
+
+        <div class="auth-field">
+          <label>가입 역할</label>
+          <select id="signupRole">
+            <option value="patient">환자</option>
+            <option value="doctor">의사</option>
+            <option value="pharmacist">약사</option>
+            <option value="admin_staff">원무</option>
+            <option value="researcher">연구자</option>
+            <option value="security">보안관리자</option>
+          </select>
+        </div>
+
+        <button class="auth-submit" onclick="signupBioDockLab()">회원가입 후 시작</button>
+
+        <div class="auth-notice">
+          환자 외 역할은 실제 서비스에서는 면허/소속기관/관리자 승인 절차가 필요합니다.
+          현재는 발표용 프로토타입이므로 즉시 데모 계정으로 생성됩니다.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="app">
   <aside>
     <div class="logo"><span class="logo-mark">🧬</span><span>BioDockLab</span></div>
@@ -457,8 +800,7 @@
       <div class="search">⌕ <input placeholder="검색 (환자, 화합물, 실험, 보고서 등)" /><span>⌘ K</span></div>
 
       <div class="top">
-        <span>🔔<sup style="background:var(--blue);color:white;border-radius:50%;padding:2px 6px">3</sup></span>
-        <span>?</span>
+        <button class="logout-btn" id="logoutBtn" onclick="logoutBioDockLab()">로그아웃</button>
         <select id="roleSelect"></select>
         <div class="userbox">
           <div class="avatar"></div>
@@ -1287,5 +1629,192 @@ function init() {
 
 init();
 </script>
+
+<script id="biodocklab-auth-v04">
+(() => {
+  const ACCOUNTS_KEY = "biodocklab_v04_accounts";
+  const SESSION_KEY = "biodocklab_v04_session";
+
+  const DEFAULT_ACCOUNTS = [
+    { email:"patient@biodocklab.local", password:"1234", name:"환자 사용자", role:"patient" },
+    { email:"doctor@biodocklab.local", password:"1234", name:"이준호 의사", role:"doctor" },
+    { email:"pharmacist@biodocklab.local", password:"1234", name:"박민지 약사", role:"pharmacist" },
+    { email:"admin@biodocklab.local", password:"1234", name:"최하늘 원무", role:"admin_staff" },
+    { email:"researcher@biodocklab.local", password:"1234", name:"김서연 박사", role:"researcher" },
+    { email:"security@biodocklab.local", password:"1234", name:"보안관리자", role:"security" }
+  ];
+
+  function loadAccounts() {
+    const saved = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "[]");
+    const merged = [...DEFAULT_ACCOUNTS];
+
+    saved.forEach(acc => {
+      if (!merged.some(item => item.email === acc.email)) {
+        merged.push(acc);
+      }
+    });
+
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(merged));
+    return merged;
+  }
+
+  function saveAccounts(accounts) {
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  }
+
+  function showAuthError(message) {
+    const el = document.getElementById("authError");
+    if (!el) return;
+    el.textContent = message;
+    el.classList.add("show");
+  }
+
+  function clearAuthError() {
+    const el = document.getElementById("authError");
+    if (!el) return;
+    el.textContent = "";
+    el.classList.remove("show");
+  }
+
+  window.switchAuthTab = function(tab) {
+    clearAuthError();
+
+    document.getElementById("loginTab").classList.toggle("active", tab === "login");
+    document.getElementById("signupTab").classList.toggle("active", tab === "signup");
+
+    document.getElementById("loginForm").classList.toggle("active", tab === "login");
+    document.getElementById("signupForm").classList.toggle("active", tab === "signup");
+  };
+
+  function applySession(account) {
+    if (!account) return;
+
+    localStorage.setItem(SESSION_KEY, JSON.stringify(account));
+    localStorage.setItem("biodocklab_v03_role", account.role);
+
+    if (typeof USERS !== "undefined") {
+      const roleUser = USERS.find(u => u.role === account.role);
+      if (roleUser) {
+        roleUser.name = account.name;
+      }
+    }
+
+    if (typeof setRole === "function") {
+      setRole(account.role);
+    }
+
+    const gate = document.getElementById("authGate");
+    if (gate) gate.style.display = "none";
+
+    const roleSelect = document.getElementById("roleSelect");
+    if (roleSelect) {
+      roleSelect.value = account.role;
+      roleSelect.disabled = true;
+      roleSelect.title = "역할은 로그인 계정에 의해 결정됩니다.";
+    }
+
+    const actorName = document.getElementById("actorName");
+    const actorRole = document.getElementById("actorRole");
+
+    const roleLabel = typeof USERS !== "undefined"
+      ? (USERS.find(u => u.role === account.role)?.label || account.role)
+      : account.role;
+
+    if (actorName) actorName.textContent = account.name;
+    if (actorRole) actorRole.textContent = roleLabel;
+  }
+
+  window.loginBioDockLab = function() {
+    clearAuthError();
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+
+    const accounts = loadAccounts();
+    const account = accounts.find(acc => acc.email === email && acc.password === password);
+
+    if (!account) {
+      showAuthError("이메일 또는 비밀번호가 맞지 않습니다.");
+      return;
+    }
+
+    applySession(account);
+  };
+
+  window.signupBioDockLab = function() {
+    clearAuthError();
+
+    const name = document.getElementById("signupName").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value.trim();
+    const role = document.getElementById("signupRole").value;
+
+    if (!name || !email || !password) {
+      showAuthError("이름, 이메일, 비밀번호를 모두 입력해야 합니다.");
+      return;
+    }
+
+    const accounts = loadAccounts();
+
+    if (accounts.some(acc => acc.email === email)) {
+      showAuthError("이미 가입된 이메일입니다.");
+      return;
+    }
+
+    const account = {
+      email,
+      password,
+      name,
+      role,
+      approval_status: role === "patient" ? "approved" : "demo_approved"
+    };
+
+    accounts.push(account);
+    saveAccounts(accounts);
+    applySession(account);
+  };
+
+  window.demoLogin = function(role) {
+    const accounts = loadAccounts();
+    const account = accounts.find(acc => acc.role === role) || accounts[0];
+    applySession(account);
+  };
+
+  window.logoutBioDockLab = function() {
+    localStorage.removeItem(SESSION_KEY);
+
+    const gate = document.getElementById("authGate");
+    if (gate) gate.style.display = "flex";
+
+    const roleSelect = document.getElementById("roleSelect");
+    if (roleSelect) roleSelect.disabled = false;
+
+    switchAuthTab("login");
+  };
+
+  function bootAuth() {
+    loadAccounts();
+
+    const session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+
+    if (session) {
+      applySession(session);
+    } else {
+      const gate = document.getElementById("authGate");
+      if (gate) gate.style.display = "flex";
+
+      const roleSelect = document.getElementById("roleSelect");
+      if (roleSelect) roleSelect.disabled = true;
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootAuth);
+  } else {
+    bootAuth();
+  }
+})();
+</script>
+
 </body>
 </html>
