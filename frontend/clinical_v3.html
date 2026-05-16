@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>BioDockLab Clinical v0.3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --blue:#1f6bff;
+      --teal:#14b8a6;
+      --purple:#7c3aed;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --green:#10b981;
+      --bg:#f6f8fc;
+      --card:#ffffff;
+      --line:#e5ebf5;
+      --text:#101b33;
+      --muted:#64748b;
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"Noto Sans KR",sans-serif;
+    }
+
+    .app { display:flex; min-height:100vh; }
+
+    aside {
+      position:fixed;
+      left:0;
+      top:0;
+      bottom:0;
+      width:286px;
+      background:white;
+      border-right:1px solid var(--line);
+      padding:24px 18px;
+    }
+
+    .logo {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:30px;
+      font-weight:950;
+      color:var(--blue);
+      margin-bottom:32px;
+    }
+
+    .logo-mark { font-size:34px; }
+
+    .nav {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .nav button {
+      display:flex;
+      align-items:center;
+      gap:14px;
+      border:0;
+      background:white;
+      color:#17233c;
+      font-weight:850;
+      font-size:16px;
+      padding:16px;
+      border-radius:16px;
+      cursor:pointer;
+      text-align:left;
+    }
+
+    .nav button.active {
+      background:#eef5ff;
+      color:var(--blue);
+    }
+
+    .nav .icon {
+      width:28px;
+      font-size:22px;
+    }
+
+    .system-card {
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:96px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:white;
+    }
+
+    .system-card strong { display:block; margin-top:8px; }
+    .system-card .ok { color:var(--teal); font-weight:950; margin-top:6px; }
+
+    .version {
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:28px;
+      text-align:center;
+      color:#8190a8;
+      font-size:13px;
+    }
+
+    main {
+      margin-left:286px;
+      width:calc(100% - 286px);
+    }
+
+    header {
+      height:82px;
+      background:white;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 32px;
+      position:sticky;
+      top:0;
+      z-index:5;
+    }
+
+    .search {
+      width:660px;
+      height:52px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      padding:0 18px;
+      color:var(--muted);
+      background:white;
+    }
+
+    .search input {
+      border:0;
+      outline:0;
+      flex:1;
+      margin-left:12px;
+      font-size:15px;
+    }
+
+    .top {
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+
+    select {
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:white;
+      padding:11px 14px;
+      font-weight:900;
+      color:#17233c;
+    }
+
+    .avatar {
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#0f172a,#94a3b8);
+    }
+
+    .userbox {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .userbox b { display:block; }
+    .userbox span { font-size:13px; color:var(--blue); font-weight:900; }
+
+    .content { padding:32px; }
+
+    .screen { display:none; }
+    .screen.active { display:block; }
+
+    h1 {
+      margin:0;
+      font-size:40px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:-1px;
+    }
+
+    h2 {
+      margin:0 0 18px;
+      font-size:21px;
+      font-weight:950;
+    }
+
+    .subtitle {
+      margin-top:10px;
+      color:var(--muted);
+      font-size:17px;
+      font-weight:750;
+    }
+
+    .hero {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:28px;
+    }
+
+    .card {
+      background:white;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 8px 24px rgba(31,72,130,.04);
+    }
+
+    .grid { display:grid; gap:18px; }
+    .grid-2 { grid-template-columns:1fr 1fr; }
+    .grid-3 { grid-template-columns:repeat(3,1fr); }
+    .grid-4 { grid-template-columns:repeat(4,1fr); }
+    .grid-main { grid-template-columns:1fr 520px; }
+
+    .metric {
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+
+    .metric-icon {
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#eef5ff;
+      font-size:28px;
+    }
+
+    .metric span {
+      color:var(--muted);
+      font-weight:850;
+    }
+
+    .metric b {
+      display:block;
+      font-size:30px;
+      margin-top:3px;
+    }
+
+    .metric small {
+      color:var(--teal);
+      font-weight:950;
+    }
+
+    .mode-card {
+      border-radius:18px;
+      padding:22px;
+      border:1px solid #dbe8ff;
+      background:#f8fbff;
+    }
+
+    .mode-card.teal { background:#f0fdfa; border-color:#ccfbf1; }
+    .mode-card.purple { background:#faf5ff; border-color:#eadcff; }
+    .mode-card.orange { background:#fff7ed; border-color:#fed7aa; }
+    .mode-card.red { background:#fff1f2; border-color:#fecdd3; }
+
+    .mode-card .big { font-size:44px; margin-bottom:14px; }
+
+    .mode-title {
+      font-size:20px;
+      font-weight:950;
+      color:var(--blue);
+      margin-bottom:10px;
+    }
+
+    .mode-card.teal .mode-title { color:#0f9f8f; }
+    .mode-card.purple .mode-title { color:#6d28d9; }
+    .mode-card.orange .mode-title { color:#c2410c; }
+    .mode-card.red .mode-title { color:#be123c; }
+
+    button.action {
+      border:1px solid var(--blue);
+      background:white;
+      color:var(--blue);
+      border-radius:13px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      margin-top:14px;
+    }
+
+    .blue-btn {
+      border:1px solid var(--blue);
+      background:var(--blue);
+      color:white;
+      border-radius:13px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+    }
+
+    .table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+
+    .table th {
+      text-align:left;
+      background:#f8fafc;
+      color:#60708a;
+      font-size:13px;
+      padding:13px;
+    }
+
+    .table td {
+      border-top:1px solid var(--line);
+      padding:13px;
+      font-weight:750;
+      vertical-align:middle;
+    }
+
+    .pill {
+      display:inline-flex;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#edf5ff;
+      color:var(--blue);
+      font-size:12px;
+      font-weight:950;
+    }
+
+    .pill.green { background:#dcfce7; color:#15803d; }
+    .pill.orange { background:#fff7ed; color:#c2410c; }
+    .pill.red { background:#ffe4e6; color:#be123c; }
+    .pill.purple { background:#f3e8ff; color:#6d28d9; }
+
+    .alert {
+      border-radius:18px;
+      padding:18px;
+      line-height:1.7;
+      font-weight:850;
+    }
+
+    .alert.safe { background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; }
+    .alert.warn { background:#fffbeb; color:#b45309; border:1px solid #fde68a; }
+    .alert.danger { background:#fff1f2; color:#be123c; border:1px solid #fecdd3; }
+    .alert.info { background:#eef5ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+
+    .protein {
+      height:310px;
+      border-radius:20px;
+      background:radial-gradient(circle at 50% 40%,#d9ecff 0,#88c1f3 32%,#2c75d2 68%,#16427f 100%);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .blob {
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,.28);
+      filter:blur(1px);
+    }
+
+    .pocket {
+      position:absolute;
+      left:38%;
+      top:35%;
+      width:180px;
+      height:135px;
+      background:rgba(20,184,166,.45);
+      border-radius:50%;
+    }
+
+    .ligand {
+      position:absolute;
+      left:45%;
+      top:48%;
+      width:90px;
+      height:48px;
+      border:5px solid var(--orange);
+      border-radius:25px;
+      transform:rotate(-22deg);
+    }
+
+    .score-ring {
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      border:18px solid #e5e7eb;
+      border-top-color:#15b8d5;
+      border-left-color:#0ea5e9;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+    }
+
+    .score-ring b { font-size:42px; }
+
+    .muted { color:var(--muted); }
+    .small { font-size:13px; }
+
+    .deny-box {
+      max-width:840px;
+      margin:80px auto;
+      text-align:center;
+    }
+
+    .deny-icon {
+      font-size:72px;
+      margin-bottom:18px;
+    }
+
+    .policy-table td:first-child {
+      font-weight:950;
+      color:#17233c;
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+  <aside>
+    <div class="logo"><span class="logo-mark">🧬</span><span>BioDockLab</span></div>
+
+    <div class="nav" id="nav">
+      <button data-view="dashboard" class="active"><span class="icon">⌂</span>Dashboard</button>
+      <button data-view="patient"><span class="icon">♙</span>Patient View</button>
+      <button data-view="doctor"><span class="icon">🩺</span>Doctor Workspace</button>
+      <button data-view="research_lab"><span class="icon">⚗</span>Research Lab</button>
+      <button data-view="prescription"><span class="icon">💊</span>Pharmacist</button>
+      <button data-view="admin"><span class="icon">🗂</span>Administration</button>
+      <button data-view="security"><span class="icon">🛡</span>Security Center</button>
+      <button data-view="data_hub"><span class="icon">◎</span>Data Hub</button>
+    </div>
+
+    <div class="system-card">
+      <div style="font-size:30px">🛡</div>
+      <strong>시스템 상태</strong>
+      <div class="ok">모든 시스템 정상</div>
+      <p class="small muted">마지막 업데이트: 2025-05-20 09:30</p>
+      <p style="color:var(--blue);font-weight:950">상세 보기 〉</p>
+    </div>
+
+    <div class="version">© 2025 BioDockLab<br/>v0.3 clinical</div>
+  </aside>
+
+  <main>
+    <header>
+      <div class="search">⌕ <input placeholder="검색 (환자, 화합물, 실험, 보고서 등)" /><span>⌘ K</span></div>
+
+      <div class="top">
+        <span>🔔<sup style="background:var(--blue);color:white;border-radius:50%;padding:2px 6px">3</sup></span>
+        <span>?</span>
+        <select id="roleSelect"></select>
+        <div class="userbox">
+          <div class="avatar"></div>
+          <div>
+            <b id="actorName">김서연 박사</b>
+            <span id="actorRole">연구자</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <section id="screen-dashboard" class="screen active">
+        <div class="alert info" id="roleBanner" style="margin-bottom:24px"></div>
+
+        <div class="grid grid-main">
+          <div>
+            <div class="hero">
+              <div>
+                <h1>Integrated Bio Platform</h1>
+                <p class="subtitle"><b style="color:var(--blue)">환자</b> · <b style="color:var(--teal)">의사</b> · <b style="color:var(--purple)">연구자</b> · <b style="color:var(--orange)">약사/원무/보안</b>을 연결합니다.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-4" id="metricBox" style="margin-bottom:18px"></div>
+
+            <div class="card" style="margin-bottom:18px">
+              <h2>역할별 모드</h2>
+              <div class="grid grid-3">
+                <div class="mode-card">
+                  <div class="big">♙</div>
+                  <div class="mode-title">Patient Mode</div>
+                  <p>개인 맞춤 설명과 상담 준비 정보를 확인합니다.</p>
+                  <button class="action" onclick="navigate('patient')">환자 포털 열기 →</button>
+                </div>
+
+                <div class="mode-card teal">
+                  <div class="big">🩺</div>
+                  <div class="mode-title">Doctor Mode</div>
+                  <p>환자 데이터 분석과 설명 리포트를 확인합니다.</p>
+                  <button class="action" onclick="navigate('doctor')">의사 워크스페이스 열기 →</button>
+                </div>
+
+                <div class="mode-card purple">
+                  <div class="big">🔬</div>
+                  <div class="mode-title">Researcher Mode</div>
+                  <p>연구 데이터 분석과 도킹 실험을 수행합니다.</p>
+                  <button class="action" onclick="navigate('research_lab')">연구 랩 열기 →</button>
+                </div>
+
+                <div class="mode-card orange">
+                  <div class="big">💊</div>
+                  <div class="mode-title">Pharmacist Mode</div>
+                  <p>처방량, 상호작용, 유전자 적합성을 검토합니다.</p>
+                  <button class="action" onclick="navigate('prescription')">약사 화면 열기 →</button>
+                </div>
+
+                <div class="mode-card">
+                  <div class="big">🗂</div>
+                  <div class="mode-title">Administration</div>
+                  <p>예약, 동의서, 서류 상태만 확인합니다.</p>
+                  <button class="action" onclick="navigate('admin')">원무 화면 열기 →</button>
+                </div>
+
+                <div class="mode-card red">
+                  <div class="big">🛡</div>
+                  <div class="mode-title">Security Center</div>
+                  <p>접근 로그와 이상 접근 이벤트를 확인합니다.</p>
+                  <button class="action" onclick="navigate('security')">보안센터 열기 →</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>최근 실험/업무 활동</h2>
+              <table class="table">
+                <thead>
+                  <tr><th>업무명</th><th>대상</th><th>유형</th><th>상태</th><th>담당자</th></tr>
+                </thead>
+                <tbody id="recentBox"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="card">
+              <h2>단백질 구조 미리보기</h2>
+              <div class="protein"></div>
+              <p class="small muted">● 단백질 표면 &nbsp;&nbsp; <span style="color:var(--teal)">● 활성 부위</span> &nbsp;&nbsp; <span style="color:var(--orange)">● 결합 리간드</span></p>
+            </div>
+
+            <div class="card">
+              <h2>화합물 스크리닝 현황</h2>
+              <div style="display:flex;align-items:center;gap:28px">
+                <div class="score-ring"><div><b>78%</b><br/><span class="small">진행률</span></div></div>
+                <div style="flex:1" id="progressBox"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>알림 및 인사이트</h2>
+              <div id="insightBox"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-patient" class="screen"></section>
+      <section id="screen-doctor" class="screen"></section>
+      <section id="screen-research_lab" class="screen"></section>
+      <section id="screen-prescription" class="screen"></section>
+      <section id="screen-admin" class="screen"></section>
+      <section id="screen-security" class="screen"></section>
+      <section id="screen-data_hub" class="screen"></section>
+
+      <section id="screen-denied" class="screen">
+        <div class="deny-box card">
+          <div class="deny-icon">🚫</div>
+          <h1>접근이 차단되었습니다</h1>
+          <p class="subtitle" id="denyText"></p>
+          <div class="alert warn" style="margin-top:24px">
+            이 접근 시도는 보안 감사 로그에 기록되었습니다. 필요한 경우 보안관리자에게 접근 권한 요청을 제출해야 합니다.
+          </div>
+          <button class="blue-btn" style="margin-top:24px" onclick="navigate('dashboard', true)">대시보드로 돌아가기</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+const PATIENT_ID = "PT-2025-0520-0017";
+
+const USERS = [
+  { role:"researcher", label:"연구자", name:"김서연 박사", title:"Researcher" },
+  { role:"doctor", label:"의사", name:"이준호 의사", title:"Doctor" },
+  { role:"pharmacist", label:"약사", name:"박민지 약사", title:"Pharmacist" },
+  { role:"admin_staff", label:"원무", name:"최하늘 원무", title:"Administration" },
+  { role:"patient", label:"환자", name:"환자 사용자", title:"Patient" },
+  { role:"security", label:"보안", name:"보안관리자", title:"Security" }
+];
+
+const POLICY = {
+  patient: ["dashboard","patient","reports_limited","consent_status"],
+  doctor: ["dashboard","patient","doctor","reports","prescription"],
+  pharmacist: ["dashboard","prescription","patient_limited","reports_limited"],
+  admin_staff: ["dashboard","admin","appointments","consent_status","patient_limited"],
+  researcher: ["dashboard","research_lab","docking","data_hub"],
+  security: ["dashboard","security","audit_logs","risk_events"]
+};
+
+const ROLE_DASHBOARD = {
+  researcher: {
+    banner:"🔐 연구자 권한 화면 · 비식별 연구 데이터와 가상 도킹 실험 중심으로 표시됩니다.",
+    metrics:[
+      ["⚗","활성 실험","128","▲12%"],
+      ["⌬","후보 화합물","3,456","▲8%"],
+      ["♙","비식별 케이스","782","▲15%"],
+      ["▤","생성된 보고서","214","▲6%"]
+    ],
+    recent:[
+      ["KRAS G12D 억제제 탐색","KRAS G12D","가상 스크리닝","진행 중","김서연 박사"],
+      ["EGFR T790M 표적 분석","EGFR T790M","도킹 시뮬레이션","검토 중","이준호 의사"],
+      ["ALK 변이체 화합물 평가","ALK L1196M","ADMET 예측","완료","박민지 약사"]
+    ],
+    insights:[
+      ["safe","KRAS G12D 타겟에서 결합 친화도 상위 5% 화합물 발견"],
+      ["warn","비식별 연구 데이터셋 동의 범위 확인 필요"]
+    ]
+  },
+  doctor: {
+    banner:"🩺 의사 권한 화면 · 담당 환자 요약, 설명 리포트, 처방 검토 요청을 확인합니다.",
+    metrics:[
+      ["♙","담당 환자","24","▲3%"],
+      ["▤","생성 리포트","18","▲5%"],
+      ["💊","처방 검토 요청","7","▲2%"],
+      ["🗓","상담 예정","11","오늘"]
+    ],
+    recent:[
+      ["PT-2025-0520-0017 결과 상담","EGFR L858R","설명 리포트","준비됨","이준호 의사"],
+      ["처방 검토 요청","Gefitinib","약사 협업","진행 중","박민지 약사"],
+      ["환자 상담 메모","NSCLC","상담 준비","완료","이준호 의사"]
+    ],
+    insights:[
+      ["safe","EGFR L858R 환자 설명 리포트가 준비되었습니다."],
+      ["warn","약물상호작용 검토 결과를 확인해야 합니다."]
+    ]
+  },
+  pharmacist: {
+    banner:"💊 약사 권한 화면 · 처방량, 병용약, 상호작용, 유전자 적합성 중심으로 표시됩니다.",
+    metrics:[
+      ["💊","검토 대기 처방","16","▲4%"],
+      ["⚠","상호작용 경고","5","주의"],
+      ["🧬","유전자 적합성 검토","9","▲6%"],
+      ["✓","완료 건수","42","오늘"]
+    ],
+    recent:[
+      ["Gefitinib 처방 검토","PT-2025-0520-0017","CYP3A4 확인","진행 중","박민지 약사"],
+      ["병용약 상호작용 확인","Supportive Care","복약지도","완료","박민지 약사"],
+      ["유전자 적합성 메모","EGFR L858R","약물 반응","검토 중","박민지 약사"]
+    ],
+    insights:[
+      ["warn","CYP3A4 관련 상호작용 확인 필요"],
+      ["safe","처방량 검토 프로세스가 정상 기록되었습니다."]
+    ]
+  },
+  admin_staff: {
+    banner:"🗂 원무 권한 화면 · 예약, 동의서, 서류 상태만 표시되며 진단/처방 상세는 마스킹됩니다.",
+    metrics:[
+      ["🗓","오늘 예약","38","▲8%"],
+      ["📝","동의서 확인","21","진행"],
+      ["📄","서류 발급","12","오늘"],
+      ["🔒","마스킹 적용","100%","정상"]
+    ],
+    recent:[
+      ["진료 예약 확인","PT-2025-0520-0017","예약 업무","완료","최하늘 원무"],
+      ["연구 동의서 상태 확인","김○○","동의서","동의","최하늘 원무"],
+      ["서류 발급 대기","PT-2025-0520-0017","행정","진행 중","최하늘 원무"]
+    ],
+    insights:[
+      ["safe","진단/처방 상세는 원무 화면에서 자동 마스킹됩니다."],
+      ["warn","외부 제공 동의 범위 확인 필요"]
+    ]
+  },
+  patient: {
+    banner:"♙ 환자 권한 화면 · 본인 설명 리포트와 상담 준비 정보만 표시됩니다.",
+    metrics:[
+      ["▤","내 리포트","3","확인 가능"],
+      ["🗓","다음 상담","1","예정"],
+      ["📝","동의 상태","2","관리"],
+      ["❓","질문 메모","5","작성"]
+    ],
+    recent:[
+      ["검사 결과 설명 리포트","내 리포트","환자용 설명","확인 가능","환자 사용자"],
+      ["다음 상담 준비","2025-06-02","예약","예정","환자 사용자"],
+      ["의사에게 물어볼 질문","복약/부작용","메모","작성 중","환자 사용자"]
+    ],
+    insights:[
+      ["safe","상담 전 확인할 쉬운 설명 리포트가 준비되었습니다."],
+      ["warn","최종 판단은 담당 의료진과 상담해야 합니다."]
+    ]
+  },
+  security: {
+    banner:"🛡 보안 권한 화면 · 의료 내용이 아니라 접근 로그, 차단 기록, 위험 이벤트만 확인합니다.",
+    metrics:[
+      ["📜","접근 로그","128","최근"],
+      ["🚫","차단 이벤트","9","검토"],
+      ["⚠","위험 이벤트","6","주의"],
+      ["🔐","정책 적용률","100%","정상"]
+    ],
+    recent:[
+      ["권한 밖 접근 차단","researcher → patient","Access Control","차단","보안관리자"],
+      ["원무 처방 접근 시도","admin → prescription","Policy","차단","보안관리자"],
+      ["감사 로그 조회","security","Audit","허용","보안관리자"]
+    ],
+    insights:[
+      ["warn","동일 환자 기록 반복 열람 의심 이벤트가 있습니다."],
+      ["safe","역할 기반 접근제어가 정상 작동 중입니다."]
+    ]
+  }
+};
+
+let currentRole = localStorage.getItem("biodocklab_v03_role") || "researcher";
+
+function user() {
+  return USERS.find(u => u.role === currentRole) || USERS[0];
+}
+
+function allowed(view) {
+  return (POLICY[currentRole] || []).includes(view);
+}
+
+function setRole(role) {
+  currentRole = role;
+  localStorage.setItem("biodocklab_v03_role", role);
+  updateActor();
+  renderDashboard();
+  navigate("dashboard", true);
+}
+
+function updateActor() {
+  const u = user();
+  document.getElementById("actorName").textContent = u.name;
+  document.getElementById("actorRole").textContent = u.label;
+
+  const select = document.getElementById("roleSelect");
+  select.value = currentRole;
+}
+
+function initRoleSelect() {
+  const select = document.getElementById("roleSelect");
+  select.innerHTML = USERS.map(u => `<option value="${u.role}">${u.label}</option>`).join("");
+  select.value = currentRole;
+  select.addEventListener("change", e => setRole(e.target.value));
+}
+
+function show(view) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const target = document.getElementById(`screen-${view}`) || document.getElementById("screen-dashboard");
+  target.classList.add("active");
+
+  document.querySelectorAll("#nav button").forEach(b => {
+    b.classList.toggle("active", b.dataset.view === view);
+  });
+}
+
+async function audit(view, isAllowed) {
+  const u = user();
+
+  try {
+    await fetch(`${API}/security/access-check`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
+        role:u.role,
+        actor:u.name,
+        view:view,
+        patient_id:PATIENT_ID,
+        reason:"clinical_v3 navigation"
+      })
+    });
+  } catch(e) {
+    console.warn("audit failed", e);
+  }
+}
+
+async function navigate(view, skipPolicy=false) {
+  const isAllowed = skipPolicy || allowed(view);
+
+  await audit(view, isAllowed);
+
+  if (!isAllowed) {
+    const u = user();
+    document.getElementById("denyText").textContent =
+      `${u.label} 권한으로는 '${view}' 화면에 접근할 수 없습니다. 이 시도는 보안 감사 로그에 기록됩니다.`;
+    show("denied");
+    return;
+  }
+
+  if (view === "patient") renderPatient();
+  if (view === "doctor") renderDoctor();
+  if (view === "research_lab") renderResearch();
+  if (view === "prescription") renderPrescription();
+  if (view === "admin") renderAdmin();
+  if (view === "security") await renderSecurity();
+  if (view === "data_hub") renderDataHub();
+
+  show(view);
+}
+
+function initNav() {
+  document.querySelectorAll("#nav button").forEach(btn => {
+    btn.addEventListener("click", () => navigate(btn.dataset.view));
+  });
+}
+
+function renderDashboard() {
+  const data = ROLE_DASHBOARD[currentRole];
+  document.getElementById("roleBanner").textContent = data.banner;
+
+  document.getElementById("metricBox").innerHTML = data.metrics.map(m => `
+    <div class="card metric">
+      <div class="metric-icon">${m[0]}</div>
+      <div>
+        <span>${m[1]}</span>
+        <b>${m[2]}</b>
+        <small>${m[3]}</small>
+      </div>
+    </div>
+  `).join("");
+
+  document.getElementById("recentBox").innerHTML = data.recent.map(r => `
+    <tr>
+      <td>${r[0]}</td>
+      <td>${r[1]}</td>
+      <td>${r[2]}</td>
+      <td><span class="pill ${r[3].includes("완료") || r[3].includes("허용") || r[3].includes("동의") ? "green" : r[3].includes("차단") ? "red" : r[3].includes("검토") || r[3].includes("주의") ? "orange" : ""}">${r[3]}</span></td>
+      <td>${r[4]}</td>
+    </tr>
+  `).join("");
+
+  document.getElementById("insightBox").innerHTML = data.insights.map(i => `
+    <div class="alert ${i[0]}" style="margin-bottom:12px">${i[1]}</div>
+  `).join("");
+
+  document.getElementById("progressBox").innerHTML = [
+    ["가상 스크리닝", "12,540 / 16,000", 85],
+    ["상위 화합물 도킹", "1,245 / 2,000", 62],
+    ["ADMET 예측", "980 / 1,500", 70],
+    ["후보 선정", "245 / 500", 50]
+  ].map(p => progress(p[0], p[1], p[2])).join("");
+
+  makeProtein();
+}
+
+function progress(label, value, width) {
+  return `
+    <div style="margin:12px 0">
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:900;color:#64748b">
+        <span>${label}</span>
+        <span>${value}</span>
+      </div>
+      <div style="height:8px;background:#e5e7eb;border-radius:999px;margin-top:6px">
+        <div style="height:8px;background:var(--blue);border-radius:999px;width:${width}%"></div>
+      </div>
+    </div>
+  `;
+}
+
+function info(label, value) {
+  return `
+    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #eef2f7;padding:11px 0;font-size:14px">
+      <b style="color:#64748b">${label}</b>
+      <b>${value}</b>
+    </div>
+  `;
+}
+
+function renderPatient() {
+  document.getElementById("screen-patient").innerHTML = reportPage("patient");
+  makeProtein();
+}
+
+function renderDoctor() {
+  document.getElementById("screen-doctor").innerHTML = reportPage("doctor");
+  makeProtein();
+}
+
+function reportPage(mode) {
+  const patientNotice = mode === "patient"
+    ? `<div class="alert warn" style="margin-bottom:18px">환자 화면에서는 진단·처방 판단이 아니라 상담 준비용 쉬운 설명만 제공합니다.</div>`
+    : `<div class="alert info" style="margin-bottom:18px">의사 화면에서는 환자 설명 리포트와 전문가용 상세 해석을 함께 확인합니다.</div>`;
+
+  return `
+    <div class="hero">
+      <div>
+        <h1>Result Explanation Report</h1>
+        <p class="subtitle">환자/의사용 이해 쉬운 결과 설명</p>
+      </div>
+      <div>
+        <button class="blue-btn">PDF 저장</button>
+      </div>
+    </div>
+
+    ${patientNotice}
+
+    <div class="grid grid-main">
+      <div class="grid">
+        <div class="card">
+          <h2>환자 요약 정보</h2>
+          <div class="grid grid-4">
+            <div>${info("Patient ID","PT-2025-0520-0017")}</div>
+            <div>${info("진단 영역","비소세포폐암(NSCLC)")}</div>
+            <div>${info("현재 상태","EGFR L858R 양성")}</div>
+            <div>${info("상담 예정","2025-06-02 10:00")}</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>치료제 후보 요약</h2>
+          <table class="table">
+            <thead>
+              <tr><th>후보 치료제</th><th>예상 효능</th><th>위험도</th><th>권장도</th><th>주요 근거</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b style="color:var(--blue)">BD-201</b><br/><span class="muted">BioDock 후보</span></td><td>72%</td><td><span class="pill orange">보통</span></td><td><span class="pill green">높음</span></td><td>EGFR L858R 특이적 결합 강도 우수</td></tr>
+              <tr><td><b style="color:var(--blue)">BD-105</b><br/><span class="muted">2세대 TKI</span></td><td>55%</td><td><span class="pill green">낮음</span></td><td><span class="pill">보통</span></td><td>기존 치료제 대비 반응률 개선 가능</td></tr>
+              <tr><td><b style="color:var(--blue)">Gefitinib</b><br/><span class="muted">1세대 TKI</span></td><td>32%</td><td><span class="pill green">낮음</span></td><td><span class="pill purple">낮음</span></td><td>기존 표준 치료제</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>쉽게 이해하는 설명</h2>
+          <p style="line-height:1.9;font-weight:750;color:#334155">
+            검사 결과, EGFR이라는 단백질의 특정 변이가 확인되었습니다. 이 자료는 의료진 상담을 돕기 위한 설명 보조 자료이며, 최종 판단은 담당 의료진이 수행합니다.
+          </p>
+          <div class="alert safe">현재 검사 결과를 바탕으로 의료진과 상담할 수 있는 설명 리포트가 준비되었습니다.</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card" style="background:#eefdf8">
+          <h2>의사 종합 해석</h2>
+          <p style="font-size:18px;line-height:1.8;font-weight:950;color:#047857">
+            EGFR L858R 변이에 대한 치료 반응 가능성이 높은 후보가 확인되었으며, 부작용 위험은 보통 수준으로 예측됩니다.
+          </p>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>분자적 근거</h2>
+            <div class="protein" style="height:210px"></div>
+            <p class="small muted">단백질 결합 부위와 후보 화합물의 위치를 시각화합니다.</p>
+          </div>
+
+          <div class="card">
+            <h2>예측 반응 및 위험도</h2>
+            <div class="score-ring"><div><b>78</b><br/>/100</div></div>
+            ${info("유전자 적합성","92 / 100")}
+            ${info("약물 결합 안정성","81 / 100")}
+            ${info("세포 실험 예측","73 / 100")}
+            ${info("부작용 예측","68 / 100")}
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>의사용 상세 해석</h2>
+          <p style="line-height:1.9;font-weight:750;color:#334155">
+            도킹 점수와 유전자 적합성 정보를 기반으로 한 설명 보조 자료입니다. 실제 진단, 처방, 임상 판단을 대체하지 않습니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderResearch() {
+  document.getElementById("screen-research_lab").innerHTML = `
+    <div class="hero">
+      <div>
+        <p style="color:var(--blue);font-weight:950">Research Lab 〉 Docking Experiments 〉 EXP-2025-05-20-001</p>
+        <h1>Virtual Docking Experiment</h1>
+        <p class="subtitle">단백질-화합물 결합 예측 및 스크리닝</p>
+      </div>
+      <button class="blue-btn">실험 실행</button>
+    </div>
+
+    <div class="grid" style="grid-template-columns:310px 1fr 380px">
+      <div class="grid">
+        <div class="card">
+          <h2>타겟 단백질 <span class="pill green">준비됨</span></h2>
+          <b style="font-size:22px">KRAS G12D</b>
+          <p class="muted">PDB ID: 6R68</p>
+          <div class="protein" style="height:170px"></div>
+          ${info("유전자","KRAS")}
+          ${info("돌연변이","G12D")}
+          ${info("해상도","2.20 Å")}
+          ${info("바인딩 부위","SII Pocket")}
+        </div>
+
+        <div class="card">
+          <h2>선택 화합물</h2>
+          <b style="font-size:22px;color:var(--blue)">BDL-10234</b>
+          <p class="muted">내부 라이브러리</p>
+          <div style="height:150px;background:#f8fafc;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:54px">⌬</div>
+          ${info("MW","452.91")}
+          ${info("식별자","BDL-10234")}
+          ${info("공급원","BioDockLib")}
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2>3D View</h2>
+          <div class="protein" style="height:430px"></div>
+          <p class="small muted"><span style="color:var(--teal)">● Hydrogen Bond</span> &nbsp; <span style="color:var(--purple)">● Hydrophobic</span> &nbsp; <span style="color:var(--orange)">● π-π Stacking</span></p>
+        </div>
+
+        <div class="card">
+          <h2>도킹 결과</h2>
+          <table class="table">
+            <thead><tr><th>순위</th><th>화합물 ID</th><th>Binding Score</th><th>ΔG</th><th>RMSD</th><th>ADMET Risk</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>BDL-10234</td><td>-10.28</td><td>-54.32</td><td>1.21</td><td><span class="pill green">Low</span></td></tr>
+              <tr><td>2</td><td>BDL-08765</td><td>-9.46</td><td>-48.11</td><td>1.35</td><td><span class="pill green">Low</span></td></tr>
+              <tr><td>3</td><td>BDL-09123</td><td>-8.74</td><td>-42.76</td><td>1.72</td><td><span class="pill orange">Medium</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2>실험 파라미터</h2>
+          ${info("도킹 프로그램","AutoDock Vina 1.2.3")}
+          ${info("그리드 박스","24.0 × 24.0 × 24.0 Å")}
+          ${info("알고리즘","GA")}
+          ${info("에너지 정렬","MM/GBSA")}
+        </div>
+
+        <div class="card">
+          <h2>실험 상태 <span class="pill">실행 중</span></h2>
+          ${info("실험 ID","EXP-2025-05-20-001")}
+          ${info("생성자","김서연 박사")}
+          ${info("진행 상황","Scoring 단계")}
+          <div style="height:12px;background:#e5e7eb;border-radius:999px;margin-top:18px">
+            <div style="width:72%;height:12px;background:var(--blue);border-radius:999px"></div>
+          </div>
+          <p style="text-align:right;color:var(--blue);font-weight:950">72%</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  makeProtein();
+}
+
+function renderPrescription() {
+  document.getElementById("screen-prescription").innerHTML = `
+    <div class="hero">
+      <div>
+        <h1>Pharmacist Workspace</h1>
+        <p class="subtitle">처방량, 약물 상호작용, 유전자 적합성 검토</p>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:18px">
+      <div class="card metric"><div class="metric-icon">💊</div><div><span>검토 대기</span><b>16</b><small>처방</small></div></div>
+      <div class="card metric"><div class="metric-icon">⚠</div><div><span>상호작용</span><b>5</b><small>주의</small></div></div>
+      <div class="card metric"><div class="metric-icon">🧬</div><div><span>유전자 적합성</span><b>9</b><small>검토</small></div></div>
+      <div class="card metric"><div class="metric-icon">✓</div><div><span>완료</span><b>42</b><small>오늘</small></div></div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>처방 검토</h2>
+        <table class="table">
+          <thead><tr><th>약품</th><th>처방량</th><th>경로</th><th>상호작용</th><th>약사 메모</th></tr></thead>
+          <tbody>
+            <tr><td>Gefitinib</td><td>250mg 1일 1회</td><td>PO</td><td><span class="pill orange">CYP3A4 확인</span></td><td>처방량, 병용약, 유전자 적합성 검토 필요</td></tr>
+            <tr><td>Supportive Care</td><td>의료진 지시</td><td>N/A</td><td><span class="pill">일반 설명</span></td><td>환자용 화면에서는 상세 처방량 제한</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>약물 안전성 체크리스트</h2>
+        <div class="alert warn">CYP3A4 관련 상호작용, 병용약, 처방량, 유전자 적합성을 검토합니다. 최종 처방 판단은 담당 의료진 프로세스에 따릅니다.</div>
+        <br/>
+        ${info("중복약 여부","확인 필요")}
+        ${info("유전자 적합성","EGFR L858R 관련")}
+        ${info("부작용 위험","보통")}
+        ${info("약사 검토 상태","진행 중")}
+      </div>
+    </div>
+  `;
+}
+
+function renderAdmin() {
+  document.getElementById("screen-admin").innerHTML = `
+    <div class="hero">
+      <div>
+        <h1>Administration View</h1>
+        <p class="subtitle">예약, 동의서, 서류 상태 중심 화면 — 진단/처방 상세는 제한</p>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:18px">
+      <div class="card metric"><div class="metric-icon">🗓</div><div><span>오늘 예약</span><b>38</b><small>건</small></div></div>
+      <div class="card metric"><div class="metric-icon">📝</div><div><span>동의서</span><b>21</b><small>확인</small></div></div>
+      <div class="card metric"><div class="metric-icon">📄</div><div><span>서류 발급</span><b>12</b><small>대기</small></div></div>
+      <div class="card metric"><div class="metric-icon">🔒</div><div><span>상세 마스킹</span><b>100%</b><small>적용</small></div></div>
+    </div>
+
+    <div class="card">
+      <h2>원무 업무 목록</h2>
+      <table class="table">
+        <thead><tr><th>환자ID</th><th>이름</th><th>예약</th><th>연구동의</th><th>서류 상태</th><th>민감정보</th></tr></thead>
+        <tbody>
+          <tr><td>PT-2025-0520-0017</td><td>김○○</td><td>2025-06-02 10:00</td><td><span class="pill green">동의</span></td><td><span class="pill">발급 대기</span></td><td><span class="pill red">진단/처방 상세 마스킹</span></td></tr>
+          <tr><td>PT-2025-0520-0041</td><td>이○○</td><td>2025-06-03 14:30</td><td><span class="pill orange">확인 필요</span></td><td><span class="pill green">완료</span></td><td><span class="pill red">검사 상세 마스킹</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <br/>
+
+    <div class="alert info">
+      원무 역할은 예약·동의·서류 업무에 필요한 정보만 확인합니다. 진단명, 처방량, 유전자 상세, 연구 데이터는 기본적으로 마스킹됩니다.
+    </div>
+  `;
+}
+
+async function renderSecurity() {
+  const screen = document.getElementById("screen-security");
+
+  screen.innerHTML = `
+    <div class="hero">
+      <div>
+        <h1>Security & Audit Center</h1>
+        <p class="subtitle">접근 로그, 권한 없는 접근, 내부자 과다열람 의심 이벤트 확인</p>
+      </div>
+      <button class="blue-btn" onclick="renderSecurity()">로그 새로고침</button>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom:18px">
+      <div class="card metric"><div class="metric-icon">📜</div><div><span>접근 로그</span><b id="logCount">-</b><small>건</small></div></div>
+      <div class="card metric"><div class="metric-icon">🚫</div><div><span>차단</span><b id="denyCount">-</b><small>건</small></div></div>
+      <div class="card metric"><div class="metric-icon">⚠</div><div><span>위험 이벤트</span><b id="riskCount">-</b><small>건</small></div></div>
+      <div class="card metric"><div class="metric-icon">🔐</div><div><span>정책 적용</span><b>100%</b><small>RBAC</small></div></div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h2>접근 감사 로그</h2>
+        <div id="auditTable">불러오는 중...</div>
+      </div>
+
+      <div class="card">
+        <h2>위험 이벤트</h2>
+        <div id="riskList">불러오는 중...</div>
+      </div>
+    </div>
+
+    <br/>
+
+    <div class="card">
+      <h2>역할별 접근 정책 매트릭스</h2>
+      <table class="table policy-table">
+        <thead><tr><th>역할</th><th>허용 화면</th><th>제한 내용</th></tr></thead>
+        <tbody>
+          <tr><td>환자</td><td>본인 설명 리포트, 상담 준비, 동의 상태</td><td>의료진용 상세 판단, 연구 데이터 제한</td></tr>
+          <tr><td>의사</td><td>담당 환자 리포트, 설명 메모, 처방 검토 요청</td><td>보안 로그 직접 접근 제한</td></tr>
+          <tr><td>약사</td><td>처방량, 병용약, 상호작용, 약사 메모</td><td>불필요한 연구 데이터 제한</td></tr>
+          <tr><td>원무</td><td>예약, 동의서, 서류 상태</td><td>진단/처방/유전자 상세 마스킹</td></tr>
+          <tr><td>연구자</td><td>비식별 연구 데이터, 도킹 실험</td><td>실명 환자 데이터 제한</td></tr>
+          <tr><td>보안</td><td>접근 로그, 차단 이벤트, 위험 이벤트</td><td>의료 내용 열람 목적 아님</td></tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  try {
+    const logs = await fetch(`${API}/security/audit-logs?role=security&actor=보안관리자`).then(r => r.json());
+    const risks = await fetch(`${API}/security/risk-events?role=security&actor=보안관리자`).then(r => r.json());
+
+    const denied = Array.isArray(logs) ? logs.filter(l => !l.allowed).length : 0;
+
+    document.getElementById("logCount").textContent = Array.isArray(logs) ? logs.length : 0;
+    document.getElementById("denyCount").textContent = denied;
+    document.getElementById("riskCount").textContent = Array.isArray(risks) ? risks.length : 0;
+
+    document.getElementById("auditTable").innerHTML = `
+      <table class="table">
+        <thead><tr><th>시간</th><th>사용자</th><th>역할</th><th>액션</th><th>허용</th></tr></thead>
+        <tbody>
+          ${logs.slice(-12).reverse().map(l => `
+            <tr>
+              <td>${l.timestamp}</td>
+              <td>${l.actor}</td>
+              <td>${l.role}</td>
+              <td>${l.action}</td>
+              <td>${l.allowed ? '<span class="pill green">허용</span>' : '<span class="pill red">차단</span>'}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+
+    document.getElementById("riskList").innerHTML = risks.slice(-8).reverse().map(e => `
+      <div class="alert ${e.severity === "high" ? "danger" : "warn"}" style="margin-bottom:12px">
+        <b>${e.title}</b><br/>
+        ${e.description}<br/>
+        <span class="small">${e.recommended_action}</span>
+      </div>
+    `).join("");
+  } catch(e) {
+    document.getElementById("auditTable").innerHTML = `<div class="alert danger">보안 로그를 불러오지 못했습니다.</div>`;
+  }
+}
+
+function renderDataHub() {
+  document.getElementById("screen-data_hub").innerHTML = `
+    <div class="hero">
+      <div>
+        <h1>Data Hub</h1>
+        <p class="subtitle">바이오 데이터 정리, 비식별화, 연구 데이터셋 품질 관리</p>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <h2>Bio Data Curator</h2>
+        <p>단백질, 유전자, 약물, 검사 데이터를 정리하고 품질을 관리합니다.</p>
+      </div>
+
+      <div class="card">
+        <h2>Consent-aware Dataset</h2>
+        <p>환자 동의 범위에 따라 연구용 데이터셋을 분리합니다.</p>
+      </div>
+
+      <div class="card">
+        <h2>De-identification</h2>
+        <p>연구자는 실명 환자 데이터가 아니라 비식별 연구 데이터만 사용합니다.</p>
+      </div>
+    </div>
+  `;
+}
+
+function makeProtein() {
+  document.querySelectorAll(".protein").forEach(el => {
+    if (el.dataset.ready) return;
+    el.dataset.ready = "1";
+
+    for (let i=0; i<42; i++) {
+      const s = document.createElement("span");
+      s.className = "blob";
+      const size = 24 + ((i * 7) % 42);
+      s.style.width = size + "px";
+      s.style.height = size + "px";
+      s.style.left = (4 + ((i * 13) % 84)) + "%";
+      s.style.top = (8 + ((i * 17) % 76)) + "%";
+      el.appendChild(s);
+    }
+
+    const pocket = document.createElement("div");
+    pocket.className = "pocket";
+    el.appendChild(pocket);
+
+    const ligand = document.createElement("div");
+    ligand.className = "ligand";
+    el.appendChild(ligand);
+  });
+}
+
+function init() {
+  initRoleSelect();
+  updateActor();
+  initNav();
+  renderDashboard();
+}
+
+init();
+</script>
+</body>
+</html>
