@@ -41,3 +41,30 @@
 
 BioDockLab should be presented as a role-based bio/clinical data explanation, research workflow, and security-audit layer. It should not be described as replacing hospital EMR systems or making medical decisions.
 
+
+---
+
+## v0.4 Login Role Policy
+
+The login screen should expose only actual platform user roles:
+
+- Patient
+- Doctor
+- Pharmacist
+- Administration / 원무
+- Researcher
+- Security
+
+The Platform Admin account is intentionally hidden from demo buttons and must log in with email/password only:
+
+- owner@biodocklab.local / 4748
+
+Biogrammer job roles should remain in the internal role matrix and administrator documentation, not as first-screen login buttons:
+
+- Bio Data Curator
+- AI Model Operator
+- Patient Explanation Designer
+- Research Workflow Engineer
+- Clinical Workflow Coordinator
+- Bio Security Architect
+- Virtual Lab Developer

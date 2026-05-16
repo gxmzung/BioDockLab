@@ -691,6 +691,11 @@
           <b>연구/설명 보조</b>
           <span>실제 진단·처방이 아닌 연구와 설명 보조 목적</span>
         </div>
+
+        <div class="auth-feature">
+          <b>내부 직무 분리</b>
+          <span>Data, AI, 설명, 보안설계, Virtual Lab 직무는 관리자 문서에서 별도 관리</span>
+        </div>
       </div>
     </div>
 
@@ -718,6 +723,7 @@
         <div class="auth-notice">
           데모 계정은 아래 버튼으로 바로 로그인할 수 있습니다.
           실제 상용화 버전에서는 병원/기관 인증, 2단계 인증, 관리자 승인이 필요합니다.
+          플랫폼 관리자 계정은 보안을 위해 버튼으로 노출하지 않고 이메일/비밀번호로만 로그인합니다.
         </div>
 
         <div class="demo-login-grid">
@@ -727,14 +733,6 @@
           <button onclick="demoLogin('admin_staff')">원무</button>
           <button onclick="demoLogin('researcher')">연구자</button>
           <button onclick="demoLogin('security')">보안</button>
-          <button onclick="demoLogin('super_admin')">관리자</button>
-                  <button onclick="demoLogin('bio_data_curator')">Data</button>
-                  <button onclick="demoLogin('ai_model_operator')">AI</button>
-                  <button onclick="demoLogin('patient_explanation_designer')">설명</button>
-                  <button onclick="demoLogin('research_workflow_engineer')">Workflow</button>
-                  <button onclick="demoLogin('clinical_workflow_coordinator')">Clinical</button>
-                  <button onclick="demoLogin('bio_security_architect')">보안설계</button>
-                  <button onclick="demoLogin('virtual_lab_developer')">Virtual Lab</button>
         </div>
       </div>
 
@@ -763,22 +761,15 @@
             <option value="admin_staff">원무</option>
             <option value="researcher">연구자</option>
             <option value="security">보안관리자</option>
-            <option value="super_admin">플랫폼 관리자</option>
-                      <option value="bio_data_curator">Bio Data Curator</option>
-                      <option value="ai_model_operator">AI Model Operator</option>
-                      <option value="patient_explanation_designer">Patient Explanation Designer</option>
-                      <option value="research_workflow_engineer">Research Workflow Engineer</option>
-                      <option value="clinical_workflow_coordinator">Clinical Workflow Coordinator</option>
-                      <option value="bio_security_architect">Bio Security Architect</option>
-                      <option value="virtual_lab_developer">Virtual Lab Developer</option>
           </select>
         </div>
 
         <button class="auth-submit" onclick="signupBioDockLab()">회원가입 후 시작</button>
 
         <div class="auth-notice">
-          환자 외 역할은 실제 서비스에서는 면허/소속기관/관리자 승인 절차가 필요합니다.
-          현재는 발표용 프로토타입이므로 즉시 데모 계정으로 생성됩니다.
+          환자 외 역할은 실제 서비스에서는 면허, 소속기관, 관리자 승인 절차가 필요합니다.
+          현재는 발표용 프로토타입이므로 데모 계정으로 즉시 생성됩니다.
+          플랫폼 관리자와 내부 바이오그래머 직무 계정은 관리자 문서에서 별도로 관리합니다.
         </div>
       </div>
     </div>
@@ -808,7 +799,7 @@
       <p style="color:var(--blue);font-weight:950">상세 보기 〉</p>
     </div>
 
-    <div class="version">© 2025 BioDockLab<br/>v0.3 clinical</div>
+    <div class="version">© 2025 BioDockLab<br/>v0.4 role-auth</div>
   </aside>
 
   <main>
