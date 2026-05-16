@@ -277,5 +277,251 @@
 })();
 </script>
 
+
+<script id="biodocklab-role-hardfix-v04">
+(() => {
+  const USERS = [
+    { role: "researcher", label: "연구자", name: "김서연 박사", title: "Researcher" },
+    { role: "doctor", label: "의사", name: "이준호 의사", title: "Doctor" },
+    { role: "pharmacist", label: "약사", name: "박민지 약사", title: "Pharmacist" },
+    { role: "admin_staff", label: "원무", name: "최하늘 원무", title: "Administration" },
+    { role: "patient", label: "환자", name: "환자 사용자", title: "Patient" },
+    { role: "security", label: "보안", name: "보안관리자", title: "Security" }
+  ];
+
+  const POLICY = {
+    researcher: ["dashboard", "research_lab", "docking", "data_hub", "patient", "doctor"],
+    doctor: ["dashboard", "patient", "doctor", "reports", "report", "prescription"],
+    pharmacist: ["dashboard", "prescription", "pharmacist", "patient_limited", "reports_limited"],
+    admin_staff: ["dashboard", "admin", "administration", "appointments", "consent_status", "patient_limited"],
+    patient: ["patient", "reports_limited", "consent_status"],
+    security: ["dashboard", "security", "audit_logs", "risk_events"]
+  };
+
+  const VIEW_ALIAS = {
+    dashboard: "dashboard",
+    patient: "patient",
+    doctor: "doctor",
+    research: "research_lab",
+    researcher: "research_lab",
+    research_lab: "research_lab",
+    docking: "research_lab",
+    pharmacist: "prescription",
+    pharmacy: "prescription",
+    prescription: "prescription",
+    admin: "admin",
+    administration: "admin",
+    admin_staff: "admin",
+    security: "security",
+    data_hub: "data_hub",
+    datahub: "data_hub"
+  };
+
+  const PATIENT_ID = "PT-2025-0520-0017";
+  let currentRole = localStorage.getItem("biodocklab_role") || "researcher";
+
+  function normalizeView(view) {
+    return VIEW_ALIAS[view] || view;
+  }
+
+  function currentUser() {
+    return USERS.find(u => u.role === currentRole) || USERS[0];
+  }
+
+  function getSelect() {
+    return document.getElementById("roleSelect");
+  }
+
+  function updateActorUI() {
+    const user = currentUser();
+
+    const actorName = document.getElementById("actorName");
+    const actorRole = document.getElementById("actorRole");
+
+    if (actorName) actorName.textContent = user.name;
+    if (actorRole) actorRole.textContent = user.label;
+
+    document.querySelectorAll("*").forEach(el => {
+      if (!el.children.length && el.textContent) {
+        if (el.textContent.includes("undefined 권한 화면")) {
+          el.textContent = el.textContent.replace("undefined", user.label);
+        }
+        if (el.textContent.trim() === "undefined") {
+          el.textContent = user.label;
+        }
+      }
+    });
+  }
+
+  function setupRoleSelect() {
+    const sel = getSelect();
+    if (!sel) return;
+
+    sel.innerHTML = USERS.map(u => {
+      return `<option value="${u.role}">${u.label}</option>`;
+    }).join("");
+
+    if (!USERS.some(u => u.role === currentRole)) {
+      currentRole = "researcher";
+    }
+
+    sel.value = currentRole;
+
+    sel.onchange = null;
+
+    sel.addEventListener("change", (e) => {
+      currentRole = e.target.value;
+      localStorage.setItem("biodocklab_role", currentRole);
+      updateActorUI();
+      hardNavigate("dashboard");
+    }, true);
+  }
+
+  function inferViewFromButton(btn) {
+    const explicit = btn.dataset.view;
+    if (explicit) return normalizeView(explicit);
+
+    const label = (btn.textContent || "").toLowerCase();
+
+    if (label.includes("dashboard")) return "dashboard";
+    if (label.includes("patient")) return "patient";
+    if (label.includes("doctor")) return "doctor";
+    if (label.includes("research")) return "research_lab";
+    if (label.includes("docking")) return "research_lab";
+    if (label.includes("pharmacist")) return "prescription";
+    if (label.includes("administration")) return "admin";
+    if (label.includes("security")) return "security";
+    if (label.includes("data hub")) return "data_hub";
+
+    return "dashboard";
+  }
+
+  function setupNav() {
+    document.querySelectorAll("#nav button").forEach(btn => {
+      const view = inferViewFromButton(btn);
+      btn.dataset.view = view;
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        hardNavigate(view);
+      }, true);
+    });
+  }
+
+  function resolveScreenId(view) {
+    const normalized = normalizeView(view);
+
+    const candidates = [
+      `screen-${normalized}`,
+      normalized === "prescription" ? "screen-pharmacist" : "",
+      normalized === "admin" ? "screen-administration" : "",
+      normalized === "research_lab" ? "screen-research" : "",
+    ].filter(Boolean);
+
+    for (const id of candidates) {
+      const el = document.getElementById(id);
+      if (el) return id;
+    }
+
+    return "screen-dashboard";
+  }
+
+  function showScreen(view) {
+    const normalized = normalizeView(view);
+    const targetId = resolveScreenId(normalized);
+
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+
+    const target = document.getElementById(targetId);
+    if (target) target.classList.add("active");
+
+    document.querySelectorAll("#nav button").forEach(b => {
+      b.classList.toggle("active", normalizeView(b.dataset.view) === normalized);
+    });
+
+    updateActorUI();
+  }
+
+  async function sendAudit(view) {
+    const user = currentUser();
+
+    try {
+      await fetch("http://127.0.0.1:8000/security/access-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: user.role,
+          actor: user.name,
+          view: normalizeView(view),
+          patient_id: PATIENT_ID,
+          reason: "clinical_v2 hardfix navigation"
+        })
+      });
+    } catch (err) {
+      console.warn("audit failed", err);
+    }
+  }
+
+  async function hardNavigate(view) {
+    const user = currentUser();
+    const normalized = normalizeView(view);
+    const allowed = (POLICY[user.role] || []).includes(normalized);
+
+    await sendAudit(normalized);
+
+    if (!allowed) {
+      alert("권한이 없는 화면입니다. 보안 로그에 기록되었습니다.");
+
+      if (user.role === "security") {
+        showScreen("security");
+        if (typeof window.loadSecurity === "function") {
+          window.loadSecurity();
+        }
+      } else {
+        showScreen("dashboard");
+      }
+
+      return;
+    }
+
+    showScreen(normalized);
+
+    if (normalized === "security" && typeof window.loadSecurity === "function") {
+      window.loadSecurity();
+    }
+
+    if (normalized === "prescription" && typeof window.loadPrescriptions === "function") {
+      window.loadPrescriptions();
+    }
+
+    if (normalized === "admin" && typeof window.loadAdmin === "function") {
+      window.loadAdmin();
+    }
+  }
+
+  function boot() {
+    setupRoleSelect();
+    setupNav();
+    updateActorUI();
+  }
+
+  window.hardNavigate = hardNavigate;
+  window.navigate = hardNavigate;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+
+  // 기존 스크립트가 비동기로 다시 덮어쓰는 경우 방어
+  setTimeout(boot, 300);
+  setTimeout(boot, 1000);
+  setTimeout(boot, 2000);
+})();
+</script>
+
 </body>
 </html>
