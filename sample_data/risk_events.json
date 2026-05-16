@@ -1,0 +1,10 @@
+[
+  {
+    "id": "RISK-001",
+    "severity": "high",
+    "title": "권한 밖 민감 데이터 접근 시도",
+    "description": "원무 역할 사용자가 처방 상세 데이터 화면에 접근하려 했습니다.",
+    "status": "needs_review",
+    "recommended_action": "접근 사유 확인 및 권한 정책 점검"
+  }
+]

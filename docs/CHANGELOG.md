@@ -43,3 +43,12 @@
 - Added security documentation README.
 - Updated README with security and commercialization documentation links.
 
+
+## v0.7.1-demo-validation-recovery
+
+- Repaired clinical seed JSON files.
+- Hardened backend JSON loading.
+- Added role policy fallback for all demo roles.
+- Fixed smoke test URL encoding and Korean actor query issue.
+- Recreated demo, QA, screenshot, and evidence docs.
+

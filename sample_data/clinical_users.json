@@ -1,0 +1,100 @@
+[
+  {
+    "id": "USER-PATIENT-001",
+    "name": "환자 사용자",
+    "role": "patient",
+    "role_label": "환자",
+    "department": "Patient Portal"
+  },
+  {
+    "id": "USER-DOCTOR-001",
+    "name": "이준호 의사",
+    "role": "doctor",
+    "role_label": "의사",
+    "department": "Doctor Workspace"
+  },
+  {
+    "id": "USER-PHARM-001",
+    "name": "박민지 약사",
+    "role": "pharmacist",
+    "role_label": "약사",
+    "department": "Pharmacy"
+  },
+  {
+    "id": "USER-ADMIN-001",
+    "name": "최하늘 원무",
+    "role": "admin_staff",
+    "role_label": "원무",
+    "department": "Administration"
+  },
+  {
+    "id": "USER-RESEARCHER-001",
+    "name": "김서연 박사",
+    "role": "researcher",
+    "role_label": "연구자",
+    "department": "Research Lab"
+  },
+  {
+    "id": "USER-SECURITY-001",
+    "name": "보안관리자",
+    "role": "security",
+    "role_label": "보안",
+    "department": "Security Center"
+  },
+  {
+    "id": "USER-OWNER-001",
+    "name": "이영준 관리자",
+    "role": "super_admin",
+    "role_label": "플랫폼 관리자",
+    "department": "Platform Admin"
+  },
+  {
+    "id": "USER-CURATOR-001",
+    "name": "데이터 큐레이터",
+    "role": "bio_data_curator",
+    "role_label": "Bio Data Curator",
+    "department": "Data Hub"
+  },
+  {
+    "id": "USER-AI-001",
+    "name": "AI 모델 오퍼레이터",
+    "role": "ai_model_operator",
+    "role_label": "AI Model Operator",
+    "department": "AI Lab"
+  },
+  {
+    "id": "USER-EXPLAIN-001",
+    "name": "환자 설명 디자이너",
+    "role": "patient_explanation_designer",
+    "role_label": "Patient Explanation Designer",
+    "department": "Explanation Design"
+  },
+  {
+    "id": "USER-RWE-001",
+    "name": "연구 워크플로우 엔지니어",
+    "role": "research_workflow_engineer",
+    "role_label": "Research Workflow Engineer",
+    "department": "Research Workflow"
+  },
+  {
+    "id": "USER-CLINICAL-001",
+    "name": "임상 워크플로우 코디네이터",
+    "role": "clinical_workflow_coordinator",
+    "role_label": "Clinical Workflow Coordinator",
+    "department": "Clinical Coordination"
+  },
+  {
+    "id": "USER-BIOSEC-001",
+    "name": "바이오 보안 아키텍트",
+    "role": "bio_security_architect",
+    "role_label": "Bio Security Architect",
+    "department": "Bio Security"
+  },
+  {
+    "id": "USER-VLAB-001",
+    "name": "가상실험실 개발자",
+    "role": "virtual_lab_developer",
+    "role_label": "Virtual Lab Developer",
+    "department": "Virtual Lab"
+  }
+]

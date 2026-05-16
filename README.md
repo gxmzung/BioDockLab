@@ -97,3 +97,13 @@ It is a research and education support platform for early-stage structure-based 
 - [Biogrammer Role Matrix](docs/roles/biogrammer_role_matrix.md)
 
 BioDockLab is a proprietary/private prototype intended for research, education, explanation support, workflow management, and security-audit exploration. It is not an EMR replacement, diagnosis system, prescription system, or validated clinical decision-making system.
+
+---
+
+## Demo / Evidence Documents
+
+- [Demo Runbook](docs/demo/DEMO_RUNBOOK.md)
+- [QA Checklist](docs/demo/QA_CHECKLIST.md)
+- [Screenshot Guide](docs/demo/SCREENSHOT_GUIDE.md)
+- [Evidence Package](docs/evidence/README.md)
+- [Smoke Test Script](scripts/smoke_test.py)

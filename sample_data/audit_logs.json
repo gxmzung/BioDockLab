@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-05-20T09:11:00",
+    "actor": "김서연 박사",
+    "role": "researcher",
+    "action": "VIEW_RESEARCH_DASHBOARD",
+    "resource": "dashboard",
+    "patient_id": null,
+    "allowed": true,
+    "reason": "seed log"
+  }
+]
