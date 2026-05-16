@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>BioDockLab Clinical v0.2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --blue:#1f6bff;--teal:#14b8a6;--navy:#0f1f3d;--ink:#111b34;--line:#e6edf7;--muted:#65748b;--bg:#f6f9ff;--card:#fff;
+      --green:#10b981;--orange:#f59e0b;--red:#ef4444;--purple:#7c3aed;--softblue:#eef5ff;--shadow:0 12px 32px rgba(31,72,130,.06)
+    }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"Apple SD Gothic Neo","Noto Sans KR",sans-serif} .app{display:flex;min-height:100vh}
+    aside{width:286px;background:white;border-right:1px solid var(--line);padding:24px 18px;position:fixed;top:0;bottom:0;left:0;z-index:2}.logo{display:flex;align-items:center;gap:12px;font-size:30px;font-weight:950;color:var(--blue);margin-bottom:34px}.logo-mark{font-size:35px;color:var(--teal)}
+    .nav{display:flex;flex-direction:column;gap:8px}.nav button{display:flex;align-items:center;gap:14px;border:0;background:white;color:#1b2b48;font-weight:850;font-size:16px;padding:16px;border-radius:15px;cursor:pointer;text-align:left}.nav button.active{background:#eef5ff;color:var(--blue)}.nav .icon{font-size:22px;width:26px}
+    .status-card{position:absolute;left:18px;right:18px;bottom:96px;border:1px solid var(--line);border-radius:17px;padding:18px;background:white}.status-card .ok{font-weight:950;color:var(--teal);margin-top:6px}.version{position:absolute;bottom:28px;left:0;right:0;text-align:center;color:#8190a8;font-size:13px}
+    main{margin-left:286px;width:calc(100% - 286px)} header{height:82px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:1}.search{width:660px;height:52px;border:1px solid var(--line);border-radius:14px;background:white;display:flex;align-items:center;padding:0 18px;color:var(--muted)}.search input{border:0;outline:0;width:100%;font-size:15px;margin-left:12px}.top-actions{display:flex;align-items:center;gap:18px}.role-select{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:850;color:#1b2b48;background:white}.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#18233d,#94a3b8)}.userbox{display:flex;align-items:center;gap:12px}.userbox b{display:block}.userbox span{font-size:13px;color:var(--blue);font-weight:850}
+    .content{padding:32px}.page-title{font-size:40px;line-height:1;font-weight:950;margin:0;letter-spacing:-1px}.subtitle{font-size:18px;color:var(--muted);font-weight:750;margin-top:12px}.hero{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}.right-actions{display:flex;gap:12px;align-items:center}.card{background:white;border:1px solid var(--line);border-radius:19px;padding:22px;box-shadow:var(--shadow)}.grid{display:grid;gap:18px}.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)}.grid-4{grid-template-columns:repeat(4,1fr)}.grid-main{grid-template-columns:1fr 520px}h2{margin:0 0 18px;font-size:20px;font-weight:950}.muted{color:var(--muted)}.small{font-size:13px}.mini{font-size:12px}.soft{background:#f8fbff}.metric{display:flex;align-items:center;gap:16px}.metric-icon{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;background:#eef5ff}.metric b{font-size:29px}.metric span{display:block;color:#6b7a90;font-weight:850}.metric small{color:var(--teal);font-weight:950}.pill{display:inline-flex;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:950;background:#edf5ff;color:var(--blue)}.pill.green{background:#dcfce7;color:#15803d}.pill.orange{background:#fff7ed;color:#c2410c}.pill.red{background:#ffe4e6;color:#be123c}.pill.purple{background:#f3e8ff;color:#6d28d9}.table{width:100%;border-collapse:collapse;font-size:14px}.table th{background:#f8fafc;color:#60708a;text-align:left;padding:12px;font-size:13px}.table td{border-top:1px solid var(--line);padding:12px;font-weight:750}.ghost-btn,.blue-btn{border-radius:12px;padding:13px 18px;font-size:15px;font-weight:950;cursor:pointer}.ghost-btn{background:white;border:1px solid var(--blue);color:var(--blue)}.blue-btn{background:var(--blue);border:1px solid var(--blue);color:white}.danger-btn{background:#fff1f2;border:1px solid #fecdd3;color:#be123c;border-radius:12px;padding:13px 18px;font-size:15px;font-weight:950;cursor:pointer}
+    .mode-card{border-radius:16px;padding:22px;border:1px solid #d8e5ff;background:#f7fbff}.mode-card.teal{border-color:#ccfbf1;background:#f0fdfa}.mode-card.purple{border-color:#eadcff;background:#faf5ff}.mode-title{font-size:20px;font-weight:950;color:var(--blue)}.mode-card.teal .mode-title{color:#0f9f8f}.mode-card.purple .mode-title{color:#6d28d9}.alert{border-radius:16px;padding:18px;line-height:1.7;font-weight:850}.alert.safe{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}.alert.warn{background:#fffbeb;color:#b45309;border:1px solid #fde68a}.alert.danger{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}.screen{display:none}.screen.active{display:block}
+    .protein-preview{height:300px;border-radius:18px;background:radial-gradient(circle at 50% 40%,#cae6ff 0,#7db8f3 32%,#2c75d2 68%,#15417f 100%);position:relative;overflow:hidden}.blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.28);filter:blur(1px)}.ligand{position:absolute;left:44%;top:47%;width:90px;height:50px;border:5px solid #f59e0b;border-radius:24px;transform:rotate(-20deg)}.active-pocket{position:absolute;left:37%;top:36%;width:170px;height:130px;border-radius:50%;background:rgba(20,184,166,.45)}.progress-ring{width:150px;height:150px;border-radius:50%;border:18px solid #e5e7eb;border-top-color:var(--blue);border-left-color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:950}.score-ring{width:170px;height:170px;border-radius:50%;border:18px solid #e5e7eb;border-top-color:#15b8d5;border-left-color:#0ea5e9;display:flex;align-items:center;justify-content:center;text-align:center}.score-ring b{font-size:42px}.report-summary{background:#eefdf8;border:1px solid #99f6e4;border-radius:18px;padding:24px}.role-banner{display:flex;gap:14px;align-items:center;border-radius:18px;background:#fff;border:1px solid var(--line);padding:18px 20px;margin-bottom:18px}.role-banner strong{font-size:18px}.lock-card{border:1px dashed #fda4af;background:#fff1f2;color:#be123c;border-radius:18px;padding:20px;font-weight:950}.security-matrix{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.matrix-cell{border-radius:12px;background:#f8fafc;padding:10px;text-align:center;font-weight:850;font-size:12px}.matrix-cell.ok{background:#ecfdf5;color:#047857}.matrix-cell.no{background:#fff1f2;color:#be123c}.audit-stat{padding:18px;border-radius:17px;background:#f8fbff;border:1px solid var(--line)}.audit-stat b{font-size:28px}.audit-stat span{display:block;color:#64748b;font-weight:850}.drawer-note{border-radius:18px;background:#eef5ff;border:1px solid #bfdbfe;padding:18px;font-weight:850;color:#1d4ed8}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="logo"><span class="logo-mark">🧬</span><span>BioDockLab</span></div>
+    <div class="nav" id="nav">
+      <button data-view="dashboard" class="active"><span class="icon">⌂</span>Dashboard</button>
+      <button data-view="patient"><span class="icon">♙</span>Patient View</button>
+      <button data-view="doctor"><span class="icon">🩺</span>Doctor Workspace</button>
+      <button data-view="research_lab"><span class="icon">⚗</span>Research Lab</button>
+      <button data-view="prescription"><span class="icon">💊</span>Pharmacist</button>
+      <button data-view="admin"><span class="icon">🗂</span>Administration</button>
+      <button data-view="security"><span class="icon">🛡</span>Security Center</button>
+      <button data-view="data_hub"><span class="icon">◎</span>Data Hub</button>
+    </div>
+    <div class="status-card"><div style="font-size:28px">🛡</div><b>시스템 상태</b><div class="ok">모든 시스템 정상</div><p class="small muted">마지막 업데이트: 2025-05-20 09:30</p><p style="color:var(--blue);font-weight:900">상세 보기 〉</p></div>
+    <div class="version">© 2025 BioDockLab<br/>v2.3.1</div>
+  </aside>
+  <main>
+    <header>
+      <div class="search">⌕ <input placeholder="검색 (환자, 화합물, 실험, 보고서 등)" /><span>⌘ K</span></div>
+      <div class="top-actions"><span>🔔<sup style="background:#1f6bff;color:white;border-radius:50%;padding:2px 6px">3</sup></span><span>?</span><select id="roleSelect" class="role-select"></select><div class="userbox"><div class="avatar"></div><div><b id="actorName">김서연 박사</b><span id="actorRole">Researcher</span></div></div></div>
+    </header>
+    <div class="content">
+      <section id="screen-dashboard" class="screen active"></section>
+      <section id="screen-patient" class="screen"></section>
+      <section id="screen-doctor" class="screen"></section>
+      <section id="screen-research_lab" class="screen"></section>
+      <section id="screen-prescription" class="screen"></section>
+      <section id="screen-admin" class="screen"></section>
+      <section id="screen-security" class="screen"></section>
+      <section id="screen-data_hub" class="screen"></section>
+    </div>
+  </main>
+</div>
+<script src="clinical_v2_app.js"></script>
+</body>
+</html>

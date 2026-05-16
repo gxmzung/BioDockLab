@@ -1,0 +1,101 @@
+const API = "http://127.0.0.1:8000";
+const patientId = "PT-2025-0520-0017";
+let users = [];
+let actor = null;
+
+function info(label,value){return `<div style="display:flex;justify-content:space-between;border-bottom:1px solid #eef2f7;padding:10px 0;font-size:14px"><b style="color:#64748b">${label}</b><b>${value}</b></div>`}
+function progress(label,value,width){return `<div style="margin:12px 0"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:900;color:#64748b"><span>${label}</span><span>${value}</span></div><div style="height:8px;background:#e5e7eb;border-radius:999px;margin-top:6px"><div style="height:8px;background:var(--blue);border-radius:999px;width:${width}%"></div></div></div>`}
+function pill(text,tone=""){return `<span class="pill ${tone}">${text}</span>`}
+function money(n){return n.toLocaleString("ko-KR")}
+
+async function init(){
+  users = await fetch(`${API}/clinical/users`).then(r=>r.json()).catch(()=>[
+    {name:"김서연 박사",role:"researcher",role_label:"연구자"},{name:"이준호 의사",role:"doctor",role_label:"의사"},{name:"박민지 약사",role:"pharmacist",role_label:"약사"},{name:"최하늘 원무",role:"admin_staff",role_label:"원무"},{name:"환자 사용자",role:"patient",role_label:"환자"},{name:"보안관리자",role:"security",role_label:"보안"}
+  ]);
+  const sel=document.getElementById("roleSelect");
+  sel.innerHTML = users.map(u=>`<option value="${u.role}">${u.role_label}</option>`).join("");
+  actor = users.find(u=>u.role==="researcher") || users[0];
+  sel.value = actor.role;
+  updateActor();
+  sel.addEventListener("change",()=>{actor = users.find(u=>u.role===sel.value);updateActor();renderAll();navigate("dashboard", false);});
+  document.querySelectorAll("#nav button").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.view, true)));
+  renderAll();
+  navigate("dashboard", false);
+}
+function updateActor(){document.getElementById("actorName").innerText=actor.name;document.getElementById("actorRole").innerText=actor.role_label;}
+async function access(view){
+  try{
+    const res=await fetch(`${API}/security/access-check`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({role:actor.role, actor:actor.name, view, patient_id:patientId, reason:"screen navigation"})});
+    return await res.json();
+  }catch(e){return {allowed:true,message:"offline demo"}}
+}
+async function navigate(view, checkAccess=true){
+  if(checkAccess){
+    const result = await access(view);
+    if(!result.allowed){
+      alert(result.message || "권한이 없습니다.");
+      view="security";
+      if(actor.role!=="security") document.getElementById("screen-security").innerHTML = renderBlockedSecurity();
+      else await renderSecurity();
+    }
+  }
+  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(`screen-${view}`)?.classList.add("active");
+  if(view==="security" && actor.role==="security") await renderSecurity();
+  decorateProtein();
+}
+function decorateProtein(){
+  document.querySelectorAll(".protein-preview").forEach(el=>{
+    if(el.dataset.ready) return; el.dataset.ready="1";
+    for(let i=0;i<46;i++){const s=document.createElement("span");s.className="blob";const size=24+((i*7)%46);s.style.width=size+"px";s.style.height=size+"px";s.style.left=(4+((i*13)%84))+"%";s.style.top=(8+((i*17)%76))+"%";el.appendChild(s)}
+    const p=document.createElement("div");p.className="active-pocket";el.appendChild(p);const l=document.createElement("div");l.className="ligand";el.appendChild(l)
+  });
+}
+function roleBanner(){
+  const roleHints={
+    researcher:"연구 데이터와 가상 도킹 실험 중심으로 표시됩니다.", doctor:"진료 상담과 결과 해석 중심으로 표시됩니다.", pharmacist:"처방량·상호작용·유전자 적합성 검토 중심으로 표시됩니다.", admin_staff:"예약·동의서·서류 상태만 표시되며 진단/처방 상세는 마스킹됩니다.", patient:"환자 이해용 설명만 표시됩니다.", security:"접근 로그와 위험 이벤트만 표시됩니다."
+  };
+  return `<div class="role-banner"><div style="font-size:32px">🔐</div><div><strong>${actor.role_label} 권한 화면</strong><div class="muted small">${roleHints[actor.role] || "역할 기반 접근제어가 적용됩니다."}</div></div></div>`
+}
+function renderAll(){
+  document.getElementById("screen-dashboard").innerHTML=renderDashboard();
+  document.getElementById("screen-patient").innerHTML=renderReport("patient");
+  document.getElementById("screen-doctor").innerHTML=renderDoctor();
+  document.getElementById("screen-research_lab").innerHTML=renderResearch();
+  document.getElementById("screen-prescription").innerHTML=renderPharmacist();
+  document.getElementById("screen-admin").innerHTML=renderAdmin();
+  document.getElementById("screen-data_hub").innerHTML=renderDataHub();
+  if(actor.role==="security") renderSecurity(); else document.getElementById("screen-security").innerHTML=renderBlockedSecurity();
+}
+function renderDashboard(){
+  const roleDash={
+    pharmacist:["처방 검토 대기",18,"상호작용 경고",5,"검토 완료",42,"유전자 적합성",91],
+    admin_staff:["오늘 예약",36,"동의서 미완료",7,"서류 처리",21,"차단된 민감정보",12],
+    security:["오늘 접근 로그",128,"차단 이벤트",9,"위험 이벤트",14,"MFA 적용률",96],
+    doctor:["상담 대기",12,"리포트 생성",24,"치료 후보",8,"설명 완료",17],
+    patient:["새 리포트",2,"상담 예정",1,"동의 상태",3,"읽은 안내",5],
+    researcher:["활성 실험",128,"후보 화합물",3456,"환자 케이스",782,"생성된 보고서",214]
+  }[actor.role] || ["활성 실험",128,"후보 화합물",3456,"환자 케이스",782,"생성된 보고서",214];
+  return `${roleBanner()}<div class="grid grid-main"><div><div class="hero"><div><h1 class="page-title">Integrated Bio Platform</h1><p class="subtitle"><b style="color:var(--blue)">환자</b> · <b style="color:var(--teal)">의사</b> · <b style="color:var(--purple)">연구자</b> · <b style="color:var(--orange)">약사/원무/보안</b>을 연결합니다.</p></div></div>
+  <div class="grid grid-4" style="margin-bottom:18px">${[0,2,4,6].map((i,idx)=>`<div class="card metric"><div class="metric-icon">${["⚗","⌬","♙","▤"][idx]}</div><div><span>${roleDash[i]}</span><b>${typeof roleDash[i+1]==="number"?money(roleDash[i+1]):roleDash[i+1]}</b><small>▲${[12,8,15,6][idx]}%</small></div></div>`).join("")}</div>
+  <div class="card" style="margin-bottom:18px"><h2>역할별 모드</h2><div class="grid grid-3"><div class="mode-card"><div style="font-size:44px">♙</div><div class="mode-title">Patient Mode</div><p>개인 맞춤 설명과 상담 준비 정보를 확인합니다.</p><button class="ghost-btn" onclick="navigate('patient',true)">환자 포털 열기 →</button></div><div class="mode-card teal"><div style="font-size:44px">🩺</div><div class="mode-title">Doctor Mode</div><p>환자 데이터 분석과 설명 리포트를 확인합니다.</p><button class="ghost-btn" onclick="navigate('doctor',true)">의사 워크스페이스 열기 →</button></div><div class="mode-card purple"><div style="font-size:44px">🔬</div><div class="mode-title">Researcher Mode</div><p>연구 데이터 분석과 도킹 실험을 수행합니다.</p><button class="ghost-btn" onclick="navigate('research_lab',true)">연구 랩 열기 →</button></div></div></div>
+  <div class="card"><h2>최근 실험/업무 활동</h2><table class="table"><thead><tr><th>업무명</th><th>대상</th><th>유형</th><th>상태</th><th>담당자</th></tr></thead><tbody><tr><td>KRAS G12D 억제제 탐색</td><td>KRAS G12D</td><td>가상 스크리닝</td><td>${pill("진행 중")}</td><td>김서연 박사</td></tr><tr><td>EGFR T790M 표적 분석</td><td>EGFR T790M</td><td>도킹 시뮬레이션</td><td>${pill("검토 중","orange")}</td><td>이준호 의사</td></tr><tr><td>약물상호작용 검토</td><td>Gefitinib</td><td>처방 검토</td><td>${pill("완료","green")}</td><td>박민지 약사</td></tr></tbody></table></div></div>
+  <div class="grid"><div class="card"><h2>단백질 구조 미리보기</h2><div class="protein-preview"></div><p class="small muted">● 단백질 표면 &nbsp; <span style="color:var(--teal)">● 활성 부위</span> &nbsp; <span style="color:var(--orange)">● 결합 리간드</span></p></div><div class="card"><h2>화합물 스크리닝 현황</h2><div style="display:flex;align-items:center;gap:28px"><div class="progress-ring">78%</div><div style="flex:1">${progress("가상 스크리닝","12,540 / 16,000",85)}${progress("상위 화합물 도킹","1,245 / 2,000",62)}${progress("ADMET 예측","980 / 1,500",70)}${progress("후보 선정","245 / 500",50)}</div></div></div><div class="card"><h2>알림 및 인사이트</h2><div class="alert safe">KRAS G12D 타겟에서 결합 친화도 상위 5% 화합물 발견</div><br><div class="alert warn">권한 없는 접근 이벤트가 Security Center에 기록되었습니다.</div></div></div></div>`;
+}
+function renderReport(){return `${roleBanner()}<div class="hero"><div><h1 class="page-title">Result Explanation Report</h1><p class="subtitle">환자/의사용 이해 쉬운 결과 설명</p></div><div class="right-actions"><button class="ghost-btn">PDF 저장</button><button class="ghost-btn">의사 메모</button><button class="blue-btn">상담 준비</button></div></div><div class="grid grid-main"><div class="grid"><div class="card"><h2>환자 요약 정보</h2><div class="grid grid-4"><div>${info("Patient ID",patientId)}</div><div>${info("진단 영역","비소세포폐암(NSCLC)")}</div><div>${info("현재 상태","진행성, EGFR L858R 양성")}</div><div>${info("상담 예정","2025-06-02 10:00")}</div></div></div><div class="card"><h2>치료제 후보 요약</h2><table class="table"><thead><tr><th>후보 치료제</th><th>예상 효능</th><th>위험도</th><th>권장도</th><th>주요 근거</th></tr></thead><tbody><tr><td><b style="color:var(--blue)">BD-201</b><br><span class="muted">BioDock 신약 후보</span></td><td>72%</td><td>${pill("보통","orange")}</td><td>${pill("높음","green")}</td><td>EGFR L858R 특이적 결합 강도 우수</td></tr><tr><td><b style="color:var(--blue)">BD-105</b><br><span class="muted">2세대 TKI</span></td><td>55%</td><td>${pill("낮음","green")}</td><td>${pill("보통")}</td><td>기존 치료제 대비 반응률 개선 가능</td></tr><tr><td><b style="color:var(--blue)">Gefitinib</b><br><span class="muted">1세대 TKI</span></td><td>32%</td><td>${pill("낮음","green")}</td><td>${pill("낮음","purple")}</td><td>기존 표준 치료제</td></tr></tbody></table></div><div class="card"><h2>쉽게 이해하는 설명</h2><p style="line-height:1.9;font-weight:700;color:#334155">검사 결과, 환자분의 암은 EGFR이라는 단백질의 특정 변이 때문에 생긴 것으로 확인되었습니다. 이 리포트는 의료진 상담을 돕기 위한 설명 보조 자료이며, 최종 판단은 담당 의료진이 수행합니다.</p><div class="alert safe">현재 환자 상태와 검사 결과를 종합했을 때, 긍정적인 치료 반응이 기대됩니다.</div></div></div><div class="grid"><div class="report-summary"><h2>의사 종합 해석</h2><p style="font-size:18px;line-height:1.8;font-weight:950;color:#047857">환자에서 EGFR L858R 변이에 대한 치료 반응 가능성이 높은 치료제가 확인되었으며, 부작용 위험은 보통 수준으로 예측됩니다.</p><ul><li>1차 권장 후보: BD-201</li><li>기존 치료제 대비 예측 반응률 향상 기대</li><li>예후가 양호할 가능성</li></ul></div><div class="grid grid-2"><div class="card"><h2>분자적 근거</h2><div class="protein-preview" style="height:200px"></div><p class="small muted">BD-201은 EGFR L858R 변이 부위에 안정적으로 결합하는 것으로 예측됩니다.</p></div><div class="card"><h2>예측 반응 및 위험도</h2><div class="score-ring"><div><b>78</b><br>/100</div></div>${info("유전자 적합성","92 / 100")}${info("약물 결합 안정성","81 / 100")}${info("세포 실험 예측","73 / 100")}${info("부작용 예측","68 / 100")}</div></div><div class="card"><h2>의사용 상세 해석</h2><p style="line-height:1.9;font-weight:700;color:#334155">EGFR L858R 변이 양성 NSCLC 환자에서 BD-201은 도킹 점수 -11.2 kcal/mol로 우수한 결합 친화도를 보였습니다. 이 정보는 임상 판단을 대체하지 않고 설명 및 상담 보조 목적으로 사용됩니다.</p></div></div></div>`}
+function renderDoctor(){return renderReport();}
+function renderResearch(){return `${roleBanner()}<div class="hero"><div><p style="color:var(--blue);font-weight:900">Research Lab 〉 Docking Experiments 〉 EXP-2025-05-20-001</p><h1 class="page-title">Virtual Docking Experiment</h1><p class="subtitle">단백질-화합물 결합 예측 및 스크리닝</p></div><div class="right-actions"><button class="ghost-btn">결과 저장</button><button class="ghost-btn">보고서 생성</button><button class="blue-btn">실험 실행</button></div></div><div class="grid" style="grid-template-columns:310px 1fr 380px"><div class="grid"><div class="card"><h2>타겟 단백질 ${pill("준비됨","green")}</h2><b style="font-size:22px">KRAS G12D</b><p class="muted">PDB ID: 6R68</p><div class="protein-preview" style="height:160px"></div>${info("유전자","KRAS")}${info("돌연변이","G12D")}${info("해상도","2.20 Å")}${info("바인딩 부위","SII Pocket")}</div><div class="card"><h2>선택 화합물 ${pill("편집")}</h2><b style="font-size:22px;color:var(--blue)">BDL-10234</b><p class="muted">내부 라이브러리</p><div style="height:150px;background:#f8fafc;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:54px">⌬</div>${info("MW","452.91")}${info("식별자","BDL-10234")}${info("공급원","BioDockLib")}</div></div><div class="grid"><div class="card"><h2>3D View</h2><div class="protein-preview" style="height:430px"></div><p class="small muted"><span style="color:var(--teal)">● Hydrogen Bond</span> &nbsp; <span style="color:var(--purple)">● Hydrophobic</span> &nbsp; <span style="color:var(--orange)">● π-π Stacking</span></p></div><div class="card"><h2>결과</h2><table class="table"><thead><tr><th>순위</th><th>화합물 ID</th><th>Binding Score</th><th>ΔG</th><th>RMSD</th><th>ADMET Risk</th><th>선택</th></tr></thead><tbody><tr><td>1</td><td>BDL-10234</td><td>-10.28</td><td>-54.32</td><td>1.21</td><td>${pill("Low","green")}</td><td>●</td></tr><tr><td>2</td><td>BDL-08765</td><td>-9.46</td><td>-48.11</td><td>1.35</td><td>${pill("Low","green")}</td><td>○</td></tr><tr><td>3</td><td>BDL-09123</td><td>-8.74</td><td>-42.76</td><td>1.72</td><td>${pill("Medium","orange")}</td><td>○</td></tr></tbody></table></div></div><div class="grid"><div class="card"><h2>실험 파라미터</h2>${info("도킹 프로그램","AutoDock Vina 1.2.3")}${info("그리드 박스","24.0 × 24.0 × 24.0 Å")}${info("알고리즘","GA")}${info("에너지 정렬","MM/GBSA")}</div><div class="card"><h2>실험 상태 ${pill("실행 중")}</h2>${info("실험 ID","EXP-2025-05-20-001")}${info("생성자","김서연 박사")}${info("진행 상황","Scoring 단계 (3/4)")}<div style="margin-top:20px;height:12px;background:#e5e7eb;border-radius:999px"><div style="width:72%;height:12px;background:var(--blue);border-radius:999px"></div></div><p style="text-align:right;color:var(--blue);font-weight:900">72%</p></div><div class="card"><h2>빠른 액션</h2><div class="grid grid-2"><button class="ghost-btn">결과 저장</button><button class="ghost-btn">보고서 생성</button><button class="ghost-btn">포즈 내보내기</button><button class="ghost-btn">새 실험 시작</button></div></div></div></div>`}
+function renderPharmacist(){return `${roleBanner()}<div class="hero"><div><h1 class="page-title">Pharmacist Workspace</h1><p class="subtitle">처방량, 약물 상호작용, 유전자 적합성 검토</p></div><div class="right-actions"><button class="blue-btn">검토 완료 저장</button><button class="ghost-btn">의사에게 코멘트</button></div></div><div class="grid grid-4" style="margin-bottom:18px"><div class="card metric"><div class="metric-icon">💊</div><div><span>검토 대기</span><b>18</b><small>+4</small></div></div><div class="card metric"><div class="metric-icon" style="background:#fff7ed">⚠</div><div><span>상호작용 경고</span><b>5</b><small>주의</small></div></div><div class="card metric"><div class="metric-icon" style="background:#ecfdf5">🧬</div><div><span>유전자 적합성</span><b>91</b><small>/100</small></div></div><div class="card metric"><div class="metric-icon" style="background:#f5f3ff">▣</div><div><span>검토 완료</span><b>42</b><small>오늘</small></div></div></div><div class="grid grid-2"><div class="card"><h2>처방 검토</h2><table class="table"><thead><tr><th>약품</th><th>처방량</th><th>경로</th><th>상호작용</th><th>약사 메모</th><th>상태</th></tr></thead><tbody><tr><td>Gefitinib</td><td>250mg 1일 1회</td><td>PO</td><td>${pill("CYP3A4 확인","orange")}</td><td>병용약·유전자 적합성 검토 필요</td><td>${pill("검토중")}</td></tr><tr><td>Supportive Care</td><td>의료진 지시</td><td>N/A</td><td>${pill("낮음","green")}</td><td>환자용 화면 상세 처방량 제한</td><td>${pill("완료","green")}</td></tr></tbody></table></div><div class="grid"><div class="card"><h2>약사 확인 포인트</h2><div class="alert warn">CYP3A4 관련 상호작용, 병용약, 처방량, 유전자 적합성을 검토합니다. 최종 처방 판단은 담당 의료진 프로세스에 따릅니다.</div></div><div class="card"><h2>권한 표시</h2>${info("조회 가능","처방량, 상호작용, 약사 메모")}${info("제한 정보","연구용 원본 데이터, 전체 감사 로그")}${info("감사 로그","처방 상세 조회 시 자동 기록")}</div></div></div><div class="card" style="margin-top:18px"><h2>약물 안전성 체크리스트</h2><div class="grid grid-3"><div class="drawer-note">① 처방량 범위 확인</div><div class="drawer-note">② 병용약 상호작용 확인</div><div class="drawer-note">③ 유전자 적합성 참고</div></div></div>`}
+function renderAdmin(){return `${roleBanner()}<div class="hero"><div><h1 class="page-title">Administration View</h1><p class="subtitle">예약, 동의서, 서류 상태 중심 화면 — 진단/처방 상세는 제한</p></div><div class="right-actions"><button class="blue-btn">서류 상태 업데이트</button><button class="ghost-btn">동의서 요청</button></div></div><div class="grid grid-4" style="margin-bottom:18px"><div class="card metric"><div class="metric-icon">📅</div><div><span>오늘 예약</span><b>36</b><small>+8</small></div></div><div class="card metric"><div class="metric-icon" style="background:#fff7ed">✍</div><div><span>동의서 미완료</span><b>7</b><small>확인</small></div></div><div class="card metric"><div class="metric-icon" style="background:#ecfdf5">📄</div><div><span>서류 처리</span><b>21</b><small>오늘</small></div></div><div class="card metric"><div class="metric-icon" style="background:#fff1f2">🔒</div><div><span>마스킹 필드</span><b>12</b><small>보호</small></div></div></div><div class="grid grid-2"><div class="card"><h2>원무 업무 목록</h2><table class="table"><thead><tr><th>환자ID</th><th>이름</th><th>예약</th><th>동의</th><th>서류</th><th>메모</th></tr></thead><tbody><tr><td>${patientId}</td><td>김○○</td><td>2025-06-02 10:00</td><td>${pill("연구동의","green")}</td><td>${pill("대기")}</td><td>진단/처방 상세는 마스킹됨</td></tr><tr><td>PT-2025-0521-0031</td><td>이○○</td><td>2025-06-02 11:00</td><td>${pill("미완료","orange")}</td><td>${pill("발급완료","green")}</td><td>추가 동의서 요청 필요</td></tr></tbody></table></div><div class="grid"><div class="lock-card">원무 권한에서는 진단명, 상세 처방량, 유전자 검사 원본, 연구용 데이터셋 접근이 제한됩니다.</div><div class="card"><h2>접근 정책</h2>${info("허용","예약·동의·서류·보험/행정 상태")}${info("제한","진단 상세·처방 상세·연구 원본 데이터")}${info("기록","업무 화면 접근 시 감사 로그 자동 생성")}</div></div></div>`}
+function renderDataHub(){return `${roleBanner()}<div class="hero"><div><h1 class="page-title">Data Hub</h1><p class="subtitle">연구 데이터, 환자 동의, 비식별화 데이터셋 관리 비전</p></div></div><div class="card"><div class="alert warn">현재 데모에서는 Data Hub 전체 기능 대신 권한·감사 로그·동의 상태 중심 기능을 먼저 구현했습니다.</div></div>`}
+function renderBlockedSecurity(){return `${roleBanner()}<div class="hero"><div><h1 class="page-title">Security & Audit Center</h1><p class="subtitle">보안 권한 사용자만 접근 가능합니다.</p></div></div><div class="lock-card">현재 역할(${actor.role_label})은 보안 감사 로그 전체 조회 권한이 없습니다. 이 접근 시도는 보안 로그에 기록됩니다.</div>`}
+async function renderSecurity(){
+  const el=document.getElementById("screen-security");
+  let logs=[],risks=[];
+  try{logs=await fetch(`${API}/security/audit-logs?role=${actor.role}&actor=${encodeURIComponent(actor.name)}`).then(r=>r.json());risks=await fetch(`${API}/security/risk-events?role=${actor.role}&actor=${encodeURIComponent(actor.name)}`).then(r=>r.json())}catch(e){logs=[];risks=[]}
+  if(logs.error){el.innerHTML=renderBlockedSecurity();return}
+  const denied=logs.filter(l=>!l.allowed).length, allowed=logs.filter(l=>l.allowed).length;
+  el.innerHTML=`${roleBanner()}<div class="hero"><div><h1 class="page-title">Security & Audit Center</h1><p class="subtitle">접근 로그, 권한 없는 접근, 내부자 과다열람 의심 이벤트 확인</p></div><button class="blue-btn" onclick="renderSecurity()">로그 새로고침</button></div><div class="grid grid-4" style="margin-bottom:18px"><div class="audit-stat"><span>전체 접근</span><b>${logs.length}</b></div><div class="audit-stat"><span>허용</span><b style="color:var(--green)">${allowed}</b></div><div class="audit-stat"><span>차단</span><b style="color:var(--red)">${denied}</b></div><div class="audit-stat"><span>위험 이벤트</span><b style="color:var(--orange)">${risks.length}</b></div></div><div class="grid grid-2"><div class="card"><h2>접근 감사 로그</h2><table class="table"><thead><tr><th>시간</th><th>사용자</th><th>역할</th><th>액션</th><th>허용</th></tr></thead><tbody>${logs.slice(-12).reverse().map(l=>`<tr><td>${l.timestamp}</td><td>${l.actor}</td><td>${l.role}</td><td>${l.action}</td><td>${l.allowed?pill("허용","green"):pill("차단","red")}</td></tr>`).join("")}</tbody></table></div><div class="card"><h2>위험 이벤트</h2>${risks.slice(-8).reverse().map(e=>`<div class="alert ${e.severity==="high"?"danger":"warn"}"><b>${e.title}</b><br>${e.description}<br><span class="small">${e.recommended_action}</span></div><br>`).join("")}</div></div><div class="card" style="margin-top:18px"><h2>역할별 접근 정책 매트릭스</h2><div class="security-matrix">${["환자","의사","약사","원무","연구자","보안"].map(r=>`<div class="matrix-cell"><b>${r}</b></div>`).join("")}${["요약","리포트","처방","예약","연구","감사"].map((v,i)=>["환자","의사","약사","원무","연구자","보안"].map((r,j)=>`<div class="matrix-cell ${((j===0&&i<2)||(j===1&&i<3)||(j===2&&i===2)||(j===3&&i===3)||(j===4&&i===4)||(j===5&&i===5))?"ok":"no"}">${((j===0&&i<2)||(j===1&&i<3)||(j===2&&i===2)||(j===3&&i===3)||(j===4&&i===4)||(j===5&&i===5))?"허용":"제한"}</div>`).join("")).join("")}</div></div>`;
+}
+init();
