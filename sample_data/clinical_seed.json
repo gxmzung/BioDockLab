@@ -338,6 +338,146 @@
       "patient_id": null,
       "allowed": true,
       "reason": "security center"
+    },
+    {
+      "timestamp": "2026-05-17T00:05:30",
+      "actor": "김서연 박사",
+      "role": "researcher",
+      "action": "ACCESS_CHECK",
+      "resource": "prescription",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": false,
+      "reason": "screen navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:05:33",
+      "actor": "김서연 박사",
+      "role": "researcher",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "screen navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:08:05",
+      "actor": "김서연 박사",
+      "role": "researcher",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:08:29",
+      "actor": "김서연 박사",
+      "role": "researcher",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:27",
+      "actor": "김서연 박사",
+      "role": "researcher",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:30",
+      "actor": "이준호 의사",
+      "role": "doctor",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:30",
+      "actor": "이준호 의사",
+      "role": "doctor",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:30",
+      "actor": "이준호 의사",
+      "role": "doctor",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:31",
+      "actor": "최하늘 원무",
+      "role": "admin_staff",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:31",
+      "actor": "최하늘 원무",
+      "role": "admin_staff",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:33",
+      "actor": "보안관리자",
+      "role": "security",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:33",
+      "actor": "보안관리자",
+      "role": "security",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:33",
+      "actor": "보안관리자",
+      "role": "security",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": true,
+      "reason": "clinical_v2 hardfix navigation"
+    },
+    {
+      "timestamp": "2026-05-17T00:09:34",
+      "actor": "환자 사용자",
+      "role": "patient",
+      "action": "ACCESS_CHECK",
+      "resource": "dashboard",
+      "patient_id": "PT-2025-0520-0017",
+      "allowed": false,
+      "reason": "clinical_v2 hardfix navigation"
     }
   ],
   "risk_events": [
@@ -416,6 +556,23 @@
       "severity": "high",
       "title": "위험 이벤트 권한 없는 접근",
       "description": "김서연 박사(researcher) attempted risk events",
+      "status": "needs_review"
+    },
+    {
+      "id": "RISK-012",
+      "severity": "high",
+      "title": "권한 없는 화면 접근 시도",
+      "description": "김서연 박사(researcher) tried to access prescription for patient PT-2025-0520-0017",
+      "status": "needs_review"
+    }
+  ]
+}atus": "needs_review"
+    },
+    {
+      "id": "RISK-012",
+      "severity": "high",
+      "title": "권한 없는 화면 접근 시도",
+      "description": "김서연 박사(researcher) tried to access prescription for patient PT-2025-0520-0017",
       "status": "needs_review"
     }
   ]

@@ -728,6 +728,13 @@
           <button onclick="demoLogin('researcher')">연구자</button>
           <button onclick="demoLogin('security')">보안</button>
           <button onclick="demoLogin('super_admin')">관리자</button>
+                  <button onclick="demoLogin('bio_data_curator')">Data</button>
+                  <button onclick="demoLogin('ai_model_operator')">AI</button>
+                  <button onclick="demoLogin('patient_explanation_designer')">설명</button>
+                  <button onclick="demoLogin('research_workflow_engineer')">Workflow</button>
+                  <button onclick="demoLogin('clinical_workflow_coordinator')">Clinical</button>
+                  <button onclick="demoLogin('bio_security_architect')">보안설계</button>
+                  <button onclick="demoLogin('virtual_lab_developer')">Virtual Lab</button>
         </div>
       </div>
 
@@ -757,6 +764,13 @@
             <option value="researcher">연구자</option>
             <option value="security">보안관리자</option>
             <option value="super_admin">플랫폼 관리자</option>
+                      <option value="bio_data_curator">Bio Data Curator</option>
+                      <option value="ai_model_operator">AI Model Operator</option>
+                      <option value="patient_explanation_designer">Patient Explanation Designer</option>
+                      <option value="research_workflow_engineer">Research Workflow Engineer</option>
+                      <option value="clinical_workflow_coordinator">Clinical Workflow Coordinator</option>
+                      <option value="bio_security_architect">Bio Security Architect</option>
+                      <option value="virtual_lab_developer">Virtual Lab Developer</option>
           </select>
         </div>
 
@@ -946,7 +960,14 @@ const USERS = [
   { role:"admin_staff", label:"원무", name:"최하늘 원무", title:"Administration" },
   { role:"patient", label:"환자", name:"환자 사용자", title:"Patient" },
   { role:"security", label:"보안", name:"보안관리자", title:"Security" },
-  { role:"super_admin", label:"플랫폼 관리자", name:"이영준 관리자", title:"Platform Admin" }
+  { role:"super_admin", label:"플랫폼 관리자", name:"이영준 관리자", title:"Platform Admin" },
+  { role:"bio_data_curator", label:"Bio Data Curator", name:"데이터 큐레이터", title:"Bio Data Curator" },
+  { role:"ai_model_operator", label:"AI Model Operator", name:"AI 모델 오퍼레이터", title:"AI Model Operator" },
+  { role:"patient_explanation_designer", label:"Patient Explanation Designer", name:"환자 설명 디자이너", title:"Patient Explanation Designer" },
+  { role:"research_workflow_engineer", label:"Research Workflow Engineer", name:"연구 워크플로우 엔지니어", title:"Research Workflow Engineer" },
+  { role:"clinical_workflow_coordinator", label:"Clinical Workflow Coordinator", name:"임상 워크플로우 코디네이터", title:"Clinical Workflow Coordinator" },
+  { role:"bio_security_architect", label:"Bio Security Architect", name:"바이오 보안 아키텍트", title:"Bio Security Architect" },
+  { role:"virtual_lab_developer", label:"Virtual Lab Developer", name:"가상실험실 개발자", title:"Virtual Lab Developer" }
 ];
 
 const POLICY = {
@@ -956,6 +977,14 @@ const POLICY = {
   admin_staff: ["dashboard","admin","appointments","consent_status","patient_limited"],
   researcher: ["dashboard","research_lab","docking","data_hub"],
   security: ["dashboard","security","audit_logs","risk_events"],
+  bio_data_curator: ["dashboard","data_hub","reports_limited","patient_limited"],
+  ai_model_operator: ["dashboard","research_lab","docking","data_hub","reports_limited"],
+  patient_explanation_designer: ["dashboard","patient","reports_limited","consent_status"],
+  research_workflow_engineer: ["dashboard","research_lab","docking","data_hub"],
+  clinical_workflow_coordinator: ["dashboard","admin","appointments","consent_status","patient_limited","prescription"],
+  bio_security_architect: ["dashboard","security","audit_logs","risk_events"],
+  virtual_lab_developer: ["dashboard","research_lab","docking","data_hub"]
+,
   super_admin: ["dashboard","patient","doctor","research_lab","docking","prescription","admin","appointments","consent_status","data_hub","security","audit_logs","risk_events","reports","reports_limited","patient_limited"]
 };
 
@@ -1069,6 +1098,52 @@ const ROLE_DASHBOARD = {
     ]
   }
 };
+
+
+Object.assign(ROLE_DASHBOARD, {
+  bio_data_curator: {
+    banner:"🧬 Bio Data Curator 권한 화면 · 바이오 데이터 정리, 메타데이터 품질, 비식별 데이터셋 관리 중심입니다.",
+    metrics:[["🧬","데이터셋","42","관리"],["🧾","메타데이터","1,284","정리"],["🔒","비식별 처리","98%","완료"],["⚠","품질 이슈","7","검토"]],
+    recent:[["PDB 메타데이터 정리","6LU7","단백질 데이터","진행 중","데이터 큐레이터"],["비식별 데이터셋 검토","PT Dataset","동의 범위","검토 중","데이터 큐레이터"],["약물 후보 데이터 정리","Ligand Library","품질관리","완료","데이터 큐레이터"]],
+    insights:[["safe","비식별 데이터셋 품질 검사가 완료되었습니다."],["warn","동의 범위가 불명확한 데이터가 있습니다."]]
+  },
+  ai_model_operator: {
+    banner:"🤖 AI Model Operator 권한 화면 · 도킹 점수, 예측 모델, 후보 랭킹 결과를 검토합니다.",
+    metrics:[["🤖","실행 모델","12","활성"],["📊","예측 결과","3,420","생성"],["⚠","편향 점검","4","필요"],["✓","완료 분석","89","오늘"]],
+    recent:[["도킹 점수 랭킹","BDL Library","AI 분석","완료","AI 모델 오퍼레이터"],["ADMET 예측","Candidate Set","모델 실행","진행 중","AI 모델 오퍼레이터"],["모델 결과 검토","EGFR Case","리포트","검토 중","AI 모델 오퍼레이터"]],
+    insights:[["safe","상위 후보 화합물 랭킹이 생성되었습니다."],["warn","모델 결과는 실험 검증을 대체하지 않습니다."]]
+  },
+  patient_explanation_designer: {
+    banner:"📝 Patient Explanation Designer 권한 화면 · 환자가 이해할 수 있는 설명 리포트와 상담 질문을 설계합니다.",
+    metrics:[["📝","설명 리포트","28","작성"],["❓","상담 질문","64","생성"],["📄","PDF 템플릿","6","관리"],["⚠","표현 검수","9","필요"]],
+    recent:[["환자용 쉬운 설명 작성","EGFR L858R","설명 리포트","진행 중","환자 설명 디자이너"],["의사에게 물어볼 질문","복약/부작용","상담 보조","완료","환자 설명 디자이너"],["과장 표현 검토","AI 결과","윤리 검수","검토 중","환자 설명 디자이너"]],
+    insights:[["safe","환자용 설명 리포트 초안이 준비되었습니다."],["warn","진단/처방처럼 보이는 표현을 제거해야 합니다."]]
+  },
+  research_workflow_engineer: {
+    banner:"⚗ Research Workflow Engineer 권한 화면 · 연구 실험 파이프라인, 도킹 로그, 재현성 기록을 관리합니다.",
+    metrics:[["⚗","실험 파이프라인","18","운영"],["📜","실험 로그","342","기록"],["⌬","도킹 Config","76","관리"],["✓","재현성 체크","91%","정상"]],
+    recent:[["AutoDock Vina 파이프라인","KRAS G12D","워크플로우","진행 중","연구 워크플로우 엔지니어"],["실험 로그 저장","EXP-2025","재현성","완료","연구 워크플로우 엔지니어"],["Config 버전 관리","Docking Box","연구 설정","검토 중","연구 워크플로우 엔지니어"]],
+    insights:[["safe","실험 로그와 결과 JSON이 정상 저장되었습니다."],["warn","실제 Vina 실행 연동은 다음 단계입니다."]]
+  },
+  clinical_workflow_coordinator: {
+    banner:"🏥 Clinical Workflow Coordinator 권한 화면 · 의사·약사·원무 흐름을 연결하고 업무 상태를 조율합니다.",
+    metrics:[["🩺","의사 요청","14","대기"],["💊","약사 검토","8","진행"],["🗂","원무 처리","21","진행"],["📄","리포트 전달","12","완료"]],
+    recent:[["의사 리포트 전달","PT-2025","상담 준비","완료","임상 워크플로우 코디네이터"],["약사 처방 검토 요청","Gefitinib","협업","진행 중","임상 워크플로우 코디네이터"],["원무 동의서 확인","김○○","행정","검토 중","임상 워크플로우 코디네이터"]],
+    insights:[["safe","의사·약사·원무 협업 흐름이 정상 연결되었습니다."],["warn","민감정보 접근 범위를 계속 확인해야 합니다."]]
+  },
+  bio_security_architect: {
+    banner:"🛡 Bio Security Architect 권한 화면 · 접근권한, 동의, 감사 로그, 내부자 과다열람을 설계·감시합니다.",
+    metrics:[["📜","접근 로그","128","최근"],["🚫","차단 이벤트","9","검토"],["⚠","위험 이벤트","6","주의"],["🔐","정책 적용률","100%","RBAC"]],
+    recent:[["권한 밖 접근 차단","admin → prescription","Access Control","차단","바이오 보안 아키텍트"],["내부자 반복 열람 탐지","PT-2025","Risk Event","검토 중","바이오 보안 아키텍트"],["역할 정책 업데이트","RBAC Matrix","보안정책","완료","바이오 보안 아키텍트"]],
+    insights:[["warn","동일 환자 기록 반복 열람 의심 이벤트가 있습니다."],["safe","역할 기반 접근제어가 정상 작동 중입니다."]]
+  },
+  virtual_lab_developer: {
+    banner:"🧪 Virtual Lab Developer 권한 화면 · 3D 분자 뷰어, 가상 도킹, WebGL/VR 실험실을 개발합니다.",
+    metrics:[["🧪","가상 실험","22","진행"],["🧬","3D 뷰어","5","모듈"],["⌬","Ligand Pose","128","시각화"],["🖥","WebGL 화면","7","개발"]],
+    recent:[["3D 단백질 뷰어 개선","6LU7","WebGL","진행 중","가상실험실 개발자"],["리간드 포즈 시각화","BDL-10234","Virtual Lab","검토 중","가상실험실 개발자"],["VR/AR 확장 기획","Molecular Pocket","로드맵","예정","가상실험실 개발자"]],
+    insights:[["safe","가상 실험실 화면이 발표용 데모로 연결되었습니다."],["warn","VR/AR은 향후 확장 비전으로 두는 것이 안전합니다."]]
+  }
+});
 
 let currentRole = localStorage.getItem("biodocklab_v03_role") || "researcher";
 
@@ -1646,7 +1721,14 @@ init();
     { email:"admin@biodocklab.local", password:"1234", name:"최하늘 원무", role:"admin_staff" },
     { email:"researcher@biodocklab.local", password:"1234", name:"김서연 박사", role:"researcher" },
     { email:"security@biodocklab.local", password:"1234", name:"보안관리자", role:"security" },
-    { email:"owner@biodocklab.local", password:"4748", name:"이영준 관리자", role:"super_admin" }
+    { email:"owner@biodocklab.local", password:"4748", name:"이영준 관리자", role:"super_admin" },
+    { email:"curator@biodocklab.local", password:"1234", name:"데이터 큐레이터", role:"bio_data_curator" },
+    { email:"ai@biodocklab.local", password:"1234", name:"AI 모델 오퍼레이터", role:"ai_model_operator" },
+    { email:"explain@biodocklab.local", password:"1234", name:"환자 설명 디자이너", role:"patient_explanation_designer" },
+    { email:"workflow@biodocklab.local", password:"1234", name:"연구 워크플로우 엔지니어", role:"research_workflow_engineer" },
+    { email:"clinical@biodocklab.local", password:"1234", name:"임상 워크플로우 코디네이터", role:"clinical_workflow_coordinator" },
+    { email:"biosecurity@biodocklab.local", password:"1234", name:"바이오 보안 아키텍트", role:"bio_security_architect" },
+    { email:"virtuallab@biodocklab.local", password:"1234", name:"가상실험실 개발자", role:"virtual_lab_developer" }
   ];
 
   function loadAccounts() {
