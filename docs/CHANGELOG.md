@@ -79,3 +79,9 @@
 - Added email attachment checklist.
 - Added final professor email draft.
 - Updated README with clinical review package links.
+
+## v0.14.1-demo-name-scope
+
+- Fixed demo name scope.
+- `최하늘 원무` is reserved for Administration/원무 only.
+- Nurse role remains anonymized as `간호학과 검토자 A`.
