@@ -69,3 +69,13 @@
 - Removed real-person-like nurse demo name from UI/docs.
 - Replaced nurse demo identity with 간호학과 검토자 A.
 - Added real-name and external-publication privacy policy document.
+
+## v0.11-professor-review-package
+
+- Added professor review packet.
+- Added nursing review question list.
+- Added clinical assumptions verification document.
+- Added screenshot capture plan.
+- Added email attachment checklist.
+- Added final professor email draft.
+- Updated README with clinical review package links.

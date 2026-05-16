@@ -107,3 +107,26 @@ BioDockLab is a proprietary/private prototype intended for research, education, 
 - [Screenshot Guide](docs/demo/SCREENSHOT_GUIDE.md)
 - [Evidence Package](docs/evidence/README.md)
 - [Smoke Test Script](scripts/smoke_test.py)
+
+---
+
+## Clinical Review Package v0.10
+
+- [One Page Intro](docs/review/BioDockLab_one_page_intro.md)
+- [Clinical Review Request](docs/review/clinical_review_request.md)
+- [Nurse Workspace Review](docs/review/nursing_workspace_review.md)
+- [News / Club Pitch](docs/review/news_and_club_pitch.md)
+- [Email to Nursing Professor](docs/review/email_to_nursing_professor.md)
+
+v0.10 adds Nurse Workspace and prepares BioDockLab for healthcare-field review.
+
+---
+
+## Professor / Clinical Review Package v0.11
+
+- [Professor Review Packet](docs/review/professor_review_packet.md)
+- [Nursing Review Questions](docs/review/review_questions_for_nursing.md)
+- [Clinical Assumptions to Verify](docs/review/clinical_assumptions_to_verify.md)
+- [Screenshot Capture Plan](docs/review/screenshot_capture_plan.md)
+- [Email Attachment Checklist](docs/review/email_attachment_checklist.md)
+- [Final Professor Email Draft](docs/review/professor_email_final.md)
