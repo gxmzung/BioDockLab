@@ -1,5 +1,10 @@
 # BioDockLab
 
+> Proprietary prototype. All Rights Reserved.  
+> Commercial use, redistribution, productization, or derivative use is prohibited without explicit written permission.
+
+
+
 Web-based Protein-Ligand Docking Visualization Platform
 
 ## Overview
