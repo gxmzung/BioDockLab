@@ -3630,5 +3630,117 @@ init();
 })();
 </script>
 
+
+<script id="biodocklab-capture-shortcuts-v014">
+(() => {
+  const params = new URLSearchParams(location.search);
+  const capture = params.get("capture");
+  const role = params.get("role");
+  const view = params.get("view");
+
+  const ACCOUNTS = {
+    patient: { email:"patient@biodocklab.local", password:"1234", name:"환자 사용자", role:"patient", label:"환자" },
+    nurse: { email:"nurse@biodocklab.local", password:"1234", name:"간호학과 검토자 A", role:"nurse", label:"간호사" },
+    doctor: { email:"doctor@biodocklab.local", password:"1234", name:"이준호 의사", role:"doctor", label:"의사" },
+    pharmacist: { email:"pharmacist@biodocklab.local", password:"1234", name:"박민지 약사", role:"pharmacist", label:"약사" },
+    admin_staff: { email:"admin@biodocklab.local", password:"1234", name:"최하늘 원무", role:"admin_staff", label:"원무" },
+    researcher: { email:"researcher@biodocklab.local", password:"1234", name:"김서연 박사", role:"researcher", label:"연구자" },
+    security: { email:"security@biodocklab.local", password:"1234", name:"보안관리자", role:"security", label:"보안" },
+    super_admin: { email:"owner@biodocklab.local", password:"4748", name:"이영준 관리자", role:"super_admin", label:"플랫폼 관리자" },
+    bio_security_architect: { email:"biosecurity@biodocklab.local", password:"1234", name:"바이오 보안 아키텍트", role:"bio_security_architect", label:"Bio Security Architect" },
+    virtual_lab_developer: { email:"virtuallab@biodocklab.local", password:"1234", name:"가상실험실 개발자", role:"virtual_lab_developer", label:"Virtual Lab Developer" }
+  };
+
+  function showLoginOnly() {
+    localStorage.removeItem("biodocklab_v04_session");
+    localStorage.removeItem("biodocklab_v03_role");
+
+    const gate = document.getElementById("authGate");
+    if (gate) gate.style.display = "flex";
+
+    const roleSelect = document.getElementById("roleSelect");
+    if (roleSelect) roleSelect.disabled = true;
+  }
+
+  function applyRole(account) {
+    if (!account) return;
+
+    localStorage.setItem("biodocklab_v04_session", JSON.stringify(account));
+    localStorage.setItem("biodocklab_v03_role", account.role);
+
+    if (typeof currentRole !== "undefined") {
+      currentRole = account.role;
+    }
+
+    const gate = document.getElementById("authGate");
+    if (gate) gate.style.display = "none";
+
+    const actorName = document.getElementById("actorName");
+    const actorRole = document.getElementById("actorRole");
+
+    if (actorName) actorName.textContent = account.name;
+    if (actorRole) actorRole.textContent = account.label;
+
+    const roleSelect = document.getElementById("roleSelect");
+    if (roleSelect) {
+      if (!Array.from(roleSelect.options).some(o => o.value === account.role)) {
+        const opt = document.createElement("option");
+        opt.value = account.role;
+        opt.textContent = account.label;
+        roleSelect.appendChild(opt);
+      }
+      roleSelect.value = account.role;
+      roleSelect.disabled = true;
+    }
+  }
+
+  function openView(targetView) {
+    if (!targetView || targetView === "dashboard") {
+      if (typeof navigate === "function") navigate("dashboard", true);
+      return;
+    }
+
+    if (targetView === "admin_console") {
+      if (typeof openAdminConsole === "function") openAdminConsole();
+      return;
+    }
+
+    if (targetView === "role_workspace") {
+      if (typeof openRoleWorkspace === "function") openRoleWorkspace();
+      return;
+    }
+
+    if (targetView === "nurse" && typeof renderNurse === "function") {
+      renderNurse();
+    }
+
+    if (typeof navigate === "function") {
+      navigate(targetView, true);
+    }
+  }
+
+  function bootShortcut() {
+    if (capture === "login") {
+      showLoginOnly();
+      return;
+    }
+
+    if (!role && !view) return;
+
+    const account = ACCOUNTS[role] || ACCOUNTS.researcher;
+    applyRole(account);
+
+    setTimeout(() => openView(view || "dashboard"), 300);
+    setTimeout(() => openView(view || "dashboard"), 900);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootShortcut);
+  } else {
+    bootShortcut();
+  }
+})();
+</script>
+
 </body>
 </html>
