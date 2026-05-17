@@ -138,3 +138,6 @@ v0.10 adds Nurse Workspace and prepares BioDockLab for healthcare-field review.
 - [Master Schedule](docs/roadmap/MASTER_SCHEDULE.md)
 - [Team Structure](docs/roadmap/TEAM_STRUCTURE.md)
 - [Implementation Roadmap](docs/roadmap/IMPLEMENTATION_ROADMAP.md)
+- [Implementation Architecture](docs/roadmap/IMPLEMENTATION_ARCHITECTURE.md)
+
+- [Implementation Progress](docs/roadmap/IMPLEMENTATION_PROGRESS.md)
