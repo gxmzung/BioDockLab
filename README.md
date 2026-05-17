@@ -148,3 +148,9 @@ v0.10 adds Nurse Workspace and prepares BioDockLab for healthcare-field review.
 - [Initial Team Candidate Mapping](docs/team/INITIAL_TEAM_CANDIDATE_MAPPING.md)
 
 - [Team Overview](docs/team/TEAM_OVERVIEW.md)
+
+---
+
+## Team
+
+- [Open Positions and Required Skills](docs/team/OPEN_POSITIONS_AND_SKILLS.md)
