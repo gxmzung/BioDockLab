@@ -142,3 +142,5 @@ v0.10 adds Nurse Workspace and prepares BioDockLab for healthcare-field review.
 
 - [Implementation Progress](docs/roadmap/IMPLEMENTATION_PROGRESS.md)
 - [GitHub Project Master Table](docs/roadmap/GITHUB_PROJECT_MASTER_TABLE.md)
+
+- [18-36 Month Commercialization Roadmap](docs/roadmap/COMMERCIALIZATION_18_36_MONTH_ROADMAP.md)
