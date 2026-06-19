@@ -123,23 +123,15 @@
       </p>
     </section>
 
-    <section id="cards" class="grid"></section>
+    <section id="cards" class="grid">
+  	<p>Loading experiment data...</p>
+    </section>
 
     <div class="footer">
       BioDockLab · Frontend + Node API + Sample Bio Data
     </div>
   </main>
-
-  <script>
-    const cards = document.getElementById("cards");
-
-    function renderRisk(risk) {
-      if (risk === "Low") return "Risk: Low";
-      if (risk === "Medium") return "Risk: Medium";
-      return "Risk: High";
-    }
-
-    <script>
+<script>
   const cards = document.getElementById("cards");
 
   function renderRisk(risk) {
@@ -165,7 +157,10 @@
       });
 
       cards.innerHTML = experiments.map((exp) => {
-        const result = analysisMap[exp.id];
+        const result = analysisMap[exp.id] || {
+          priority: "Needs Improvement",
+          recommendation: "No analysis result found"
+        };
 
         return `
           <article class="card">
@@ -189,7 +184,7 @@
       }).join("");
     })
     .catch((err) => {
-      cards.innerHTML = "<p>Failed to load experiment data.</p>";
+      cards.innerHTML = "<p>Failed to load experiment data. Check /api/experiments and /api/analysis.</p>";
       console.error(err);
     });
 </script>
