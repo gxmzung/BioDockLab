@@ -1,3 +1,3 @@
-frontend/legacy/* linguist-documentation
+frontend/legacy/* linguist-vendored
 docs/** linguist-documentation
 reports/*.md linguist-documentation
