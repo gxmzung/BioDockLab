@@ -139,10 +139,35 @@
       return "Risk: High";
     }
 
-    fetch("/api/experiments")
-      .then((res) => res.json())
-      .then((experiments) => {
-        cards.innerHTML = experiments.map((exp) => `
+    <script>
+  const cards = document.getElementById("cards");
+
+  function renderRisk(risk) {
+    if (risk === "Low") return "Risk: Low";
+    if (risk === "Medium") return "Risk: Medium";
+    return "Risk: High";
+  }
+
+  function priorityBadge(priority) {
+    if (priority === "High Priority") return "🟢 High Priority";
+    if (priority === "Review") return "🟡 Review";
+    return "🔴 Needs Improvement";
+  }
+
+  Promise.all([
+    fetch("/api/experiments").then((res) => res.json()),
+    fetch("/api/analysis").then((res) => res.json())
+  ])
+    .then(([experiments, analysis]) => {
+      const analysisMap = {};
+      analysis.forEach((item) => {
+        analysisMap[item.id] = item;
+      });
+
+      cards.innerHTML = experiments.map((exp) => {
+        const result = analysisMap[exp.id];
+
+        return `
           <article class="card">
             <div class="id">${exp.id}</div>
             <div class="domain">${exp.domain}</div>
@@ -156,13 +181,17 @@
             </div>
             <b>Success Rate: ${exp.success_rate}%</b><br>
             <span class="risk">${renderRisk(exp.risk_level)}</span>
+            <br><br>
+            <b>${priorityBadge(result.priority)}</b>
+            <p class="meta">${result.recommendation}</p>
           </article>
-        `).join("");
-      })
-      .catch((err) => {
-        cards.innerHTML = "<p>Failed to load experiment data.</p>";
-        console.error(err);
-      });
-  </script>
+        `;
+      }).join("");
+    })
+    .catch((err) => {
+      cards.innerHTML = "<p>Failed to load experiment data.</p>";
+      console.error(err);
+    });
+</script>
 </body>
 </html>
