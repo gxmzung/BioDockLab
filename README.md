@@ -154,3 +154,36 @@ v0.10 adds Nurse Workspace and prepares BioDockLab for healthcare-field review.
 ## Team
 
 - [Open Positions and Required Skills](docs/team/OPEN_POSITIONS_AND_SKILLS.md)
+
+---
+
+## BioDockLab v2.0 Update
+
+BioDockLab v2.0 expands the project into a Bio AI Research Navigator.
+
+The new direction connects five bio-medical AI research areas:
+
+- Organoid
+- Surgery AI
+- Quantum Biocomputing
+- Digital Twin
+- Cell-Free Protein Synthesis, CFPS
+
+The goal is to transform bio experiment data into a structured decision-support system.
+
+### v2.0 Result
+
+- Bio AI Research Navigator page
+- Five research direction cards
+- Bio Data → AI Analysis → Digital Twin → Decision → Report flow
+- Developer position statement
+
+### Files
+
+- `frontend/bio_ai_navigator.html`
+- `docs/BioDockLab_v2_Development_Note.md`
+
+### Developer Position
+
+I am not positioning myself as a bio researcher.  
+I am positioning myself as a developer who structures and visualizes bio experiment data so researchers can make better decisions.
