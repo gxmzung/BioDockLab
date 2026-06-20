@@ -14,6 +14,7 @@ function App() {
   const [hospitalSummary, setHospitalSummary] = useState(null);
   const [patientReports, setPatientReports] = useState([]);
   const [doctorDecisions, setDoctorDecisions] = useState([]);
+  const [timeline, setTimeline] = useState([]);
   const [status, setStatus] = useState("loading");
 
   async function loadRoleDetail(roleId) {
@@ -34,6 +35,7 @@ function App() {
           hospitalSummaryRes,
           reportsRes,
           doctorDecisionsRes,
+          timelineRes,
         ] = await Promise.all([
           fetch(`${API_BASE}/experiments`),
           fetch(`${API_BASE}/analysis`),
@@ -43,6 +45,7 @@ function App() {
           fetch(`${API_BASE}/hospital-summary`),
           fetch(`${API_BASE}/patient-reports`),
           fetch(`${API_BASE}/doctor-decisions`),
+          fetch(`${API_BASE}/clinical-timeline/P-002`),
         ]);
 
         const rolesData = await rolesRes.json();
@@ -55,6 +58,7 @@ function App() {
         setHospitalSummary(await hospitalSummaryRes.json());
         setPatientReports(await reportsRes.json());
         setDoctorDecisions(await doctorDecisionsRes.json());
+        setTimeline(await timelineRes.json());
         setStatus("connected");
 
         if (rolesData.length > 0) {
@@ -138,6 +142,30 @@ function App() {
             <strong>{hospitalSummary?.average_spo2 ?? "-"}%</strong>
             <p>oxygen saturation</p>
           </div>
+        </section>
+
+
+        <section className="section-header">
+          <div>
+            <h2>Clinical Timeline</h2>
+            <p>P-002 환자의 바이탈 변화부터 의사 판단, 환자 설명 리포트, 감사 로그까지 이어지는 흐름</p>
+          </div>
+        </section>
+
+        <section className="timeline-panel">
+          {timeline.map((item) => (
+            <article className={`timeline-item ${item.status}`} key={`${item.time}-${item.type}`}>
+              <div className="timeline-time">{item.time}</div>
+              <div className="timeline-body">
+                <div className="decision-header">
+                  <span className="patient-chip">{item.type}</span>
+                  <span className="risk-chip medium">{item.role}</span>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            </article>
+          ))}
         </section>
 
         <section className="section-header">

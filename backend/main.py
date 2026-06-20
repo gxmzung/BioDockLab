@@ -377,3 +377,14 @@ def get_doctor_decision(patient_id: str):
         "decision_support": [],
         "next_action": "No action",
     }
+
+
+@app.get("/clinical-timeline")
+def get_clinical_timeline():
+    return load_json(DATA_DIR / "clinical_timeline.json", [])
+
+
+@app.get("/clinical-timeline/{patient_id}")
+def get_clinical_timeline_by_patient(patient_id: str):
+    timeline = get_clinical_timeline()
+    return [item for item in timeline if item.get("patient_id") == patient_id]
