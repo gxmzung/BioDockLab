@@ -154,7 +154,7 @@ function App() {
   const [vitals, setVitals] = useState(fallbackVitals);
   const [reports, setReports] = useState(fallbackReports);
   const [decisions, setDecisions] = useState(fallbackDecisions);
-  const [timeline, setTimeline] = useState(fallbackTimeline);
+  const [allTimeline, setAllTimeline] = useState(fallbackTimeline);
   const [digitalTwin, setDigitalTwin] = useState(fallbackTwin);
   const [selectedPatientId, setSelectedPatientId] = useState("P-002");
 
@@ -166,7 +166,7 @@ function App() {
           getJson("/vital-signs", fallbackVitals),
           getJson("/patient-reports", fallbackReports),
           getJson("/doctor-decisions", fallbackDecisions),
-          getJson("/clinical-timeline/P-002", fallbackTimeline),
+          getJson("/clinical-timeline", fallbackTimeline),
           getJson("/digital-twin-findings/P-002", fallbackTwin)
         ]);
 
@@ -192,6 +192,17 @@ function App() {
   const selectedDecision = useMemo(() => {
     return decisions.find((item) => item.patient_id === selectedPatientId) || decisions[0];
   }, [decisions, selectedPatientId]);
+
+  const selectedTimeline = useMemo(() => {
+    const filtered = allTimeline.filter((item) => item.patient_id === selectedPatientId);
+    return filtered.length ? filtered : fallbackTimeline.filter((item) => item.patient_id === selectedPatientId);
+  }, [allTimeline, selectedPatientId]);
+
+  const selectedTwin = useMemo(() => {
+    if (digitalTwin?.patient_id === selectedPatientId) return digitalTwin;
+    const fallbackList = Array.isArray(fallbackTwin) ? fallbackTwin : [fallbackTwin];
+    return fallbackList.find((item) => item.patient_id === selectedPatientId) || digitalTwin;
+  }, [digitalTwin, selectedPatientId]);
 
   const watchCount = vitals.filter((item) => item.status === "Watch").length;
   const reportsReady = reports.length;
@@ -361,7 +372,7 @@ function App() {
                 <div className="body-leg left" />
                 <div className="body-leg right" />
 
-                {digitalTwin.findings.map((finding) => (
+                {selectedTwin.findings.map((finding) => (
                   <span
                     key={finding.id}
                     className={`marker ${finding.severity.toLowerCase()}`}
@@ -370,7 +381,7 @@ function App() {
                 ))}
               </div>
 
-              <p>{digitalTwin.summary}</p>
+              <p>{selectedTwin.summary}</p>
             </section>
           </aside>
         </section>
@@ -382,7 +393,7 @@ function App() {
               <span>바이탈 → 판단 → 설명 리포트 흐름</span>
             </div>
 
-            {timeline.map((item) => (
+            {selectedTimeline.map((item) => (
               <article className="timeline-row" key={`${item.time}-${item.type}`}>
                 <strong>{item.time}</strong>
                 <div>
@@ -399,7 +410,7 @@ function App() {
               <span>의료진 확인용 위험 부위 요약</span>
             </div>
 
-            {digitalTwin.findings.map((finding) => (
+            {selectedTwin.findings.map((finding) => (
               <article className="finding-row" key={finding.id}>
                 <div>
                   <strong>{finding.label}</strong>
