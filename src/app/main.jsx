@@ -10,6 +10,9 @@ function App() {
   const [summary, setSummary] = useState(null);
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
+  const [vitals, setVitals] = useState([]);
+  const [hospitalSummary, setHospitalSummary] = useState(null);
+  const [patientReports, setPatientReports] = useState([]);
   const [status, setStatus] = useState("loading");
 
   async function loadRoleDetail(roleId) {
@@ -21,22 +24,33 @@ function App() {
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const [experimentsRes, analysisRes, summaryRes, rolesRes] = await Promise.all([
+        const [
+          experimentsRes,
+          analysisRes,
+          summaryRes,
+          rolesRes,
+          vitalsRes,
+          hospitalSummaryRes,
+          reportsRes,
+        ] = await Promise.all([
           fetch(`${API_BASE}/experiments`),
           fetch(`${API_BASE}/analysis`),
           fetch(`${API_BASE}/platform-summary`),
           fetch(`${API_BASE}/roles`),
+          fetch(`${API_BASE}/vital-signs`),
+          fetch(`${API_BASE}/hospital-summary`),
+          fetch(`${API_BASE}/patient-reports`),
         ]);
 
-        const experimentsData = await experimentsRes.json();
-        const analysisData = await analysisRes.json();
-        const summaryData = await summaryRes.json();
         const rolesData = await rolesRes.json();
 
-        setExperiments(experimentsData);
-        setAnalysis(analysisData);
-        setSummary(summaryData);
+        setExperiments(await experimentsRes.json());
+        setAnalysis(await analysisRes.json());
+        setSummary(await summaryRes.json());
         setRoles(rolesData);
+        setVitals(await vitalsRes.json());
+        setHospitalSummary(await hospitalSummaryRes.json());
+        setPatientReports(await reportsRes.json());
         setStatus("connected");
 
         if (rolesData.length > 0) {
@@ -59,11 +73,11 @@ function App() {
     <main className="dashboard-shell">
       <section className="hero">
         <div>
-          <span className="badge">BioDockLab v2.2 · Hospital Layer</span>
-          <h1>Role-based Bio AI Data Platform</h1>
+          <span className="badge">BioDockLab v2.3 · Hospital Data Layer</span>
+          <h1>Patient Right-to-Know & Vital Sign Platform</h1>
           <p>
-            BioDockLab은 환자의 알 권리, 의료진의 판단 보조, 연구자의 실험 분석을
-            하나의 데이터 흐름으로 연결하는 의료·바이오 연구 플랫폼이다.
+            BioDockLab은 환자의 알 권리, 간호사의 바이탈사인 확인,
+            의료진의 판단 보조, 연구자의 실험 분석을 하나의 데이터 흐름으로 연결한다.
           </p>
         </div>
 
@@ -81,17 +95,61 @@ function App() {
           <strong>{summary?.roles ?? "-"}</strong>
         </div>
         <div className="metric-card">
-          <span>Experiments</span>
-          <strong>{summary?.experiments ?? "-"}</strong>
+          <span>Patients</span>
+          <strong>{hospitalSummary?.patients ?? "-"}</strong>
         </div>
         <div className="metric-card">
-          <span>Average Success</span>
-          <strong>{summary?.average_success_rate ?? "-"}%</strong>
+          <span>Watch Cases</span>
+          <strong>{hospitalSummary?.watch ?? "-"}</strong>
         </div>
         <div className="metric-card">
-          <span>High Priority</span>
-          <strong>{summary?.high_priority ?? "-"}</strong>
+          <span>Average SpO₂</span>
+          <strong>{hospitalSummary?.average_spo2 ?? "-"}%</strong>
         </div>
+      </section>
+
+      <h2 className="section-title">Vital Sign Monitoring</h2>
+
+      <section className="experiment-grid">
+        {vitals.map((item) => (
+          <article className="experiment-card" key={item.patient_id}>
+            <h2>{item.patient_id}</h2>
+            <p>{item.name} · Age {item.age}</p>
+            <p>{item.note}</p>
+
+            <div className="vital-grid">
+              <span>HR <strong>{item.heart_rate}</strong></span>
+              <span>BP <strong>{item.blood_pressure}</strong></span>
+              <span>Temp <strong>{item.temperature}℃</strong></span>
+              <span>SpO₂ <strong>{item.spo2}%</strong></span>
+            </div>
+
+            <div className="card-footer">
+              <span className={`priority ${item.status === "Watch" ? "warning" : ""}`}>
+                {item.status}
+              </span>
+              <span className="rate">{item.respiratory_rate}/min</span>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <h2 className="section-title">Patient Right-to-Know Reports</h2>
+
+      <section className="report-grid">
+        {patientReports.map((report) => (
+          <article className="report-card" key={report.patient_id}>
+            <span className="badge">{report.patient_id}</span>
+            <h2>{report.title}</h2>
+            <p>{report.summary}</p>
+            <p>{report.explanation}</p>
+            <ul>
+              {report.right_to_know.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
       </section>
 
       <h2 className="section-title">Role-based Access Layer</h2>
@@ -140,7 +198,7 @@ function App() {
         </section>
       )}
 
-      <h2 className="section-title">Experiment Analysis Overview</h2>
+      <h2 className="section-title">Research Experiment Analysis</h2>
 
       <section className="experiment-grid">
         {experiments.map((exp) => {
@@ -174,10 +232,10 @@ function App() {
 
       <section className="pipeline">
         <div className="pipeline-step">Role Access</div>
-        <div className="pipeline-step">Experiment Data</div>
+        <div className="pipeline-step">Vital Signs</div>
+        <div className="pipeline-step">Patient Report</div>
         <div className="pipeline-step">AI Analysis</div>
         <div className="pipeline-step">Simulation</div>
-        <div className="pipeline-step">Report</div>
       </section>
     </main>
   );

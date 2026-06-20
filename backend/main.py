@@ -304,3 +304,54 @@ def get_role_detail(role_id: str):
             "restricted": [],
         },
     )
+
+
+@app.get("/vital-signs")
+def get_vital_signs():
+    return load_json(DATA_DIR / "vital_signs.json", [])
+
+
+@app.get("/patient-reports")
+def get_patient_reports():
+    return load_json(DATA_DIR / "patient_reports.json", [])
+
+
+@app.get("/patient-reports/{patient_id}")
+def get_patient_report(patient_id: str):
+    reports = get_patient_reports()
+    for report in reports:
+        if report.get("patient_id") == patient_id:
+            return report
+
+    return {
+        "patient_id": patient_id,
+        "title": "Report Not Found",
+        "summary": "해당 환자 설명 리포트가 없다.",
+        "explanation": "",
+        "right_to_know": [],
+    }
+
+
+@app.get("/hospital-summary")
+def get_hospital_summary():
+    vital_signs = get_vital_signs()
+    watch_count = sum(1 for item in vital_signs if item.get("status") == "Watch")
+    stable_count = sum(1 for item in vital_signs if item.get("status") == "Stable")
+
+    avg_spo2 = round(
+        sum(item.get("spo2", 0) for item in vital_signs) / max(len(vital_signs), 1),
+        1,
+    )
+
+    return {
+        "patients": len(vital_signs),
+        "stable": stable_count,
+        "watch": watch_count,
+        "average_spo2": avg_spo2,
+        "focus": [
+            "Patient right-to-know",
+            "Vital sign monitoring",
+            "Nurse handoff support",
+            "Doctor decision support",
+        ],
+    }
