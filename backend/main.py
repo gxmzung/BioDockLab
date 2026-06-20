@@ -355,3 +355,25 @@ def get_hospital_summary():
             "Doctor decision support",
         ],
     }
+
+
+@app.get("/doctor-decisions")
+def get_doctor_decisions():
+    return load_json(DATA_DIR / "doctor_decisions.json", [])
+
+
+@app.get("/doctor-decisions/{patient_id}")
+def get_doctor_decision(patient_id: str):
+    decisions = get_doctor_decisions()
+
+    for decision in decisions:
+        if decision.get("patient_id") == patient_id:
+            return decision
+
+    return {
+        "patient_id": patient_id,
+        "risk_level": "Unknown",
+        "clinical_summary": "해당 환자 판단 보조 데이터가 없다.",
+        "decision_support": [],
+        "next_action": "No action",
+    }

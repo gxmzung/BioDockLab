@@ -13,6 +13,7 @@ function App() {
   const [vitals, setVitals] = useState([]);
   const [hospitalSummary, setHospitalSummary] = useState(null);
   const [patientReports, setPatientReports] = useState([]);
+  const [doctorDecisions, setDoctorDecisions] = useState([]);
   const [status, setStatus] = useState("loading");
 
   async function loadRoleDetail(roleId) {
@@ -32,6 +33,7 @@ function App() {
           vitalsRes,
           hospitalSummaryRes,
           reportsRes,
+          doctorDecisionsRes,
         ] = await Promise.all([
           fetch(`${API_BASE}/experiments`),
           fetch(`${API_BASE}/analysis`),
@@ -40,6 +42,7 @@ function App() {
           fetch(`${API_BASE}/vital-signs`),
           fetch(`${API_BASE}/hospital-summary`),
           fetch(`${API_BASE}/patient-reports`),
+          fetch(`${API_BASE}/doctor-decisions`),
         ]);
 
         const rolesData = await rolesRes.json();
@@ -51,6 +54,7 @@ function App() {
         setVitals(await vitalsRes.json());
         setHospitalSummary(await hospitalSummaryRes.json());
         setPatientReports(await reportsRes.json());
+        setDoctorDecisions(await doctorDecisionsRes.json());
         setStatus("connected");
 
         if (rolesData.length > 0) {
@@ -73,11 +77,11 @@ function App() {
     <main className="dashboard-shell">
       <section className="hero">
         <div>
-          <span className="badge">BioDockLab v2.3 · Hospital Data Layer</span>
-          <h1>Patient Right-to-Know & Vital Sign Platform</h1>
+          <span className="badge">BioDockLab v2.4 · Clinical Decision Support</span>
+          <h1>Patient Right-to-Know & Doctor Decision Platform</h1>
           <p>
             BioDockLab은 환자의 알 권리, 간호사의 바이탈사인 확인,
-            의료진의 판단 보조, 연구자의 실험 분석을 하나의 데이터 흐름으로 연결한다.
+            의사의 판단 보조, 연구자의 실험 분석을 하나의 데이터 흐름으로 연결한다.
           </p>
         </div>
 
@@ -106,6 +110,28 @@ function App() {
           <span>Average SpO₂</span>
           <strong>{hospitalSummary?.average_spo2 ?? "-"}%</strong>
         </div>
+      </section>
+
+      <h2 className="section-title">Doctor Decision Support</h2>
+
+      <section className="decision-grid">
+        {doctorDecisions.map((item) => (
+          <article className="decision-card" key={item.patient_id}>
+            <div className="decision-header">
+              <span className="badge">{item.patient_id}</span>
+              <span className={`risk-chip ${item.risk_level.includes("Medium") ? "medium" : ""}`}>
+                {item.risk_level}
+              </span>
+            </div>
+            <h2>{item.next_action}</h2>
+            <p>{item.clinical_summary}</p>
+            <ul>
+              {item.decision_support.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
       </section>
 
       <h2 className="section-title">Vital Sign Monitoring</h2>
@@ -226,16 +252,6 @@ function App() {
             </article>
           );
         })}
-      </section>
-
-      <h2 className="section-title">Platform Pipeline</h2>
-
-      <section className="pipeline">
-        <div className="pipeline-step">Role Access</div>
-        <div className="pipeline-step">Vital Signs</div>
-        <div className="pipeline-step">Patient Report</div>
-        <div className="pipeline-step">AI Analysis</div>
-        <div className="pipeline-step">Simulation</div>
       </section>
     </main>
   );
