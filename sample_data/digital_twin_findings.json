@@ -1,0 +1,42 @@
+[
+  {
+    "patient_id": "P-002",
+    "model_type": "human-trauma-digital-twin",
+    "overall_risk": "High",
+    "summary": "혈압 저하, 심박수 증가, 산소포화도 저하가 함께 관찰되어 내부 출혈 가능성을 시각적으로 추적한다.",
+    "findings": [
+      {
+        "id": "BLEED-ABD-001",
+        "region": "Left Upper Abdomen",
+        "label": "복부 상부 출혈 의심",
+        "severity": "High",
+        "description": "저혈압과 빈맥이 동반되어 복부 내부 출혈 가능성이 있다.",
+        "x": 50,
+        "y": 44
+      },
+      {
+        "id": "BLEED-PEL-002",
+        "region": "Pelvic Region",
+        "label": "골반 부위 출혈 의심",
+        "severity": "High",
+        "description": "골반 부위 손상 또는 내부 출혈 가능성을 모니터링한다.",
+        "x": 50,
+        "y": 58
+      },
+      {
+        "id": "INJ-FEM-003",
+        "region": "Left Femur",
+        "label": "좌측 대퇴부 손상",
+        "severity": "Medium",
+        "description": "대퇴부 손상과 출혈 가능성을 함께 추적한다.",
+        "x": 42,
+        "y": 75
+      }
+    ],
+    "patient_explanation": [
+      "현재 몸 안쪽에서 출혈이 의심되는 위치를 모형으로 보여준다.",
+      "빨간색은 의료진이 빠르게 확인해야 하는 위험 위치를 의미한다.",
+      "이 정보는 환자가 자신의 상태를 이해하고 의료진에게 질문할 수 있도록 돕는다."
+    ]
+  }
+]
