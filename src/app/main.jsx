@@ -103,6 +103,32 @@ const fallbackTimeline = [
   }
 ];
 
+
+const fallbackAuditEvents = [
+  {
+    id: "AUD-001",
+    time: "08:02",
+    actor: "Nurse",
+    actor_name: "간호사 A",
+    patient_id: "P-001",
+    action: "Viewed vital signs",
+    data_scope: "Vital Signs",
+    result: "Allowed",
+    reason: "정기 바이탈 확인"
+  },
+  {
+    id: "AUD-005",
+    time: "08:39",
+    actor: "Researcher",
+    actor_name: "연구자 계정",
+    patient_id: "P-002",
+    action: "Tried to access identifiable patient report",
+    data_scope: "Patient Report",
+    result: "Denied",
+    reason: "연구자 권한은 식별 가능한 환자 리포트 접근 불가"
+  }
+];
+
 const fallbackTwin = {
   patient_id: "P-002",
   model_type: "prototype-risk-map",
@@ -156,19 +182,21 @@ function App() {
   const [decisions, setDecisions] = useState(fallbackDecisions);
   const [allTimeline, setAllTimeline] = useState(fallbackTimeline);
   const [digitalTwin, setDigitalTwin] = useState(fallbackTwin);
+  const [auditEvents, setAuditEvents] = useState(fallbackAuditEvents);
   const [selectedPatientId, setSelectedPatientId] = useState("P-002");
   const [roleMode, setRoleMode] = useState("dashboard");
 
   useEffect(() => {
     async function load() {
-      const [health, vitalData, reportData, decisionData, timelineData, twinData] =
+      const [health, vitalData, reportData, decisionData, timelineData, twinData, auditData] =
         await Promise.all([
           getJson("/health", null),
           getJson("/vital-signs", fallbackVitals),
           getJson("/patient-reports", fallbackReports),
           getJson("/doctor-decisions", fallbackDecisions),
           getJson("/clinical-timeline", fallbackTimeline),
-          getJson("/digital-twin-findings/P-002", fallbackTwin)
+          getJson("/digital-twin-findings/P-002", fallbackTwin),
+          getJson("/hospital-audit-events", fallbackAuditEvents)
         ]);
 
       setApiStatus(health ? "connected" : "fallback mode");
@@ -177,6 +205,7 @@ function App() {
       setDecisions(decisionData.length ? decisionData : fallbackDecisions);
       setTimeline(timelineData.length ? timelineData : fallbackTimeline);
       setDigitalTwin(twinData?.findings ? twinData : fallbackTwin);
+      setAuditEvents(auditData.length ? auditData : fallbackAuditEvents);
     }
 
     load();
@@ -204,6 +233,12 @@ function App() {
     const fallbackList = Array.isArray(fallbackTwin) ? fallbackTwin : [fallbackTwin];
     return fallbackList.find((item) => item.patient_id === selectedPatientId) || digitalTwin;
   }, [digitalTwin, selectedPatientId]);
+
+  const selectedAuditEvents = useMemo(() => {
+    return auditEvents.filter((item) => item.patient_id === selectedPatientId);
+  }, [auditEvents, selectedPatientId]);
+
+  const deniedAuditCount = auditEvents.filter((item) => item.result === "Denied").length;
 
   const watchCount = vitals.filter((item) => item.status === "Watch").length;
   const reportsReady = reports.length;
@@ -293,6 +328,11 @@ function App() {
             <span>Reports Ready</span>
             <strong>{reportsReady}</strong>
             <p>환자 설명 리포트</p>
+          </div>
+          <div className="stat-card danger">
+            <span>Denied Access</span>
+            <strong>{deniedAuditCount}</strong>
+            <p>권한 차단 이벤트</p>
           </div>
         </section>
 
@@ -420,6 +460,32 @@ function App() {
                   <span>{item.type} · {item.role}</span>
                   <p>{item.title}</p>
                 </div>
+              </article>
+            ))}
+          </section>
+
+
+          <section className="panel audit-panel">
+            <div className="panel-title">
+              <h2>Security Audit Log</h2>
+              <span>선택 환자 기준 접근 기록</span>
+            </div>
+
+            {selectedAuditEvents.length === 0 && (
+              <p className="empty-text">선택 환자의 감사 로그가 없습니다.</p>
+            )}
+
+            {selectedAuditEvents.map((event) => (
+              <article className={`audit-row ${event.result === "Denied" ? "denied" : "allowed"}`} key={event.id}>
+                <div>
+                  <strong>{event.time}</strong>
+                  <span>{event.actor} · {event.actor_name}</span>
+                </div>
+                <div>
+                  <h3>{event.action}</h3>
+                  <p>{event.data_scope} · {event.reason}</p>
+                </div>
+                <em className={event.result === "Denied" ? "watch" : ""}>{event.result}</em>
               </article>
             ))}
           </section>

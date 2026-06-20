@@ -1,0 +1,68 @@
+[
+  {
+    "id": "AUD-001",
+    "time": "08:02",
+    "actor": "Nurse",
+    "actor_name": "간호사 A",
+    "patient_id": "P-001",
+    "action": "Viewed vital signs",
+    "data_scope": "Vital Signs",
+    "result": "Allowed",
+    "reason": "정기 바이탈 확인"
+  },
+  {
+    "id": "AUD-002",
+    "time": "08:10",
+    "actor": "Nurse",
+    "actor_name": "간호사 B",
+    "patient_id": "P-002",
+    "action": "Viewed vital signs",
+    "data_scope": "Vital Signs",
+    "result": "Allowed",
+    "reason": "산소포화도 저하 확인"
+  },
+  {
+    "id": "AUD-003",
+    "time": "08:27",
+    "actor": "Doctor",
+    "actor_name": "담당의 A",
+    "patient_id": "P-002",
+    "action": "Viewed doctor decision support",
+    "data_scope": "Doctor Decision",
+    "result": "Allowed",
+    "reason": "Clinical review required"
+  },
+  {
+    "id": "AUD-004",
+    "time": "08:35",
+    "actor": "Patient",
+    "actor_name": "Sample Patient B",
+    "patient_id": "P-002",
+    "action": "Viewed patient explanation report",
+    "data_scope": "Patient Report",
+    "result": "Allowed",
+    "reason": "환자 알 권리 리포트 확인"
+  },
+  {
+    "id": "AUD-005",
+    "time": "08:39",
+    "actor": "Researcher",
+    "actor_name": "연구자 계정",
+    "patient_id": "P-002",
+    "action": "Tried to access identifiable patient report",
+    "data_scope": "Patient Report",
+    "result": "Denied",
+    "reason": "연구자 권한은 식별 가능한 환자 리포트 접근 불가"
+  },
+  {
+    "id": "AUD-006",
+    "time": "08:45",
+    "actor": "Security Officer",
+    "actor_name": "보안관리자",
+    "patient_id": "P-002",
+    "action": "Reviewed access log",
+    "data_scope": "Audit Log",
+    "result": "Allowed",
+    "reason": "민감정보 접근 이력 점검"
+  }
+]
