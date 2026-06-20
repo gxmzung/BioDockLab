@@ -74,184 +74,218 @@ function App() {
   }, [analysis]);
 
   return (
-    <main className="dashboard-shell">
-      <section className="hero">
-        <div>
-          <span className="badge">BioDockLab v2.4 · Clinical Decision Support</span>
-          <h1>Patient Right-to-Know & Doctor Decision Platform</h1>
-          <p>
-            BioDockLab은 환자의 알 권리, 간호사의 바이탈사인 확인,
-            의사의 판단 보조, 연구자의 실험 분석을 하나의 데이터 흐름으로 연결한다.
-          </p>
-        </div>
-
-        <aside className="status-panel">
-          <strong>Runtime Status</strong>
-          <span>Frontend: Vite 5173</span>
-          <span>Backend API: FastAPI 8000</span>
-          <span>API Status: {status}</span>
-        </aside>
-      </section>
-
-      <section className="metric-grid">
-        <div className="metric-card">
-          <span>Roles</span>
-          <strong>{summary?.roles ?? "-"}</strong>
-        </div>
-        <div className="metric-card">
-          <span>Patients</span>
-          <strong>{hospitalSummary?.patients ?? "-"}</strong>
-        </div>
-        <div className="metric-card">
-          <span>Watch Cases</span>
-          <strong>{hospitalSummary?.watch ?? "-"}</strong>
-        </div>
-        <div className="metric-card">
-          <span>Average SpO₂</span>
-          <strong>{hospitalSummary?.average_spo2 ?? "-"}%</strong>
-        </div>
-      </section>
-
-      <h2 className="section-title">Doctor Decision Support</h2>
-
-      <section className="decision-grid">
-        {doctorDecisions.map((item) => (
-          <article className="decision-card" key={item.patient_id}>
-            <div className="decision-header">
-              <span className="badge">{item.patient_id}</span>
-              <span className={`risk-chip ${item.risk_level.includes("Medium") ? "medium" : ""}`}>
-                {item.risk_level}
-              </span>
-            </div>
-            <h2>{item.next_action}</h2>
-            <p>{item.clinical_summary}</p>
-            <ul>
-              {item.decision_support.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
-      </section>
-
-      <h2 className="section-title">Vital Sign Monitoring</h2>
-
-      <section className="experiment-grid">
-        {vitals.map((item) => (
-          <article className="experiment-card" key={item.patient_id}>
-            <h2>{item.patient_id}</h2>
-            <p>{item.name} · Age {item.age}</p>
-            <p>{item.note}</p>
-
-            <div className="vital-grid">
-              <span>HR <strong>{item.heart_rate}</strong></span>
-              <span>BP <strong>{item.blood_pressure}</strong></span>
-              <span>Temp <strong>{item.temperature}℃</strong></span>
-              <span>SpO₂ <strong>{item.spo2}%</strong></span>
-            </div>
-
-            <div className="card-footer">
-              <span className={`priority ${item.status === "Watch" ? "warning" : ""}`}>
-                {item.status}
-              </span>
-              <span className="rate">{item.respiratory_rate}/min</span>
-            </div>
-          </article>
-        ))}
-      </section>
-
-      <h2 className="section-title">Patient Right-to-Know Reports</h2>
-
-      <section className="report-grid">
-        {patientReports.map((report) => (
-          <article className="report-card" key={report.patient_id}>
-            <span className="badge">{report.patient_id}</span>
-            <h2>{report.title}</h2>
-            <p>{report.summary}</p>
-            <p>{report.explanation}</p>
-            <ul>
-              {report.right_to_know.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
-      </section>
-
-      <h2 className="section-title">Role-based Access Layer</h2>
-
-      <section className="role-grid">
-        {roles.map((role) => (
-          <button
-            className="role-card role-button"
-            key={role.id}
-            onClick={() => loadRoleDetail(role.id)}
-          >
-            <strong>{role.name}</strong>
-            <p>{role.description}</p>
-            <span>{role.focus}</span>
-          </button>
-        ))}
-      </section>
-
-      {selectedRole && (
-        <section className="detail-panel">
+    <main className="app-shell">
+      <aside className="sidebar">
+        <div className="brand">
+          <div className="brand-mark">B</div>
           <div>
-            <span className="badge">Selected Role</span>
-            <h2>{selectedRole.title}</h2>
-            <p>{selectedRole.summary}</p>
+            <strong>BioDockLab</strong>
+            <span>Hospital AI Platform</span>
+          </div>
+        </div>
+
+        <nav>
+          <a className="active">Dashboard</a>
+          <a>Patients</a>
+          <a>Vital Signs</a>
+          <a>Doctor Support</a>
+          <a>Reports</a>
+          <a>Research</a>
+          <a>Access Control</a>
+        </nav>
+
+        <div className="sidebar-card">
+          <strong>v2.4 MVP</strong>
+          <span>API-connected hospital data layer</span>
+        </div>
+      </aside>
+
+      <section className="main-content">
+        <header className="topbar">
+          <div>
+            <span className="eyebrow">BioDockLab v2.4 · Clinical Decision Support</span>
+            <h1>환자의 알 권리와 의료진 판단을 연결하는 AI Bio-Platform</h1>
+            <p>
+              바이탈사인, 환자 설명 리포트, 의사 판단 보조, 연구 실험 분석을 하나의 플랫폼으로 통합합니다.
+            </p>
           </div>
 
-          <div className="detail-columns">
-            <div>
-              <h3>Accessible Data</h3>
-              <ul>
-                {selectedRole.data_scope.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
+          <div className="runtime-card">
+            <span>Frontend · Vite 5173</span>
+            <span>Backend · FastAPI 8000</span>
+            <strong>{status === "connected" ? "API Connected" : status}</strong>
+          </div>
+        </header>
 
-            <div>
-              <h3>Restricted Data</h3>
-              <ul>
-                {selectedRole.restricted.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
+        <section className="metric-grid">
+          <div className="metric-card">
+            <span>Roles</span>
+            <strong>{summary?.roles ?? "-"}</strong>
+            <p>role-based access</p>
+          </div>
+          <div className="metric-card">
+            <span>Patients</span>
+            <strong>{hospitalSummary?.patients ?? "-"}</strong>
+            <p>active hospital samples</p>
+          </div>
+          <div className="metric-card warning">
+            <span>Watch Cases</span>
+            <strong>{hospitalSummary?.watch ?? "-"}</strong>
+            <p>needs attention</p>
+          </div>
+          <div className="metric-card">
+            <span>Average SpO₂</span>
+            <strong>{hospitalSummary?.average_spo2 ?? "-"}%</strong>
+            <p>oxygen saturation</p>
           </div>
         </section>
-      )}
 
-      <h2 className="section-title">Research Experiment Analysis</h2>
+        <section className="section-header">
+          <div>
+            <h2>Doctor Decision Support</h2>
+            <p>의사가 보는 환자별 위험도 요약과 다음 행동 제안</p>
+          </div>
+        </section>
 
-      <section className="experiment-grid">
-        {experiments.map((exp) => {
-          const result = analysisMap.get(exp.id);
-
-          return (
-            <article className="experiment-card" key={exp.id}>
-              <h2>{exp.domain}</h2>
-              <p>{exp.sample}</p>
-              <p>{exp.condition}</p>
-
-              <div className="progress">
-                <div
-                  className="progress-bar"
-                  style={{ width: `${exp.success_rate}%` }}
-                />
+        <section className="decision-grid">
+          {doctorDecisions.map((item) => (
+            <article className={`decision-card ${item.risk_level.includes("Medium") ? "highlight" : ""}`} key={item.patient_id}>
+              <div className="decision-header">
+                <span className="patient-chip">{item.patient_id}</span>
+                <span className={`risk-chip ${item.risk_level.includes("Medium") ? "medium" : ""}`}>
+                  {item.risk_level}
+                </span>
               </div>
-
-              <div className="card-footer">
-                <span className="priority">{result?.priority ?? "Pending"}</span>
-                <span className="rate">{exp.success_rate}%</span>
-              </div>
-
-              <p>{result?.recommendation}</p>
+              <h3>{item.next_action}</h3>
+              <p>{item.clinical_summary}</p>
+              <ul>
+                {item.decision_support.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ul>
             </article>
-          );
-        })}
+          ))}
+        </section>
+
+        <section className="section-header">
+          <div>
+            <h2>Vital Sign Monitoring</h2>
+            <p>간호사 인수인계와 의료진 확인을 위한 바이탈사인 요약</p>
+          </div>
+        </section>
+
+        <section className="patient-grid">
+          {vitals.map((item) => (
+            <article className="patient-card" key={item.patient_id}>
+              <div className="patient-top">
+                <div>
+                  <span className="patient-chip">{item.patient_id}</span>
+                  <h3>{item.name}</h3>
+                  <p>Age {item.age}</p>
+                </div>
+                <span className={`status-chip ${item.status === "Watch" ? "watch" : ""}`}>
+                  {item.status}
+                </span>
+              </div>
+
+              <div className="vital-grid">
+                <span>HR <strong>{item.heart_rate}</strong></span>
+                <span>BP <strong>{item.blood_pressure}</strong></span>
+                <span>Temp <strong>{item.temperature}℃</strong></span>
+                <span>SpO₂ <strong>{item.spo2}%</strong></span>
+              </div>
+
+              <p className="note">{item.note}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="two-column">
+          <div>
+            <section className="section-header compact">
+              <div>
+                <h2>Patient Right-to-Know Reports</h2>
+                <p>환자가 이해할 수 있는 검사 결과 설명</p>
+              </div>
+            </section>
+
+            <section className="report-grid">
+              {patientReports.map((report) => (
+                <article className="report-card" key={report.patient_id}>
+                  <span className="patient-chip">{report.patient_id}</span>
+                  <h3>{report.title}</h3>
+                  <p>{report.summary}</p>
+                  <ul>
+                    {report.right_to_know.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </section>
+          </div>
+
+          <aside className="access-panel">
+            <div className="section-header compact">
+              <div>
+                <h2>Role Access</h2>
+                <p>역할 기반 데이터 접근 요약</p>
+              </div>
+            </div>
+
+            <div className="role-list">
+              {roles.map((role) => (
+                <button key={role.id} onClick={() => loadRoleDetail(role.id)}>
+                  <strong>{role.name}</strong>
+                  <span>{role.focus}</span>
+                </button>
+              ))}
+            </div>
+
+            {selectedRole && (
+              <div className="role-detail">
+                <span className="eyebrow">Selected Role</span>
+                <h3>{selectedRole.title}</h3>
+                <p>{selectedRole.summary}</p>
+              </div>
+            )}
+          </aside>
+        </section>
+
+        <section className="section-header">
+          <div>
+            <h2>Research Experiment Analysis</h2>
+            <p>연구 확장성을 위한 실험 분석 레이어</p>
+          </div>
+        </section>
+
+        <section className="research-grid">
+          {experiments.map((exp) => {
+            const result = analysisMap.get(exp.id);
+
+            return (
+              <article className="research-card" key={exp.id}>
+                <div className="decision-header">
+                  <span className="patient-chip">{exp.id}</span>
+                  <span className="risk-chip medium">{result?.priority ?? "Pending"}</span>
+                </div>
+                <h3>{exp.domain}</h3>
+                <p>{exp.sample}</p>
+                <div className="progress">
+                  <div style={{ width: `${exp.success_rate}%` }} />
+                </div>
+                <strong>{exp.success_rate}%</strong>
+                <p>{result?.recommendation}</p>
+              </article>
+            );
+          })}
+        </section>
+
+        <section className="pipeline">
+          {["Role Access", "Vital Signs", "Patient Report", "Doctor Support", "AI Analysis", "Simulation"].map((step) => (
+            <div key={step}>{step}</div>
+          ))}
+        </section>
       </section>
     </main>
   );
