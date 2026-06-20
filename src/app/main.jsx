@@ -15,6 +15,8 @@ function App() {
   const [patientReports, setPatientReports] = useState([]);
   const [doctorDecisions, setDoctorDecisions] = useState([]);
   const [timeline, setTimeline] = useState([]);
+  const [auditEvents, setAuditEvents] = useState([]);
+  const [auditSummary, setAuditSummary] = useState(null);
   const [status, setStatus] = useState("loading");
 
   async function loadRoleDetail(roleId) {
@@ -36,6 +38,8 @@ function App() {
           reportsRes,
           doctorDecisionsRes,
           timelineRes,
+          auditEventsRes,
+          auditSummaryRes,
         ] = await Promise.all([
           fetch(`${API_BASE}/experiments`),
           fetch(`${API_BASE}/analysis`),
@@ -46,6 +50,8 @@ function App() {
           fetch(`${API_BASE}/patient-reports`),
           fetch(`${API_BASE}/doctor-decisions`),
           fetch(`${API_BASE}/clinical-timeline/P-002`),
+          fetch(`${API_BASE}/hospital-audit-events`),
+          fetch(`${API_BASE}/hospital-audit-summary`),
         ]);
 
         const rolesData = await rolesRes.json();
@@ -59,6 +65,8 @@ function App() {
         setPatientReports(await reportsRes.json());
         setDoctorDecisions(await doctorDecisionsRes.json());
         setTimeline(await timelineRes.json());
+        setAuditEvents(await auditEventsRes.json());
+        setAuditSummary(await auditSummaryRes.json());
         setStatus("connected");
 
         if (rolesData.length > 0) {
@@ -307,6 +315,51 @@ function App() {
               </article>
             );
           })}
+        </section>
+
+
+        <section className="section-header">
+          <div>
+            <h2>Audit & Access Control</h2>
+            <p>환자 데이터 접근 기록과 역할 기반 허용/차단 로그</p>
+          </div>
+        </section>
+
+        <section className="audit-layout">
+          <div className="audit-summary">
+            <div>
+              <span>Total Events</span>
+              <strong>{auditSummary?.events ?? "-"}</strong>
+            </div>
+            <div>
+              <span>Allowed</span>
+              <strong>{auditSummary?.allowed ?? "-"}</strong>
+            </div>
+            <div className="denied">
+              <span>Denied</span>
+              <strong>{auditSummary?.denied ?? "-"}</strong>
+            </div>
+          </div>
+
+          <div className="audit-table">
+            {auditEvents.map((event) => (
+              <article className="audit-row" key={`${event.time}-${event.actor}-${event.action}`}>
+                <div>
+                  <strong>{event.time}</strong>
+                  <span>{event.actor}</span>
+                </div>
+                <div>
+                  <strong>{event.action}</strong>
+                  <span>{event.reason}</span>
+                </div>
+                <div>
+                  <span className={`audit-result ${event.result === "Denied" ? "denied" : ""}`}>
+                    {event.result}
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="pipeline">

@@ -388,3 +388,27 @@ def get_clinical_timeline():
 def get_clinical_timeline_by_patient(patient_id: str):
     timeline = get_clinical_timeline()
     return [item for item in timeline if item.get("patient_id") == patient_id]
+
+
+@app.get("/hospital-audit-events")
+def get_hospital_audit_events():
+    return load_json(DATA_DIR / "hospital_audit_events.json", [])
+
+
+@app.get("/hospital-audit-summary")
+def get_hospital_audit_summary():
+    events = get_hospital_audit_events()
+    allowed = sum(1 for item in events if item.get("result") == "Allowed")
+    denied = sum(1 for item in events if item.get("result") == "Denied")
+
+    return {
+        "events": len(events),
+        "allowed": allowed,
+        "denied": denied,
+        "focus": [
+            "Role-based access control",
+            "Patient privacy",
+            "Audit trail",
+            "Sensitive medical data governance"
+        ]
+    }
