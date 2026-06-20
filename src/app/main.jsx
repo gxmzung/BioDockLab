@@ -9,7 +9,14 @@ function App() {
   const [analysis, setAnalysis] = useState([]);
   const [summary, setSummary] = useState(null);
   const [roles, setRoles] = useState([]);
+  const [selectedRole, setSelectedRole] = useState(null);
   const [status, setStatus] = useState("loading");
+
+  async function loadRoleDetail(roleId) {
+    const res = await fetch(`${API_BASE}/role-detail/${roleId}`);
+    const data = await res.json();
+    setSelectedRole(data);
+  }
 
   useEffect(() => {
     async function loadDashboard() {
@@ -21,11 +28,20 @@ function App() {
           fetch(`${API_BASE}/roles`),
         ]);
 
-        setExperiments(await experimentsRes.json());
-        setAnalysis(await analysisRes.json());
-        setSummary(await summaryRes.json());
-        setRoles(await rolesRes.json());
+        const experimentsData = await experimentsRes.json();
+        const analysisData = await analysisRes.json();
+        const summaryData = await summaryRes.json();
+        const rolesData = await rolesRes.json();
+
+        setExperiments(experimentsData);
+        setAnalysis(analysisData);
+        setSummary(summaryData);
+        setRoles(rolesData);
         setStatus("connected");
+
+        if (rolesData.length > 0) {
+          await loadRoleDetail(rolesData[0].id);
+        }
       } catch (error) {
         console.error(error);
         setStatus("error");
@@ -43,7 +59,7 @@ function App() {
     <main className="dashboard-shell">
       <section className="hero">
         <div>
-          <span className="badge">BioDockLab v2.1 · API Connected</span>
+          <span className="badge">BioDockLab v2.2 · Hospital Layer</span>
           <h1>Role-based Bio AI Data Platform</h1>
           <p>
             BioDockLab은 환자의 알 권리, 의료진의 판단 보조, 연구자의 실험 분석을
@@ -78,6 +94,52 @@ function App() {
         </div>
       </section>
 
+      <h2 className="section-title">Role-based Access Layer</h2>
+
+      <section className="role-grid">
+        {roles.map((role) => (
+          <button
+            className="role-card role-button"
+            key={role.id}
+            onClick={() => loadRoleDetail(role.id)}
+          >
+            <strong>{role.name}</strong>
+            <p>{role.description}</p>
+            <span>{role.focus}</span>
+          </button>
+        ))}
+      </section>
+
+      {selectedRole && (
+        <section className="detail-panel">
+          <div>
+            <span className="badge">Selected Role</span>
+            <h2>{selectedRole.title}</h2>
+            <p>{selectedRole.summary}</p>
+          </div>
+
+          <div className="detail-columns">
+            <div>
+              <h3>Accessible Data</h3>
+              <ul>
+                {selectedRole.data_scope.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3>Restricted Data</h3>
+              <ul>
+                {selectedRole.restricted.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
       <h2 className="section-title">Experiment Analysis Overview</h2>
 
       <section className="experiment-grid">
@@ -106,18 +168,6 @@ function App() {
             </article>
           );
         })}
-      </section>
-
-      <h2 className="section-title">Role-based Access Layer</h2>
-
-      <section className="role-grid">
-        {roles.map((role) => (
-          <article className="role-card" key={role.id}>
-            <strong>{role.name}</strong>
-            <p>{role.description}</p>
-            <span>{role.focus}</span>
-          </article>
-        ))}
       </section>
 
       <h2 className="section-title">Platform Pipeline</h2>

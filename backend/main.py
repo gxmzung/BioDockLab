@@ -217,3 +217,90 @@ def get_platform_summary():
             "CFPS",
         ],
     }
+
+
+@app.get("/role-detail/{role_id}")
+def get_role_detail(role_id: str):
+    role_details = {
+        "patient": {
+            "title": "Patient Right-to-Know View",
+            "summary": "환자가 자신의 검사 결과, 위험도, 설명 리포트를 이해할 수 있도록 제공하는 화면",
+            "data_scope": [
+                "검사 결과 요약",
+                "위험도 설명",
+                "의료진 상담 준비 자료",
+                "환자 친화형 리포트",
+            ],
+            "restricted": [
+                "타 환자 정보",
+                "내부 의료진 메모",
+                "보안 로그",
+            ],
+        },
+        "nurse": {
+            "title": "Nurse Vital Sign & Handoff View",
+            "summary": "간호사가 바이탈사인, 인수인계, 상태 변화를 빠르게 확인하는 화면",
+            "data_scope": [
+                "바이탈사인",
+                "투약 전 확인",
+                "인수인계 메모",
+                "상태 변화 알림",
+            ],
+            "restricted": [
+                "관리자 보안 정책",
+                "연구자 전용 실험 데이터",
+            ],
+        },
+        "doctor": {
+            "title": "Doctor Decision Support View",
+            "summary": "의사가 검사 결과와 AI 위험도 분석을 기반으로 판단을 보조받는 화면",
+            "data_scope": [
+                "검사 결과",
+                "AI 위험도 평가",
+                "치료 방향 후보",
+                "환자 상담 자료",
+            ],
+            "restricted": [
+                "원무 서류 처리 내역",
+                "시스템 내부 보안 설정",
+            ],
+        },
+        "pharmacist": {
+            "title": "Pharmacist Prescription Review View",
+            "summary": "약사가 처방, 약물상호작용, 유전자 적합성을 검토하는 화면",
+            "data_scope": [
+                "처방 정보",
+                "약물상호작용",
+                "유전자 적합성",
+                "복약 안전성",
+            ],
+            "restricted": [
+                "진료 판단 메모",
+                "보안 감사 로그",
+            ],
+        },
+        "security": {
+            "title": "Security Audit View",
+            "summary": "보안관리자가 접근 기록, 권한 위반, 민감정보 접근을 감사하는 화면",
+            "data_scope": [
+                "접근 로그",
+                "권한 정책",
+                "위험 이벤트",
+                "민감정보 접근 기록",
+            ],
+            "restricted": [
+                "환자 친화형 설명 화면 조작",
+                "실험 결과 임의 수정",
+            ],
+        },
+    }
+
+    return role_details.get(
+        role_id,
+        {
+            "title": "Unknown Role",
+            "summary": "등록되지 않은 역할이다.",
+            "data_scope": [],
+            "restricted": [],
+        },
+    )
