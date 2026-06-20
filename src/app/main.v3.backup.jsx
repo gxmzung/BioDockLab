@@ -157,7 +157,6 @@ function App() {
   const [allTimeline, setAllTimeline] = useState(fallbackTimeline);
   const [digitalTwin, setDigitalTwin] = useState(fallbackTwin);
   const [selectedPatientId, setSelectedPatientId] = useState("P-002");
-  const [roleMode, setRoleMode] = useState("dashboard");
 
   useEffect(() => {
     async function load() {
@@ -210,7 +209,7 @@ function App() {
   const doctorReviews = decisions.filter((item) => item.risk_level !== "Low").length;
 
   return (
-    <main className={`v3-shell role-${roleMode}`}>
+    <main className="v3-shell">
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">B</div>
@@ -221,11 +220,13 @@ function App() {
         </div>
 
         <nav className="side-nav">
-          <button className={roleMode === "dashboard" ? "active" : ""} onClick={() => setRoleMode("dashboard")}>Dashboard</button>
-          <button className={roleMode === "patient" ? "active" : ""} onClick={() => setRoleMode("patient")}>Patient View</button>
-          <button className={roleMode === "nurse" ? "active" : ""} onClick={() => setRoleMode("nurse")}>Nurse View</button>
-          <button className={roleMode === "doctor" ? "active" : ""} onClick={() => setRoleMode("doctor")}>Doctor View</button>
-          <button className={roleMode === "security" ? "active" : ""} onClick={() => setRoleMode("security")}>Security View</button>
+          <button className="active">Dashboard</button>
+          <button>Patients</button>
+          <button>Vital Signs</button>
+          <button>Patient Report</button>
+          <button>Doctor Decision</button>
+          <button>Digital Twin</button>
+          <button>Audit Log</button>
         </nav>
 
         <div className="side-card">
@@ -251,27 +252,6 @@ function App() {
             <small>v2 data science core</small>
           </div>
         </header>
-
-
-        <section className="role-mode-banner">
-          <div>
-            <span className="eyebrow">Current Role View</span>
-            <strong>
-              {roleMode === "dashboard" && "Hospital Dashboard"}
-              {roleMode === "patient" && "Patient Right-to-Know View"}
-              {roleMode === "nurse" && "Nurse Vital Monitoring View"}
-              {roleMode === "doctor" && "Doctor Decision Support View"}
-              {roleMode === "security" && "Security Audit View"}
-            </strong>
-            <p>
-              {roleMode === "dashboard" && "전체 병원 운영 현황과 환자 상태를 한 화면에서 확인합니다."}
-              {roleMode === "patient" && "환자가 본인의 상태와 검사 결과를 이해할 수 있도록 쉬운 설명을 우선 표시합니다."}
-              {roleMode === "nurse" && "간호사가 바이탈사인, 주의 환자, 인수인계 흐름을 빠르게 확인합니다."}
-              {roleMode === "doctor" && "의사가 위험도, 판단 보조, 디지털 트윈 위험 위치를 중심으로 확인합니다."}
-              {roleMode === "security" && "보안관리자가 접근 기록과 민감정보 접근 흐름을 확인합니다."}
-            </p>
-          </div>
-        </section>
 
         <section className="stats-grid">
           <div className="stat-card">

@@ -499,3 +499,74 @@ em.big {
     height: auto;
   }
 }
+
+.role-mode-banner {
+  margin-bottom: 18px;
+  padding: 20px 22px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #eff6ff, #f0fdfa);
+  border: 1px solid #bfdbfe;
+}
+
+.role-mode-banner strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 24px;
+  color: #0f172a;
+}
+
+.role-mode-banner p {
+  margin: 8px 0 0;
+  color: #475569;
+  line-height: 1.55;
+}
+
+/* Patient View: 환자 설명 리포트와 이해 가능한 상태 중심 */
+.role-patient .doctor-box,
+.role-patient .twin-finding-panel {
+  display: none;
+}
+
+.role-patient .report-panel {
+  border-color: #14b8a6;
+  background: #f0fdfa;
+}
+
+/* Nurse View: 바이탈과 타임라인 중심 */
+.role-nurse .report-panel,
+.role-nurse .twin-finding-panel {
+  display: none;
+}
+
+.role-nurse .patient-detail {
+  border-color: #2563eb;
+}
+
+.role-nurse .timeline-panel {
+  border-color: #14b8a6;
+}
+
+/* Doctor View: 판단보조와 디지털 트윈 중심 */
+.role-doctor .report-panel {
+  display: none;
+}
+
+.role-doctor .doctor-box,
+.role-doctor .twin-panel,
+.role-doctor .twin-finding-panel {
+  border-color: #f59e0b;
+}
+
+/* Security View: 감사 로그 / 타임라인 중심 */
+.role-security .patient-detail,
+.role-security .report-panel,
+.role-security .twin-panel,
+.role-security .twin-finding-panel {
+  display: none;
+}
+
+.role-security .timeline-panel {
+  grid-column: 1 / -1;
+  border-color: #8b5cf6;
+  background: #faf5ff;
+}
