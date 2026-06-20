@@ -570,3 +570,72 @@ em.big {
   border-color: #8b5cf6;
   background: #faf5ff;
 }
+
+.stat-card.danger strong {
+  color: #ef4444;
+}
+
+.empty-text {
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.audit-panel {
+  grid-column: span 1;
+}
+
+.audit-row {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 14px 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+.audit-row:first-of-type {
+  border-top: 0;
+}
+
+.audit-row strong {
+  display: block;
+  color: #1d4ed8;
+}
+
+.audit-row span {
+  display: block;
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.audit-row h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.audit-row p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.audit-row.denied {
+  padding-left: 12px;
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+  border-radius: 14px;
+}
+
+.role-security .audit-panel {
+  grid-column: 1 / -1;
+  border-color: #8b5cf6;
+  background: #faf5ff;
+}
+
+@media (max-width: 1200px) {
+  .audit-row {
+    grid-template-columns: 1fr;
+  }
+}
