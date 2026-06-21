@@ -507,3 +507,18 @@ BioDockLab is a research software prototype.
 It is not a medical device, diagnostic tool, clinical decision-making system, or validated biological prediction system.
 
 All simulation and analysis results are for software demonstration and research workflow exploration only.
+---
+
+## Hand-Drawn System Concept
+
+Before implementation, BioDockLab was organized through hand-drawn system sketches to clarify the platform architecture, medical/bio data flow, AI analysis layer, simulation direction, and role-based access model.
+
+### System Overview
+
+![BioDockLab Handdrawn System Overview](assets/concept/biodocklab_handdrawn_system_overview.png)
+
+### Medical / Bio AI Map
+
+![BioDockLab Medical AI Map](assets/concept/biodocklab_handdrawn_medical_ai_map.png)
+
+More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Concept.md)
