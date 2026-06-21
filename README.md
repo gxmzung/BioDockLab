@@ -1,35 +1,83 @@
-BioDockLab 
+# BioDockLab
 
-BioDockLab is a bio AI research software platform for managing experiment data, analyzing experimental outcomes, simulating biological responses, and generating research reports.
+**Role-based Medical & Bio Data Platform for Experiment Management, AI Analysis, Simulation, and Explainable Research Reports**
 
-The project is designed as a lightweight research-assistant system that connects biological experiment records with AI-based analysis and digital twin-style simulation.
+BioDockLab is a bio AI research software platform designed to manage medical and biological experiment data, analyze experimental outcomes, simulate biological responses, and generate structured research reports.
 
-BioDockLab is not intended to replace biological researchers, clinicians, or medical professionals.
-Its purpose is to support experiment tracking, comparison, decision-making, simulation, and report generation through software.
+The project connects **experiment records**, **vital-sign-style data**, **AI-based analysis**, **risk classification**, **digital twin-style simulation**, and **explainable reports** into one research-assistant workflow.
 
-⸻
+BioDockLab is not intended to replace biological researchers, clinicians, nurses, or medical professionals.
+Its purpose is to support experiment tracking, patient-understandable explanation, clinical data interpretation, research comparison, simulation, and report generation through software.
 
-1. Project Overview
+---
+
+## 1. Project Overview
 
 BioDockLab focuses on the following research software workflow:
 
+```text
 Experiment Data
+→ Vital / Bio Data Structuring
 → AI Analysis
 → Risk / Priority Evaluation
 → Digital Twin Simulation
-→ Research Report
+→ Explainable Report
+```
 
-The core idea is to connect biological experiment data with computational analysis.
+The core idea is to connect medical and biological data with computational analysis.
 
-Instead of keeping experiment results only as notes or isolated files, BioDockLab aims to structure them into reusable data that can be analyzed, compared, simulated, and summarized.
+Instead of keeping experiment results, vital signs, or research notes as isolated files, BioDockLab aims to structure them into reusable data that can be analyzed, compared, simulated, and summarized.
 
-⸻
+---
 
-2. Core Concept
+## 2. Why BioDockLab
 
-BioDockLab is built around four main concepts.
+Medical and bio data should not remain as numbers only.
 
-2.1 Experiment Data Management
+Patients need understandable explanations of their own condition.
+Medical staff need structured data to support observation, assessment, and decision-making.
+Researchers need reusable experiment records that can be compared, simulated, and documented.
+
+BioDockLab explores how software can connect these needs through a role-based medical and bio data platform.
+
+### Key Goals
+
+* Support patient right-to-know through explainable data
+* Help medical staff interpret vital signs and experiment results
+* Manage biological experiment records in a structured format
+* Provide AI-based risk and priority analysis
+* Connect research data with digital twin-style simulation
+* Generate structured research and analysis reports
+* Expand toward future medical and bio technologies
+
+---
+
+## 3. Core Concept
+
+BioDockLab is built around five main concepts.
+
+### 3.1 Role-Based Medical / Bio Data Access
+
+BioDockLab separates information by user role.
+
+Possible user roles include:
+
+* Patient
+* Nurse
+* Doctor
+* Pharmacist
+* Administrator
+* Researcher
+* Security Manager
+
+Each role requires different information.
+
+For example, a patient needs understandable explanations, while a nurse needs vital signs and handoff information.
+A researcher needs experiment conditions and results, while a security manager needs access logs and sensitive-data control.
+
+---
+
+### 3.2 Experiment Data Management
 
 BioDockLab manages biological experiment records such as:
 
@@ -45,7 +93,28 @@ BioDockLab manages biological experiment records such as:
 
 This allows experiment results to be stored in a structured format and reused for future comparison or analysis.
 
-2.2 AI-Based Experiment Analysis
+---
+
+### 3.3 Vital Sign and Patient-Explainable Data
+
+BioDockLab can be expanded to handle vital-sign-style medical data such as:
+
+* Body temperature
+* Pulse
+* Blood pressure
+* Respiratory rate
+* Oxygen saturation
+* Symptom notes
+* Medication-related observations
+* Basic patient status summary
+
+The goal is not to diagnose patients.
+
+The goal is to organize data so that patients can better understand their condition and medical staff can review important information more clearly.
+
+---
+
+### 3.4 AI-Based Experiment Analysis
 
 The AI module provides lightweight experiment analysis based on experimental conditions, success rate, risk level, and observation results.
 
@@ -61,7 +130,9 @@ Current analysis direction includes:
 The current version uses rule-based analysis as an MVP-level approach.
 This can later be expanded into machine learning-based prediction when enough experimental data is collected.
 
-2.3 Digital Twin Simulation
+---
+
+### 3.5 Digital Twin Simulation
 
 The digital twin module estimates biological or experimental responses based on input parameters.
 
@@ -77,7 +148,99 @@ BioDockLab uses simulation logic to model how experimental outcomes may change d
 
 The digital twin module is one of the most important long-term directions of BioDockLab.
 
-2.4 Research Report Generation
+---
+
+## 4. Main Features
+
+### 4.1 Role-Based Dashboard
+
+BioDockLab can display different dashboards depending on the user role.
+
+Possible dashboard types:
+
+* Patient explanation dashboard
+* Nurse vital sign / handoff dashboard
+* Doctor result summary dashboard
+* Pharmacist prescription review dashboard
+* Administrator document / consent dashboard
+* Researcher experiment dashboard
+* Security audit dashboard
+
+---
+
+### 4.2 Experiment Data Dashboard
+
+The experiment dashboard is intended to show:
+
+* Experiment list
+* Sample information
+* Condition summary
+* Success rate
+* Risk level
+* Analysis priority
+* Experiment status
+
+This makes it easier to understand experiment results at a glance.
+
+---
+
+### 4.3 Experiment Analysis Engine
+
+The analysis engine evaluates experiment data and produces a simple interpretation of the result.
+
+Example output:
+
+```text
+Priority: High Priority
+Risk Level: Low
+Status: Stable
+Recommendation: Continue similar condition
+```
+
+The current engine is intentionally simple so that the project can be tested and expanded step by step.
+
+---
+
+### 4.4 Risk Classification
+
+BioDockLab includes a risk classification structure for experimental outcomes.
+
+Risk classification may consider:
+
+* Low success rate
+* High risk score
+* Unstable condition
+* Incomplete observation
+* Experimental failure pattern
+
+This can later be expanded into more advanced classification logic.
+
+---
+
+### 4.5 Digital Twin Simulation
+
+The digital twin simulation module predicts possible biological response based on experiment parameters.
+
+Example input parameters:
+
+* Success rate
+* Risk score
+* Treatment strength
+* Reaction time
+* Condition value
+
+Example output:
+
+* Predicted response score
+* Estimated risk
+* Simulation result
+* Recommended adjustment
+
+This module connects experiment data with simulation-based prediction.
+
+---
+
+### 4.6 Research Report Generation
 
 BioDockLab is designed to support automated research report generation.
 
@@ -92,271 +255,62 @@ Planned report output includes:
 
 The goal is to help researchers organize experimental results into a clear report format.
 
-⸻
+---
 
-3. Main Features
+## 5. Bio Future Watch
 
-3.1 Experiment Data Dashboard
+**Bio Future Watch** is an expansion feature for tracking future medical and bio technologies and connecting them with BioDockLab's data structure.
 
-BioDockLab can display experiment data in a dashboard format.
+Medical and bio technology is quietly changing human life through areas such as:
 
-The dashboard is intended to show:
+* Genetic disease research
+* Vision treatment
+* Artificial organs
+* 3D-printed tissue
+* Organoid research
+* Digital twin medicine
+* CFPS
+* Addiction treatment vaccines
+* Artificial hearts
 
-* Experiment list
-* Sample information
-* Condition summary
-* Success rate
-* Risk level
-* Analysis priority
-* Experiment status
+Bio Future Watch is not just a news-summary feature.
 
-This makes it easier to understand experiment results at a glance.
+It classifies medical and bio innovations by their clinical, research, and patient-explanation impact.
 
-3.2 Experiment Analysis Engine
+### Core Functions
 
-The analysis engine evaluates experiment data and produces a simple interpretation of the result.
+* Research Trend Tracker
+* Patient Explainable Summary
+* Clinical Impact Mapping
+* Bio Technology Category
+* BioDockLab Module Linker
 
-Example analysis outputs:
+### Example Module Links
 
-Priority: High Priority
-Risk Level: Low
-Status: Stable
-Recommendation: Continue similar condition
+```text
+Organoid
+→ bio / experiments / simulation / reports
 
-The current engine is intentionally simple so that the project can be tested and expanded step by step.
+Surgery AI
+→ imaging / ai / reports / security
 
-3.3 Risk Classification
+Quantum Biocomputing
+→ quantum / research / docs
 
-BioDockLab includes a risk classification structure for experimental outcomes.
+Digital Twin
+→ simulation / ai / viewer / reports
 
-Risk classification may consider:
+CFPS
+→ simulation / bio / experiments / reports
+```
 
-* Low success rate
-* High risk score
-* Unstable condition
-* Incomplete observation
-* Experimental failure pattern
+Bio Future Watch helps BioDockLab expand from a research dashboard into a future-oriented medical and bio data platform.
 
-This can later be expanded into more advanced classification logic.
+---
 
-3.4 Digital Twin Simulation
+## 6. Research Expansion Areas
 
-The digital twin simulation module predicts possible biological response based on experiment parameters.
-
-Example input parameters:
-
-Success Rate
-Risk Score
-Treatment Strength
-Reaction Time
-Condition Value
-
-Example output:
-
-Predicted Response Score
-Estimated Risk
-Simulation Result
-Recommended Adjustment
-
-This module connects experiment data with simulation-based prediction.
-
-3.5 Organoid Response Simulation
-
-BioDockLab can be expanded to support organoid experiment modeling.
-
-Organoid-related data may include:
-
-* Organoid sample type
-* Culture condition
-* Treatment strength
-* Drug response
-* Viability score
-* Observation result
-
-This allows BioDockLab to act as a research assistant for organoid experiment tracking and response comparison.
-
-3.6 CFPS Yield Simulation
-
-BioDockLab can also be expanded toward CFPS, or Cell-Free Protein Synthesis.
-
-CFPS-related data may include:
-
-* Reaction temperature
-* Reaction time
-* Enzyme quality
-* Substrate level
-* Protein yield
-* Production success rate
-
-This allows BioDockLab to support bio-manufacturing and protein production experiment records.
-
-⸻
-
-4. Technology Stack
-
-Frontend
-
-* TypeScript
-* React
-* Recharts
-* Lucide React
-
-Backend
-
-* Python
-* FastAPI
-* JSON-based sample data
-
-AI / Simulation
-
-* Python
-* Rule-based experiment analysis
-* Risk classification
-* Feature engineering structure
-* Digital twin-style simulation
-* Organoid response simulation
-* CFPS yield estimation
-
-Documentation
-
-* Markdown
-* Research notes
-* Development notes
-* Report templates
-
-⸻
-
-5. Project Structure
-
-BioDockLab/
-├── .github/              # GitHub workflow and repository configuration
-├── ai/                   # Experiment analysis and risk classification
-├── backend/              # FastAPI backend prototype
-├── bio/                  # Bio-domain logic
-├── data/
-│   └── sample/           # Sample experiment data
-├── database/             # Database-related structure
-├── docs/                 # Development notes and technical documents
-├── experiments/          # Experiment-related files
-├── frontend/             # Dashboard and UI prototype
-├── imaging/              # Biological / medical imaging experiments
-├── quantum/              # Long-term quantum biocomputing research notes
-├── reports/              # Report output and templates
-├── simulation/           # Digital twin, organoid, and CFPS simulation
-├── src/                  # Shared source modules
-└── viewer/               # Data viewer prototype
-
-⸻
-
-6. Current Development Status
-
-BioDockLab is currently in the MVP / prototype stage.
-
-Implemented or partially implemented:
-
-* Experiment sample data structure
-* FastAPI backend prototype
-* Experiment list API
-* Experiment detail API
-* Rule-based experiment analyzer
-* Risk classifier
-* Digital twin simulation function
-* Organoid response simulator
-* CFPS yield simulator
-* Dashboard prototype
-* Development documentation
-
-The project already has the basic structure for a bio AI research software platform, but the next step is to connect each module into one executable workflow.
-
-⸻
-
-7. Current Limitations
-
-BioDockLab is still an early-stage research software prototype.
-
-Current limitations include:
-
-* Experiment CRUD is not fully implemented yet
-* AI analysis is currently rule-based
-* Digital twin simulation is still function-level
-* Frontend and backend are not fully integrated
-* Report generation is not fully automated
-* Real biological validation has not been performed
-* Medical or clinical use is not supported
-
-This project should currently be understood as a software prototype and research-assistant concept, not as a validated medical system.
-
-⸻
-
-8. Development Roadmap
-
-v2.1 — Experiment Data MVP
-
-Goal: Build the core experiment data management structure.
-
-Planned tasks:
-
-* Clean up sample data schema
-* Add experiment create / update / delete logic
-* Improve FastAPI route structure
-* Connect dashboard to backend data
-* Add basic experiment detail view
-
-v2.2 — AI Analysis Layer
-
-Goal: Connect experiment data with AI-based analysis.
-
-Planned tasks:
-
-* Add AI analysis API endpoint
-* Return risk classification result
-* Return priority recommendation
-* Generate experiment summary
-* Prepare ML-ready feature structure
-
-v2.3 — Digital Twin MVP
-
-Goal: Build the first usable digital twin simulation workflow.
-
-Planned tasks:
-
-* Add digital twin simulation API
-* Add parameter-based simulation input
-* Return predicted response score
-* Visualize simulation result in dashboard
-* Connect organoid and CFPS simulation logic
-
-v2.4 — Research Report System
-
-Goal: Generate structured research reports from experiment data.
-
-Planned tasks:
-
-* Generate Markdown report
-* Include experiment summary
-* Include AI analysis result
-* Include simulation result
-* Prepare PDF export structure
-
-v3.0 — Bio AI Research Platform
-
-Goal: Integrate experiment data, AI analysis, simulation, and report generation into one platform.
-
-Planned tasks:
-
-* Integrated research dashboard
-* Experiment comparison view
-* Digital twin simulation screen
-* Automated report export
-* Test and CI workflow
-* Improved documentation
-* Future ML pipeline preparation
-
-⸻
-
-9. Expansion Areas
-
-9.1 Organoid
+### 6.1 Organoid
 
 Organoids are stem-cell-based mini organ models used for disease modeling, drug response analysis, and therapeutic candidate evaluation.
 
@@ -369,9 +323,15 @@ In BioDockLab, organoid experiments can be connected through:
 * Similar experiment recommendation
 * Response simulation
 
-Organoid support is one of the most practical expansion directions for BioDockLab.
+Module direction:
 
-9.2 CFPS
+```text
+bio / experiments / simulation / reports
+```
+
+---
+
+### 6.2 CFPS
 
 CFPS stands for Cell-Free Protein Synthesis.
 
@@ -387,22 +347,38 @@ In BioDockLab, CFPS can be connected through:
 * Yield estimation
 * Success rate comparison
 
-This can expand BioDockLab toward bio-manufacturing and synthetic biology workflows.
+Module direction:
 
-9.3 Digital Twin
+```text
+simulation / bio / experiments / reports
+```
+
+---
+
+### 6.3 Digital Twin
 
 Digital twin is the core long-term direction of BioDockLab.
 
 In this project, digital twin means a software-based simulation layer that connects:
 
+```text
 Experiment Condition
 → AI Analysis
 → Predicted Biological Response
 → Risk / Success Estimation
+```
 
 The goal is to help researchers test experimental possibilities before performing the next physical experiment.
 
-9.4 Surgery AI
+Module direction:
+
+```text
+simulation / ai / viewer / reports
+```
+
+---
+
+### 6.4 Surgery AI
 
 Surgery AI is treated as a long-term healthcare data-flow extension.
 
@@ -415,9 +391,17 @@ Possible future direction:
 * Surgical decision-support data structure
 * Clinical workflow simulation
 
+Module direction:
+
+```text
+imaging / ai / reports / security
+```
+
 This area requires careful ethical, clinical, and regulatory consideration.
 
-9.5 Quantum Biocomputing
+---
+
+### 6.5 Quantum Biocomputing
 
 Quantum biocomputing is managed as a long-term research keyword.
 
@@ -428,26 +412,183 @@ Possible future direction:
 * Genome-scale computation
 * Large biological system modeling
 
+Module direction:
+
+```text
+quantum / research / docs
+```
+
 At the current stage, this is not a direct implementation target.
 
-⸻
+---
 
-10. MVP Target
+## 7. Technology Stack
+
+### Frontend
+
+* TypeScript
+* React
+* Recharts
+* Lucide React
+* Role-based dashboard UI
+* Data visualization components
+
+### Backend
+
+* Python
+* FastAPI
+* REST API structure
+* JSON-based sample data
+* Experiment API prototype
+
+### AI / Analysis
+
+* Python
+* Rule-based experiment analysis
+* Risk classification
+* Priority scoring
+* Feature engineering structure
+* Recommendation logic
+
+### Simulation
+
+* Digital twin-style simulation
+* Organoid response simulation
+* CFPS yield estimation
+* Parameter-based response scoring
+
+### Data / Reports
+
+* JSON sample data
+* Experiment records
+* Research report templates
+* Markdown report direction
+* PDF export direction
+
+### Documentation / DevOps
+
+* Markdown
+* Docker
+* docker-compose
+* GitHub repository management
+* Development notes
+* Research notes
+* Roadmap documentation
+
+---
+
+## 8. Project Structure
+
+```text
+BioDockLab/
+├── .github/              # GitHub workflow and repository configuration
+├── ai/                   # Experiment analysis and risk classification
+├── assets/               # UI and visual assets
+├── backend/              # FastAPI backend prototype
+├── bio/                  # Bio-domain logic
+├── data/                 # Data-related resources
+├── database/             # Database-related structure
+├── docking/              # Molecular docking expansion
+├── docs/                 # Development notes and technical documents
+├── experiments/          # Experiment-related files
+├── frontend/             # Dashboard and UI prototype
+├── imaging/              # Biological / medical imaging experiments
+├── quantum/              # Long-term quantum biocomputing research notes
+├── reports/              # Report output and templates
+├── sample_data/          # Sample experiment datasets
+├── scripts/              # Utility and automation scripts
+├── simulation/           # Digital twin, organoid, and CFPS simulation
+├── src/                  # Shared source modules
+└── viewer/               # Data viewer prototype
+```
+
+---
+
+## 9. Docs Structure
+
+```text
+docs/
+├── api/             # API documentation
+├── architecture/    # System architecture documents
+├── business/        # Business and service planning
+├── demo/            # Demo scenario documents
+├── ethics/          # Ethics and usage principles
+├── evidence/        # Evidence and validation materials
+├── meeting_notes/   # Meeting records
+├── planning/        # Development planning
+├── presentation/    # Presentation materials
+├── research/        # Research notes
+├── review/          # Review and feedback documents
+├── roadmap/         # Product and research roadmap
+├── roles/           # Role-based access and user definitions
+├── security/        # Security architecture
+└── team/            # Team and responsibility documents
+```
+
+The docs structure is designed to keep BioDockLab organized as a research software platform, not just a code repository.
+
+---
+
+## 10. Current Development Status
+
+BioDockLab is currently in the MVP / prototype stage.
+
+Implemented or partially implemented:
+
+* Experiment sample data structure
+* FastAPI backend prototype
+* Experiment list API
+* Experiment detail API
+* Rule-based experiment analyzer
+* Risk classifier
+* Feature engineering structure
+* Digital twin simulation function
+* Organoid response simulator
+* CFPS yield simulator
+* Dashboard prototype
+* Role-based screen planning
+* Development documentation
+
+The project already has the basic structure for a bio AI research software platform, but the next step is to connect each module into one executable workflow.
+
+---
+
+## 11. Current Limitations
+
+BioDockLab is still an early-stage research software prototype.
+
+Current limitations include:
+
+* Experiment CRUD is not fully implemented yet
+* AI analysis is currently rule-based
+* Digital twin simulation is still function-level
+* Frontend and backend are not fully integrated
+* Report generation is not fully automated
+* Real biological validation has not been performed
+* Medical or clinical use is not supported
+
+This project should currently be understood as a software prototype and research-assistant concept, not as a validated medical system.
+
+---
+
+## 12. MVP Target
 
 The most important short-term MVP is:
 
+```text
 Experiment Data Registration
 → AI Risk Analysis
 → Digital Twin Prediction
 → Dashboard Visualization
 → Research Report Generation
+```
 
 This MVP would make BioDockLab more than a documentation repository.
 It would become an executable research-assistant software prototype.
 
-⸻
+---
 
-11. Example Workflow
+## 13. Example Workflow
 
 1. A researcher registers an experiment.
 2. BioDockLab stores the experiment condition and result.
@@ -458,49 +599,112 @@ It would become an executable research-assistant software prototype.
 
 This workflow is the central product direction of BioDockLab.
 
-⸻
+---
 
-12. Why This Project Matters
+## 14. Development Roadmap
 
-BioDockLab explores how computer science can support biological research workflows.
+### v2.1 — Experiment Data MVP
+
+Goal: Build the core experiment data management structure.
+
+Planned tasks:
+
+* Clean up sample data schema
+* Add experiment create / update / delete logic
+* Improve FastAPI route structure
+* Connect dashboard to backend data
+* Add basic experiment detail view
+
+---
+
+### v2.2 — AI Analysis Layer
+
+Goal: Connect experiment data with AI-based analysis.
+
+Planned tasks:
+
+* Add AI analysis API endpoint
+* Return risk classification result
+* Return priority recommendation
+* Generate experiment summary
+* Prepare ML-ready feature structure
+
+---
+
+### v2.3 — Digital Twin MVP
+
+Goal: Build the first usable digital twin simulation workflow.
+
+Planned tasks:
+
+* Add digital twin simulation API
+* Add parameter-based simulation input
+* Return predicted response score
+* Visualize simulation result in dashboard
+* Connect organoid and CFPS simulation logic
+
+---
+
+### v2.4 — Research Report System
+
+Goal: Generate structured research reports from experiment data.
+
+Planned tasks:
+
+* Generate Markdown report
+* Include experiment summary
+* Include AI analysis result
+* Include simulation result
+* Prepare PDF export structure
+
+---
+
+### v3.0 — Bio AI Research Platform
+
+Goal: Integrate experiment data, AI analysis, simulation, and report generation into one platform.
+
+Planned tasks:
+
+* Integrated research dashboard
+* Experiment comparison view
+* Digital twin simulation screen
+* Automated report export
+* Test and CI workflow
+* Improved documentation
+* Future ML pipeline preparation
+
+---
+
+## 15. Why This Project Matters
+
+BioDockLab explores how computer science can support medical and biological research workflows.
 
 The project combines:
 
-* Data management
+* Role-based medical data structure
+* Patient-understandable explanation
+* Vital-sign-style data organization
+* Experiment data management
 * AI analysis
+* Risk classification
 * Simulation
 * Digital twin concepts
 * Bio-domain software architecture
 * Research report automation
 
-The long-term goal is to build a bridge between experimental biology and software engineering.
+The long-term goal is to build a bridge between medical data, biological research, and software engineering.
 
-⸻
+---
 
-13. Purpose
+## 16. Author
 
-BioDockLab was built to explore how computer science, AI, and biological research workflows can be connected into one research software system.
-
-The project aims to show:
-
-* Bio-domain software design
-* AI-assisted experiment analysis
-* Research data management
-* Digital twin simulation concept
-* Expandable scientific software architecture
-* Practical research-assistant platform design
-
-⸻
-
-14. Author
-
-Lee Youngjun
+**Lee Youngjun**
 Department of Computer Science, Paejae University
-GitHub: @gxmzung
+GitHub: [@gxmzung](https://github.com/gxmzung)
 
-⸻
+---
 
-15. Disclaimer
+## 17. Disclaimer
 
 BioDockLab is a research software prototype.
 
