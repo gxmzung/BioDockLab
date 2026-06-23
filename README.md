@@ -1,13 +1,79 @@
 # BioDockLab
 
-**Role-based Medical & Bio Data Platform for Experiment Management, AI Analysis, Simulation, and Explainable Research Reports**
+Bio AI research software platform for experiment data, analysis, digital twin simulation, and reports.
 
-BioDockLab is a bio AI research software platform designed to manage medical and biological experiment data, analyze experimental outcomes, simulate biological responses, and generate structured research reports.
+## Overview
 
-The project connects **experiment records**, **vital-sign-style data**, **AI-based analysis**, **risk classification**, **digital twin-style simulation**, and **explainable reports** into one research-assistant workflow.
+BioDockLab is an AI-based research support platform designed to connect experiment data, analysis workflows, digital twin simulation, and research reporting.
 
-BioDockLab is not intended to replace biological researchers, clinicians, nurses, or medical professionals.
-Its purpose is to support experiment tracking, patient-understandable explanation, clinical data interpretation, research comparison, simulation, and report generation through software.
+This project started from the question:
+
+> How can AI help researchers organize, analyze, and explain complex bio experiment data?
+
+## Problem
+
+Bio research workflows often involve scattered experiment data, repeated manual documentation, and difficulty connecting analysis results into a clear research report.
+
+BioDockLab aims to support:
+
+* Experiment data management
+* AI-assisted analysis
+* Digital twin simulation concept
+* Research report generation
+* Collaboration between bio researchers and software developers
+
+## My Role
+
+* Project planning
+* System architecture design
+* Prototype development
+* Presentation and Q&A
+* Expert feedback reflection
+* Follow-up development planning
+
+## Result
+
+* Grand Prize, Future Government Innovation Idea Contest
+* Selected for university startup support program
+* Expanded into a follow-up development project
+
+## Tech Stack
+
+* TypeScript
+* Python
+* FastAPI
+* AI Workflow
+* Digital Twin Concept
+* Report Automation
+
+## Roadmap
+
+### v0.1
+
+* Concept design
+* System architecture
+* Hand-drawn workflow map
+
+### v0.5
+
+* Data upload and experiment management prototype
+* AI analysis workflow design
+
+### v1.0
+
+* Research report generation
+* Researcher-friendly dashboard
+* Bio-domain expert feedback integration
+
+## Expansion
+
+BioDockLab can be expanded into:
+
+* Bio research assistant
+* Lab data management system
+* AI-powered experiment report generator
+* Education tool for bio research workflows
+
 
 ---
 
