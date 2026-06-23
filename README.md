@@ -136,6 +136,13 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 
 ## Documentation
 
+### API
+
+- [API Overview](docs/api/README.md)
+- [API Boundary](docs/api/API_BOUNDARY.md)
+- [API Specification](docs/api/api_spec.md)
+- [Research API Specification](docs/api/research_api_spec.md)
+
 ### Architecture
 
 - [System Context](docs/architecture/SYSTEM_CONTEXT.md)
