@@ -163,6 +163,12 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 - [Surgery AI](docs/research/SURGERY_AI.md)
 - [Quantum Biocomputing](docs/research/QUANTUM_BIOCOMPUTING.md)
 
+### Business
+
+- [Business Overview](docs/business/README.md)
+- [Business Boundary](docs/business/BUSINESS_BOUNDARY.md)
+- [Business Model](docs/business/business_model.md)
+
 ### Evidence
 
 - [Evidence Overview](docs/evidence/README.md)
