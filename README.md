@@ -208,6 +208,8 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 
 - [Claim Boundary](docs/ethics/claim_boundary.md)
 - [Security Policy](docs/security/README.md)
+- [Security Boundary](docs/security/SECURITY_BOUNDARY.md)
+- [Data Protection](docs/security/DATA_PROTECTION.md)
 - [Threat Model](docs/security/threat_model_v0.1.md)
 
 ### Roadmap
