@@ -1,5 +1,11 @@
 # BioDockLab
 
+![Status](https://img.shields.io/badge/status-MVP-blue)
+![Research](https://img.shields.io/badge/focus-Bio%20AI-green)
+![Stage](https://img.shields.io/badge/stage-Prototype-orange)
+![University](https://img.shields.io/badge/Paejae-University-red)
+![License](https://img.shields.io/badge/license-Proprietary-lightgrey)
+
 **Bio AI Research Software Platform**  
 Experiment Data · AI Analysis · Digital Twin Simulation · Research Reports
 
