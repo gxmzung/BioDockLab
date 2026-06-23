@@ -214,6 +214,14 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 - [Data Protection](docs/security/DATA_PROTECTION.md)
 - [Threat Model](docs/security/threat_model_v0.1.md)
 
+### Review
+
+- [Review Overview](docs/review/README.md)
+- [Review Guide](docs/review/REVIEW_GUIDE.md)
+- [Expert Feedback Request](docs/review/EXPERT_FEEDBACK_REQUEST.md)
+- [Professor Review Packet](docs/review/professor_review_packet.md)
+- [Clinical Assumptions to Verify](docs/review/clinical_assumptions_to_verify.md)
+
 ### Team
 
 - [Team Overview](docs/team/TEAM_OVERVIEW.md)
