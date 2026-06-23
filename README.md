@@ -214,6 +214,13 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 - [Data Protection](docs/security/DATA_PROTECTION.md)
 - [Threat Model](docs/security/threat_model_v0.1.md)
 
+### Presentation
+
+- [Presentation Overview](docs/presentation/README.md)
+- [Presentation Flow](docs/presentation/PRESENTATION_FLOW.md)
+- [Q&A Preparation](docs/presentation/QNA_PREP.md)
+- [Demo Script](docs/presentation/demo_script.md)
+
 ### Review
 
 - [Review Overview](docs/review/README.md)
