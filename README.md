@@ -138,6 +138,9 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 
 ### Architecture
 
+- [System Context](docs/architecture/SYSTEM_CONTEXT.md)
+- [Data Flow](docs/architecture/DATA_FLOW.md)
+- [Module Map](docs/architecture/MODULE_MAP.md)
 - [Handdrawn System Concept](docs/architecture/Handdrawn_System_Concept.md)
 - [Backend Structure](docs/architecture/backend_structure.md)
 - [Technical Stack Roadmap](docs/architecture/TECH_STACK_ROADMAP.md)
