@@ -166,6 +166,28 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 - [MVP Specification](docs/planning/MVP_SPEC.md)
 - [Role Assignment](docs/planning/ROLE_ASSIGNMENT.md)
 
+### Decisions
+
+- [Architecture Decision Records](docs/decisions/README.md)
+- [ADR-001: Why FastAPI](docs/decisions/ADR-001_Why_FastAPI.md)
+- [ADR-002: Why Rule-Based MVP](docs/decisions/ADR-002_Why_RuleBased_MVP.md)
+- [ADR-003: Why Digital Twin Direction](docs/decisions/ADR-003_Why_Digital_Twin_Direction.md)
+- [ADR-004: Why Modular Architecture](docs/decisions/ADR-004_Why_Modular_BioDockLab_Architecture.md)
+
+### Validation
+
+- [Validation Overview](docs/validation/README.md)
+- [Validation Status](docs/validation/VALIDATION_STATUS.md)
+- [Assumptions](docs/validation/ASSUMPTIONS.md)
+- [Known Limitations](docs/validation/KNOWN_LIMITATIONS.md)
+
+### Operations
+
+- [Operations Overview](docs/operations/README.md)
+- [Local Setup](docs/operations/LOCAL_SETUP.md)
+- [Developer Guide](docs/operations/DEVELOPER_GUIDE.md)
+- [Deployment Notes](docs/operations/DEPLOYMENT.md)
+
 ### Ethics & Security
 
 - [Claim Boundary](docs/ethics/claim_boundary.md)
