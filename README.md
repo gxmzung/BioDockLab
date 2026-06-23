@@ -207,6 +207,8 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 ### Ethics & Security
 
 - [Claim Boundary](docs/ethics/claim_boundary.md)
+- [Ethics Boundary](docs/ethics/ETHICS_BOUNDARY.md)
+- [AI Claim Policy](docs/ethics/AI_CLAIM_POLICY.md)
 - [Security Policy](docs/security/README.md)
 - [Security Boundary](docs/security/SECURITY_BOUNDARY.md)
 - [Data Protection](docs/security/DATA_PROTECTION.md)
