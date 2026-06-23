@@ -214,6 +214,13 @@ More details: [Handdrawn System Concept](docs/architecture/Handdrawn_System_Conc
 - [Data Protection](docs/security/DATA_PROTECTION.md)
 - [Threat Model](docs/security/threat_model_v0.1.md)
 
+### Team
+
+- [Team Overview](docs/team/TEAM_OVERVIEW.md)
+- [Team Roles](docs/team/TEAM_ROLES.md)
+- [Collaboration Guide](docs/team/COLLABORATION_GUIDE.md)
+- [Open Positions and Skills](docs/team/OPEN_POSITIONS_AND_SKILLS.md)
+
 ### Roadmap
 
 - [Implementation Roadmap](docs/roadmap/IMPLEMENTATION_ROADMAP.md)
