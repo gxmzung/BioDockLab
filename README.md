@@ -1,3 +1,32 @@
+﻿<!-- PORTFOLIO-HEADER:START -->
+
+# BioDockLab
+
+> Bio AI research platform for experiment data, AI analysis, digital-twin simulation, and research reporting.
+
+**Domain:** Bio AI · Research Software · Digital Twin  
+**Role:** Planning · System Architecture · Prototype Development  
+**Status:** MVP / Prototype · 2026 Competition Winner
+
+## Portfolio Summary
+
+### System Focus
+
+- experiment / sample data management
+- AI-assisted analysis and priority scoring
+- digital-twin-style biological simulation
+- research dashboard and visualization
+- report-generation workflow
+- interactive exhibition prototype
+
+### Engineering Boundary
+
+> BioDockLab is a research-workflow software prototype, not a medical device or clinical diagnostic system. AI and simulation outputs are exploratory research-support results.
+
+---
+
+<!-- PORTFOLIO-HEADER:END -->
+
 # BioDockLab
 
 ![Status](https://img.shields.io/badge/status-MVP-blue)
@@ -338,3 +367,4 @@ BioDockLab is a **research software prototype**.
 It is **not** a medical device, diagnostic tool, clinical decision-making system, or validated biological prediction system.
 
 All simulation and analysis results are for software demonstration and research workflow exploration only.
+
